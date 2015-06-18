@@ -74,7 +74,7 @@ The next part is the real visualizion. You probably want to visualize it in an o
 
         float im = left_data[i];
         float re = left_data[i + 1];
-        double mag = 10 * log10(im * im + re * re); // The magnitude in logarithmic scale, linear would be sqrt(im * im + re * re)
+        double mag = sqrt(im * im + re * re);
 
         // Visualize magnitude of i-th band
         left_bands[tight_index] = (int16_t) (mag * HEIGHT);
