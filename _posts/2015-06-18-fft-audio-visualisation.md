@@ -47,7 +47,7 @@ temporary output buffer.
 ```
         int16_t left = data[i];
 
-        double window_modifier = (0.5 * (1 - cos(2 * M_PI * tight_index / N))); // Hann (Hanning) window function
+        double window_modifier = (0.5 * (1 - cos(2 * M_PI * tight_index / (N - 1)))); // Hann (Hanning) window function
         float value = (float) (window_modifier * ((left) / 32768.0f)); // Convert to float and apply
 
         // cap values above 1 and below -1
