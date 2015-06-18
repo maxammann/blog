@@ -84,7 +84,8 @@ The next part is the real visualizion. You probably want to visualize it in an o
     }
 ```
 
-*The first bin in the FFT is DC (0 Hz), the second bin is Fs / N, where Fs is the sample rate and N is the size of the FFT. The next bin is 2 * Fs / N. To express this in general terms, the nth bin is n * Fs / N.
+*The first bin in the FFT is DC (0 Hz), the second bin is Fs / N, where Fs is the sample rate and N is the size of the FFT. The next bin is 2 \* Fs / N.
+To express this in general terms, the nth bin is n \* Fs / N.
 
 So if your sample rate, Fs is say 44.1 kHz and your FFT size, N is 1024, then the FFT output bins
 are at:*
@@ -100,11 +101,15 @@ are at:*
 511: 511 * 44100 / 1024 = 22006.9 Hz
 ```
 
-*Note that for a real input signal (imaginary parts all zero) the second half of the FFT (bins from N / 2 + 1 to N - 1) contain no useful additional information (they have complex conjugate symmetry with the first N / 2 - 1 bins). The last useful bin (for practical aplications) is at N / 2 - 1, which corresponds to 22006.9 Hz in the above example. The bin at N / 2 represents energy at the Nyquist frequency, i.e. Fs / 2 ( = 22050 Hz in this example), but this is in general not of any practical use, since anti-aliasing filters will typically attenuate any signals at and above Fs / 2. (Source: [Stackoverflow](http://stackoverflow.com/a/4371627/1763110))* 
+*Note that for a real input signal (imaginary parts all zero) the second half of the FFT (bins from N / 2 + 1 to N - 1) contain no useful additional information 
+(they have complex conjugate symmetry with the first N / 2 - 1 bins). The last useful bin (for practical aplications) is at N / 2 - 1, which corresponds to 22006.9 Hz in the above example. 
+The bin at N / 2 represents energy at the Nyquist frequency, i.e. Fs / 2 ( = 22050 Hz in this example), but this is in general not of any practical use, since anti-aliasing filters will 
+typically attenuate any signals at and above Fs / 2. (Source: [Stackoverflow](http://stackoverflow.com/a/4371627/1763110))* 
 
 But how to use this after decoding and resampling?
 You have to use *AV_SAMPLE_FMT_S16* as output format. So inizialize the resampling library as
 follow:
+
 ```
 enum AVSampleFormat init_resampling(AVAudioResampleContext **out_resample, AVCodecContext *dec_ctx) {
     AVAudioResampleContext *resample = avresample_alloc_context();
@@ -191,4 +196,4 @@ while (1) {
 }    
 ```
 
-
+The example source can be viewed [here](https://gist.github.com/maxammann/137176f1dcd0e4f596e8).
