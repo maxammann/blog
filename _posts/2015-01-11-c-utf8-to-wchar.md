@@ -13,7 +13,7 @@ Luckily I only have to support linux.
 
 So let's get started with some code:
 
-{% highlight c %}
+```c
 #define UTF8_BUFERR_SIZE  256;
 
 static wchar_t *utf8towchar(char* utf8) {
@@ -33,7 +33,7 @@ static wchar_t *utf8towchar(char* utf8) {
 
   return text;
 }
-{% endhighlight %}
+```
 
 *Note: the wchar_t array has to be freed!*
 

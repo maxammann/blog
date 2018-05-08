@@ -9,7 +9,7 @@ trial-and-error the final code is not that complicated.
 
 You start by defining a few data structures:
 
-```
+```c
 static int16_t left_bands[32]; // Left channel frequency bands
 static int16_t right_bands[32]; // Right channel frequency bands
 
@@ -20,7 +20,7 @@ static int N, samples; // N and number of samples to process each step
 
 The first step is to initialise the FFT library of libav. N is the size of the fft.
 
-```
+```c
 void visualize_init(int samples_) {
     samples = samples_;
     N = samples_ / 2; // left/right channels
@@ -30,7 +30,7 @@ void visualize_init(int samples_) {
 
 Let's start now to visualize our buffer:
 
-```
+```c
 void buffer_visualize(int16_t *data) {
     int i, tight_index; // just some iterator indices
 
@@ -44,7 +44,7 @@ right, one int left and so on...
 So in the next step we're going to split it, convert the integers to floats, apply a window function and write them to our
 temporary output buffer.
 
-```
+```c
         int16_t left = data[i];
 
         double window_modifier = (0.5 * (1 - cos(2 * M_PI * tight_index / (N - 1)))); // Hann (Hanning) window function
@@ -60,13 +60,13 @@ temporary output buffer.
 
 Also repeat this for the right channel. Finally we can pass our data to the fft library:
 
-```
+```c
     av_rdft_calc(ctx, left_data);
 ```
 
 The next part is the real visualizion. You probably want to visualize it in an other way.
 
-```
+```c
     int size = N / 2 * 2; // half is usable, but we have re and im
 
 
@@ -110,7 +110,7 @@ But how to use this after decoding and resampling?
 You have to use *AV_SAMPLE_FMT_S16* as output format. So inizialize the resampling library as
 follow:
 
-```
+```c
 enum AVSampleFormat init_resampling(AVAudioResampleContext **out_resample, AVCodecContext *dec_ctx) {
     AVAudioResampleContext *resample = avresample_alloc_context();
 
@@ -136,7 +136,7 @@ enum AVSampleFormat init_resampling(AVAudioResampleContext **out_resample, AVCod
 Then just decode it and pass it to our process function. The normalizing and resampling part can be
 quite difficult as it's not that good documented but here's an working example:
 
-```
+```c
 // Packet
 AVPacket packet;
 av_init_packet(&packet);

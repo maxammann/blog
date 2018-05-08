@@ -7,14 +7,14 @@ When using a tiling window you often want to hide the title bar of windows to ac
 
 The following conky command will return the name of the currently selected window.
 
-```
+```bash
 ${exec xprop -id $(xprop -root | awk '/_NET_ACTIVE_WINDOW\(WINDOW\)/{print $NF}') | awk '/_NET_WM_NAME/{$1=$2="";print}' | tr -s ' ' | awk '{print substr($0, 3, length($0) - 3)}'} 
 ```
 
 
 Build into a complete conky script it will look like this:
 
-```
+```conf
 out_to_x no
 own_window no
 out_to_console yes
