@@ -1,5 +1,4 @@
 # Dependencies
-markdown:            redcarpet
 redcarpet:
   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "underline", "with_toc_data", "footnotes", "quote", "jekyll-paginate" ]
 highlighter:         rouge
@@ -20,8 +19,8 @@ paginate:            5
 # About/contact
 author:
   name:              Max Ammann
-  url:               https://twitter.com/mdo
-  email:             maximilian.ammann@googlemail.com
+  url:               https://maxammann.org
+  email:             max@maxammann.org
 
 # Custom vars
 version:             1.0.0
