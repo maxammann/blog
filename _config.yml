@@ -1,14 +1,13 @@
 # Dependencies
 markdown:            redcarpet
 redcarpet:
-  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "underline", "with_toc_data", "footnotes", "quote" ]
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "underline", "with_toc_data", "footnotes", "quote", "jekyll-paginate" ]
 highlighter:         pygments
 
 # Permalinks
 #
 # Use of `relative_permalinks` ensures post links from the index work properly.
 permalink:           pretty
-relative_permalinks: true
 
 # Setup
 title:               Max Ammann
