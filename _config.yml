@@ -8,6 +8,7 @@ highlighter:         rouge
 # Use of `relative_permalinks` ensures post links from the index work properly.
 permalink:           pretty
 
+
 # Setup
 title:               Max Ammann
 tagline:             'Blog'
