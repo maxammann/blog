@@ -14,7 +14,7 @@ title:               Max Ammann
 tagline:             'Blog'
 description:         'Technical blog by Max Ammann'
 url:                 maxammann.github.io
-baseurl:             /
+baseurl:             ""
 paginate:            5
 
 # About/contact
