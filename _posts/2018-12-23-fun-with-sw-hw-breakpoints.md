@@ -64,6 +64,8 @@ instruction `0x804a060` when reaching the second first or second breakpoint:
 
 As you can see it seems like only 3 bytes got copied. The first byte is `0x00`.
 This is because gdb wrote `0x90` (INT) to the address when the breakpoint was set.
+After reaching the 1. breakpoing it wrote `0x90` again to make sure that the programm will stop at
+the 2. breakpoint.
 After reaching the 2. breakpoint it restored the byte to `0x00` because when the breakpoints were set it actually was.
 
 So this is why gdb fucks our shellcode up! It restored the value where the `INT` was to the wrong
@@ -106,4 +108,8 @@ Even if you look at the assembler code in gdb it will not show it you
 [(Debugger flow control: Hardware breakpoints vs software breakpoints)](http://www.nynaeve.net/?p=80):
 
 > "Now, you might be tempted to say that this isn’t really how software breakpoints work, if you have ever tried to disassemble or dump the raw opcode bytes of anything that you have set a breakpoint on, because if you do that, you’ll not see an int 3 anywhere where you set a breakpoint. This is actually because the debugger tells a lie to you about the contents of memory where software breakpoints are involved; any access to that memory (through the debugger) behaves as if the original opcode byte that the debugger saved away was still there."
+
+# Conclusion
+
+Never set software breakpoints at addresses you are writing executable code to!
 
