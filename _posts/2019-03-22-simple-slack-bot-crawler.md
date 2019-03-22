@@ -11,9 +11,10 @@ this is an easy. In my case this is the weekly food plan.
 I decided to go with [requests-html](https://html.python-requests.org/),
 [tinydb](https://tinydb.readthedocs.io/en/latest/) and of course
 [slackclient](https://python-slackclient.readthedocs.io/en/latest/).
+Please not that `requests-html` needs at least Python 3.6.
 
 I'll walk you through the important parts [on
-GitHub](https://github.com/maxammann/slack-yummybot).
+GitHub](https://github.com/maxammann/slack-yummybot/blob/8b48166dc9fd1d679321751eff3429add7fd0b65/bot.py)
 
 First setup a `SlackClient` and `HTMLSession`:
 
