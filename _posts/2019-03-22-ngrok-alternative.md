@@ -53,11 +53,11 @@ ssh -R $PUBLIC_IP:12345:localhost:12345 $SERVER_HOST
 
 
 Projects I discovered while writing:
-- https://github.com/ericbarch/socket-tunnel
-- https://github.com/localtunnel/localtunnel
-- http://pagekite.net/support/quickstart/
-- https://dev.to/k4ml/poor-man-ngrok-with-tcp-proxy-and-ssh-reverse-tunnel-1fm
-- https://serveo.net/
+- [socker-tunnel](https://github.com/ericbarch/socket-tunnel)
+- [localtunnel](https://github.com/localtunnel/localtunnel)
+- [pagekite.net](http://pagekite.net/support/quickstart/)
+- [similar guite](https://dev.to/k4ml/poor-man-ngrok-with-tcp-proxy-and-ssh-reverse-tunnel-1fm)
+- [servo.net](https://serveo.net/)
 
 
 
