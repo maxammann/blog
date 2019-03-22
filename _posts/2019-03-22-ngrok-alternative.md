@@ -19,7 +19,6 @@ SSH will provide is with a reverse tunnel and `socat` will proxy the tunnel to t
 Run the following command on your local computer to expose port 8080:
 ```
 ssh -R 12345:localhost:8080 $SERVER_HOST 
-ssh -R 94.130.119.220:12345:localhost:12345 $SERVER_HOST 
 ```
 
 Not you should be able to run `curl http://localhost:12345` on the remote server.
@@ -45,7 +44,11 @@ clients to specify which IP they bind to when creating the reverse tunnel.
 
 *From sshd_config manual*
 
-Just set `GatewayPorts` to `clientspecified`
+Just set `GatewayPorts` to `clientspecified` and use the following command for the tunnel:
+```
+ssh -R $PUBLIC_IP:12345:localhost:12345 $SERVER_HOST 
+```
+(Hint: `$PUBLIC_IP` and `$SERVER_HOST` can be the same)
 
 
 
