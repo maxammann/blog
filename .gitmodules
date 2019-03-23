@@ -1,2 +1,3 @@
 [submodule "public"]
+    url = git@github.com:maxammann/maxammann.github.io.git
 	branch = master
