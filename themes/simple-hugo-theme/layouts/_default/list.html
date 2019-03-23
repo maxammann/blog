@@ -1,0 +1,10 @@
+{{ define "main" }}
+
+{{/* Display _index.md if available */}}
+{{ if .Content }}
+{{ partial "single" . }}
+{{ end }}
+
+{{ partial "posts.html" . }}
+
+{{ end }}
