@@ -14,13 +14,16 @@ The setup is quite simple. dnsmasq will provide a local DHCP and DNS server.
 - `sudo apt install dnsmasq`
 - Edit `/etc/network/interfaces` and add the following:
   ```
-  ???
+  auto usb0
+  iface usb0 inet static
+      address 192.168.44.1/24
   ```
 - Edit /etc/dnsmasq.conf and add the following:
-  ```
-  ???
-  ```
 - `sudo systemctl enable --now dnsmasq`
+  ```
+  listen-address=192.168.44.1
+  dhcp-range=192.168.44.10,192.168.44.20,12h
+  ```
 
 After a reboot of the PI you should see that the Ethernet Gadget on the connected USB host.
 
