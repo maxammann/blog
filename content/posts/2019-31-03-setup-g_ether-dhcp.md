@@ -18,12 +18,16 @@ The setup is quite simple. dnsmasq will provide a local DHCP and DNS server.
   iface usb0 inet static
       address 192.168.44.1/24
   ```
+  You can also disable the wlan0 interface by removing all the lines which mention it to disable
+  wlan.
+
 - Edit /etc/dnsmasq.conf and add the following:
-- `sudo systemctl enable --now dnsmasq`
-  ```
+```
   listen-address=192.168.44.1
   dhcp-range=192.168.44.10,192.168.44.20,12h
   ```
+
+- `sudo systemctl enable --now dnsmasq`
 
 After a reboot of the PI you should see that the Ethernet Gadget on the connected USB host.
 
