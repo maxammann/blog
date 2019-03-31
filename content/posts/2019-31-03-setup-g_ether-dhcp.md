@@ -32,6 +32,7 @@ The setup is quite simple. dnsmasq will provide a local DHCP and DNS server.
 After a reboot of the PI you should see that the Ethernet Gadget on the connected USB host.
 
 If you have trouble connecting it check the following:
+
 - Did you use the correct USB port on the PI Zero? Only one offers the possiblity to transfere data.
 - Try to reload the kernel module: `sudo modprobe -r g_ether && sudo modprobe g_ether`
 - Is a firewall on the PI blocking the DHCP client?
