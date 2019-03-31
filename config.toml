@@ -16,7 +16,7 @@ copyright = "Attribution 4.0 International (CC BY 4.0)"
 pygmentsCodefences = true
 pygmentsCodeFencesGuessSyntax = true
 pygmentsoptions = "linenos=table"
-pygmentsStyle = "github"
+pygmentsStyle = "tango"
 
 # Taxonomies
 [taxonomies]
