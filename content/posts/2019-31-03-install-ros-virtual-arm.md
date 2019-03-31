@@ -59,7 +59,13 @@ A TLDR version is the following:
 * `./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release -j1`
 
 You can try to compile with `-j2` (More does not make sense), but you maybe will get an out of memory error because the PI has
-only 256MB of RAM.
+only 256MB of RAM. Here is an example of the memory consumption ;)
+```bash
+pi@raspberrypi:~$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:           247M        218M         21M          0B        7.7M        1.3M
+Swap:           99M         99M          0B
+```
 
 You can active the ROS environment with `source ~/ros_catkin_ws/install_isolated/setup.bash`. You
 can also add this to your `.bashrc` if you like.
