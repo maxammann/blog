@@ -10,13 +10,13 @@ This post should guide you through the process of compiling ROS on a virtualised
 
 Start by checking out the repo of a custom kernel for qemu:
 ```bash
-git clone https://github.com/dhruvvyas90/qemu-rpi-kernel
+ git clone https://github.com/dhruvvyas90/qemu-rpi-kernel
 ```
 
 Next download the latest [Raspbian Image](https://www.raspberrypi.org/downloads/raspbian/).
 It is advided to create a qemu image of the extracted image:
 ```bash
-qemu-img convert -f raw -O qcow2 2018-11-13-raspbian-stretch-lite.img raspbian-stretch-lite.qcow
+ qemu-img convert -f raw -O qcow2 2018-11-13-raspbian-stretch-lite.img raspbian-stretch-lite.qcow
 ```
 
 You can resize the image by running `qemu-img convert -f raw -O qcow2 2018-11-13-raspbian-stretch-lite.img raspbian-stretch-lite.qcow`.
