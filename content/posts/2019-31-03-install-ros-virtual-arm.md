@@ -4,6 +4,8 @@ title: "Installing ROS on virtual Raspberry PI Zero"
 date: 2019-03-31
 ---
 
+**This post represents a slow way to compile ROS. In a [new post]({{< ref "2019-04-13-crosscompiling-ros-raspbian" >}}) I show how to crosscompile ROS."
+
 This post should guide you through the process of compiling ROS on a virtualised Raspberry PI Zero.
 
 # Setup virtual Raspberry PI Zero with QEMU
@@ -47,7 +49,7 @@ A TLDR version is the following:
   Note: This is not recommended because packages installed by pip
   override those from apt. In this case we need to do this becasuse the version provided by apt is
   [not working](https://github.com/ros/catkin/issues/956)
-* `sudo apt-get install python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential`
+* `sudo apt install python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential`
 * `sudo rosdep init`
 * `rosdep update`
 * `mkdir ~/ros_catkin_ws`
@@ -72,4 +74,5 @@ can also add this to your `.bashrc` if you like.
 
 The next task for me is to get the data from the qemu image to copy it to the real hardware.
 
+See [this post for how to mount qcow2 images]({{< ref "2019-04-14-mounting-qcow.md" >}}).
 
