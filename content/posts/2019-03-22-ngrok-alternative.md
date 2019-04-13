@@ -13,7 +13,7 @@ is easy to setup as a JavaScript developer but can be a hassle if you are not fa
 Also this solution falls short if you care about privacy or signed a NDA (and have to care about it).
 
 This problem is not that complicated that it needs enterprise software. In fact you can do this with
-common unix tools. All you need is `ssh`, `socat` and a server running a SSH server. This server should be able to expose posts to the internet.
+common Unix tools. All you need is `ssh`, `socat` and a server running a SSH server. This server should be able to expose posts to the internet.
 SSH will provide is with a reverse tunnel and `socat` will proxy the tunnel to the internet.
 
 Run the following command on your local computer to expose port 8080:
@@ -25,7 +25,7 @@ Not you should be able to run `curl http://localhost:12345` on the remote server
 Unfortunately SSH will bind to localhost. Therefore it is not yet possible to accces the port 12345
 from outside.
 
-Use the following command to solve that, by proxying requets from the internet to localhost:
+Use the following command to solve that, by proxying requests from the internet to localhost:
 
 ```
 socat tcp-listen:12345,reuseaddr,fork,bind=$PUBLIC_IP tcp:localhost:12345

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Setup the ethernet gadget of PI Zero with dnsmasq"
+title: "Setup the Ethernet gadget of PI Zero with dnsmasq"
 date: 2019-03-31
 ---
 
@@ -33,7 +33,7 @@ After a reboot of the PI you should see that the Ethernet Gadget on the connecte
 
 If you have trouble connecting it check the following:
 
-- Did you use the correct USB port on the PI Zero? Only one offers the possiblity to transfere data.
+- Did you use the correct USB port on the PI Zero? Only one offers the possibility to transfer data.
 - Try to reload the kernel module: `sudo modprobe -r g_ether && sudo modprobe g_ether`
 - Is a firewall on the PI blocking the DHCP client?
 

@@ -24,7 +24,7 @@ sc = SlackClient(slack_token)
 session = HTMLSession()
 ```
 
-Next crawl the content from the html page and select the interresting parts:
+Next crawl the content from the html page and select the interesting parts:
 
 ```python
 r = session.get('https://tuerantuer.de/cafe/wochenplan/')
@@ -54,7 +54,7 @@ for yummyImage in yummyImages:
 print("Failed to send message to Slack")
 ```
 
-Run this script as a cronjob every hour to post updates!
+Run this script as a cron job every hour to post updates!
 There is no need to use Web Hooks as this is only pushing to the slack.
 
 

@@ -14,7 +14,7 @@ date: 2018-04-08
 * [APU2C4](https://www.pcengines.ch/apu2c4.htm). I could not get this to work on ALIX devices.
 
 ## Software requirements
-* dd on linux
+* dd on Linux
 * A serial AMD64 pfSense memstick installer image from [here](https://www.pfsense.org/download/)
 
 # Installation
@@ -31,7 +31,7 @@ screen /dev/ttyUSB0 115200 8N1
 ``.
 Because the APU2C4 is disconnected from power you should see a blank screen.
 6. Power up the APU2C4 and press F10.
-7. You should see now the bootloader and should be able to boot from usb.
+7. You should see now the bootloader and should be able to boot from USB.
 8. The installation setup is straight forward and should take approximately 5-10 minutes.
 9. After the installation pfSense asks you to reboot. Unplug the USB and answer `yes`.
 

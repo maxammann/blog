@@ -6,7 +6,7 @@ date: 2019-03-31
 
 **This post represents a slow way to compile ROS. In a [new post]({{< ref "2019-04-13-crosscompiling-ros-raspbian" >}}) I show how to crosscompile ROS."
 
-This post should guide you through the process of compiling ROS on a virtualised Raspberry PI Zero.
+This post should guide you through the process of compiling ROS on a virtualized Raspberry PI Zero.
 
 # Setup virtual Raspberry PI Zero with QEMU
 
@@ -16,16 +16,16 @@ Start by checking out the repo of a custom kernel for qemu:
 ```
 
 Next download the latest [Raspbian Image](https://www.raspberrypi.org/downloads/raspbian/).
-It is advided to create a qemu image of the extracted image:
+It is advised to create a qemu image of the extracted image:
 ```bash
  qemu-img convert -f raw -O qcow2 2018-11-13-raspbian-stretch-lite.img raspbian-stretch-lite.qcow
 ```
 
 You can resize the image by running `qemu-img convert -f raw -O qcow2 2018-11-13-raspbian-stretch-lite.img raspbian-stretch-lite.qcow`.
-This will not resize the root parition! You'll have to do this later by using `raspi-config` or doing it manually.
+This will not resize the root partition! You'll have to do this later by using `raspi-config` or doing it manually.
 
 
-Thats all! Now you can start the virtual PI by running:
+That's all! Now you can start the virtual PI by running:
 ```bash
 qemu-system-arm \ 
   -M versatilepb \ 
@@ -47,7 +47,7 @@ A TLDR version is the following:
 * `sudo apt install python-pip`
 * `sudo pip install -U catkin_pkg`\\
   Note: This is not recommended because packages installed by pip
-  override those from apt. In this case we need to do this becasuse the version provided by apt is
+  override those from apt. In this case we need to do this because the version provided by apt is
   [not working](https://github.com/ros/catkin/issues/956)
 * `sudo apt install python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential`
 * `sudo rosdep init`
