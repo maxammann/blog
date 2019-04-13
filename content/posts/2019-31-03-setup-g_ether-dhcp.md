@@ -13,19 +13,19 @@ The setup is quite simple. dnsmasq will provide a local DHCP and DNS server.
 - Edit `/boot/cmdline.txt` and add `modules-load=dwc2,g_ether` after `rootwait`
 - `sudo apt install dnsmasq`
 - Edit `/etc/network/interfaces` and add the following:
-  ```
-  auto usb0
-  iface usb0 inet static
+```
+auto usb0
+iface usb0 inet static
       address 192.168.44.1/24
-  ```
+```
   You can also disable the wlan0 interface by removing all the lines which mention it to disable
   wlan.
 
 - Edit /etc/dnsmasq.conf and add the following:
 ```
-  listen-address=192.168.44.1
-  dhcp-range=192.168.44.10,192.168.44.20,12h
-  ```
+listen-address=192.168.44.1
+dhcp-range=192.168.44.10,192.168.44.20,12h
+```
 
 - `sudo systemctl enable --now dnsmasq`
 
