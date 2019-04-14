@@ -2,9 +2,6 @@ baseurl = "https://maxammann.org/"
 title = "Blog by Max Ammann"
 languageCode = "en-us"
 
-[author]
-    name = "Max Ammann"
-
 # Theme to use
 theme = "simple-hugo-theme"
 
@@ -37,6 +34,10 @@ pygmentsUseClasses = true
     url = "/about/"
     name = "about"
     weight = 2
+  [[menu.main]]
+    url = "/contact/"
+    name = "contact"
+    weight = 3
 
   # Footer
   [[menu.footer]]
