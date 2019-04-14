@@ -2,6 +2,7 @@
 layout: post
 title: "Unicode: Mess with characters and fonts."
 date: 2015-01-17
+slug: unicode-mess
 ---
 
 Can you see this symbol? 🔊 Nice, this means you have a good set of fonts and a good browser.

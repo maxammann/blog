@@ -2,6 +2,7 @@
 layout: post
 title: Mounting qcow2 images
 date: 2019-04-14
+slug: mounting-qcow
 ---
 
 If you previously converted a raw image using `qemu-img convert` to a qcow2 image you maybe want to mount it to retrieve and modify data:

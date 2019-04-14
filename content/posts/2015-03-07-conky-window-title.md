@@ -2,6 +2,7 @@
 layout: post
 title: "Conky: Display window title"
 date: 2015-03-07
+slug: conky-window-title
 ---
 
 When using a tiling window you often want to hide the title bar of windows to achive a nicer look and save some space. But at the same time you don't want to miss important information which sometimes is only exposed through the name of a window which is displayed in the title bar by default. In i3 you can modify your status bar with conky, so why don't display it there?

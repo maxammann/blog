@@ -2,6 +2,7 @@
 layout: post
 title: "C: Processing and playing PCMed audio"
 date: 2015-03-15
+slug: c-process-pcm
 ---
 
 Playing compressed audio contains can be quiete complicated and needs some process power. So I'm going to start to play **.WAV**, **.AIFF** and raw **PCM** data. 

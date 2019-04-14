@@ -2,6 +2,7 @@
 layout: post
 title: "Pulseaudio: Synchronize Master and PCM"
 date: 2015-02-15
+slug: sync-master-pcm
 ---
 
 *PulseAudio is a network-capable sound server hosted at freedesktop.org. Supported operating systems include Linux, the BSDs, Solaris as well as Microsoft Windows.*

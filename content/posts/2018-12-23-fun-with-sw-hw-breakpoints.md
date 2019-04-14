@@ -2,6 +2,7 @@
 layout: post
 title: "CTF: Fun with Hardware and Software breakpoints in GDB"
 date: 2018-12-23
+slug: fun-with-sw-hw-breakpoints
 ---
 
 I did the orw challange on [pwnable.tw](https://pwnable.tw/) yesterday. It is very streight forward.

@@ -2,6 +2,7 @@
 layout: post
 title: "Setup the Ethernet gadget of PI Zero with dnsmasq"
 date: 2019-03-31
+slug: setup-g_ether-dhcp
 ---
 
 Sometimes it makes sense to connect to the PI Zero by using the g_ether kernel module. This

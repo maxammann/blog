@@ -2,6 +2,7 @@
 layout: post
 title: "Jira: Invalid Server ID"
 date: 2018-11-21
+slug: jira-server-id
 ---
 
 In case you migrated from Jira Cloud to the self-hosted version your server id probably got

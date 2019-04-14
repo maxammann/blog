@@ -2,6 +2,7 @@
 layout: post
 title: "C: UTF-8 to wide character"
 date: 2015-01-11
+slug: c-utf8-to-wchar
 ---
 
 In my "RPi Matrix" project I wanted to render UTF-8 fonts on a 2D-Raster. To rasterize and vector fonts I used a library called FreeType,

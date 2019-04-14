@@ -2,6 +2,7 @@
 layout: post
 title: "pfSense: Installing on an APUC4"
 date: 2018-04-08
+slug: pfsense-install
 ---
 
 # Preparation

@@ -2,6 +2,7 @@
 layout: post
 title: "Ngrok alternative for the linux geek"
 date: 2019-03-22
+slug: ngrok-alternative
 ---
 
 Sometimes you want to expose a port running on localhost to the internet. The use of NAT with IPv4

@@ -2,6 +2,7 @@
 layout: post
 title: "Installing ROS on virtual Raspberry PI Zero"
 date: 2019-03-31
+slug: install-ros-virtual-arm
 ---
 
 **This post represents a slow way to compile ROS. In a [new post]({{< ref "2019-04-13-crosscompiling-ros-raspbian" >}}) I show how to crosscompile ROS."

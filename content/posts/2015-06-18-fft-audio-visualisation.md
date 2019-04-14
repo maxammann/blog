@@ -2,6 +2,7 @@
 layout: post
 title: "libav: Visualize audio in a spectrum using libavcodec"
 date: 2015-06-18
+slug: fft-audio-visualisation
 ---
 
 Visualizing audio can be quite complicated if you suffer the mathematical premises. But with some

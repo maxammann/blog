@@ -2,6 +2,7 @@
 layout: post
 title: "Basics for a simple slack bot which crawls websites"
 date: 2019-03-22
+slug: simple-slack-bot-crawler
 ---
 
 Writing a slack bot which pushes content to a workspace is quite simple and fast to do.

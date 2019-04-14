@@ -60,7 +60,7 @@ pygmentsUseClasses = true
 
 # Links format
 [permalinks]
-  posts = "/posts/:year/:month/:filename/"
+  posts = "/posts/:year/:month/:slug/"
 
 [params]
   datefmt  = "2 Jan, 2006"
