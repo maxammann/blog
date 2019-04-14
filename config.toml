@@ -2,6 +2,9 @@ baseurl = "https://maxammann.org/"
 title = "Blog by Max Ammann"
 languageCode = "en-us"
 
+[author]
+    name = "Max Ammann"
+
 # Theme to use
 theme = "simple-hugo-theme"
 
@@ -45,8 +48,12 @@ pygmentsUseClasses = true
     name = "RSS"
     weight = 2
   [[menu.footer]]
+    url = "/maxammann.asc"
+    name = "GPG ASC"
+    weight = 3
+  [[menu.footer]]
     url = "mailto:max@maxammann.org"
-    name = "Contact"
+    name = "E-Mail"
     weight = 3
 
 
