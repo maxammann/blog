@@ -2,22 +2,24 @@ body {
     margin: 40px auto;
     max-width: 750px;
     line-height: 1.6;
-    font-size: 18px;
+    font-size: 16px;
     color: #444;
     padding: 0 10px;
+    font-family: "sans"
 }
 
 h1,
 h2,
 h3 {
-    line-height: 1.2
+    line-height: 1.2;
+    font-family: "serif"
 }
 
 div.header h1 {
     padding-top: 0;
     padding-bottom: 8px;
     margin-bottom: 24px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     border-bottom: 1px solid;
 }
@@ -58,3 +60,15 @@ blockquote {
     color: #7a7a7a;
     border-left: .25rem solid #e5e5e5;
 }
+
+code { 
+    background-color: #f8f8f8;
+    font-family: "monospace";
+    font-size: 14px;
+ }
+
+/* Fix formatting of code blocks if there is only a single line */
+/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0 0.4em 0 0.4em; margin-right: 0.4em; border: 0; }
+/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0 0.4em 0 0.4em; margin-right: 0.4em; border: 0; width: auto; overflow: auto; display: block; }
+/* LineNumbersTable */ .chroma .lnt { margin: 0; padding: 0; }
+/* LineNumbers */ .chroma .ln { margin: 0; padding: 0; }

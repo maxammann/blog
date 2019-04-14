@@ -9,7 +9,10 @@
     </title>
 
     {{ $styles := resources.Get "css/style.css" | minify -}}
+    {{ $syntax := resources.Get "css/syntax.css" | minify -}}
+
     <style>
+        {{- $syntax.Content | safeCSS -}}
         {{- $styles.Content | safeCSS -}}
     </style>
 
