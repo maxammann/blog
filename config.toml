@@ -16,6 +16,7 @@ copyright = "Attribution 4.0 International (CC BY 4.0)"
 pygmentsCodefences = true
 pygmentsOptions = "linenos=true"
 pygmentsStyle = "tango"
+pygmentsUseClasses = true
 
 # Taxonomies
 [taxonomies]
@@ -54,6 +55,5 @@ pygmentsStyle = "tango"
   posts = "/posts/:year/:month/:filename/"
 
 [params]
-  # Date format (default: Jan 2, 2006)
   datefmt  = "2 Jan, 2006"
 
