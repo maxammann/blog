@@ -124,3 +124,7 @@ To verify a chain use:
 ```bash
 openssl verify /usr/local/etc/telegraf.ca
 ```
+
+# Notes and Links
+
+See here for a guide to setup telegraf: https://blog.lbdg.me/pfsense-monitoring/
