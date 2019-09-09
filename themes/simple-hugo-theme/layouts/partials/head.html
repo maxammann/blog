@@ -16,9 +16,11 @@
         {{- $styles.Content | safeCSS -}}
     </style>
 
-    {{- if .RSSLink }}
-    <link href="{{ .RSSLink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
-    {{- end -}}
+    {{ $pageTitle := .Site.Title }}
+
+    {{ with .OutputFormats.Get "RSS" }}
+    <link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ $pageTitle }}" />
+    {{ end }}
 
     {{ template "_internal/google_analytics_async.html" . }}
 
