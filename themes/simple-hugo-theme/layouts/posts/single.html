@@ -1,0 +1,9 @@
+{{ define "main" }}
+
+{{ partial "single" . }}
+
+<p>
+<i>Do you have Questions? Send an E-Mail to <a href="mailto:max@maxammann.org?subject={{ printf "%s%s" "Question about: " .Title }}">max@maxammann.org</a></i>
+</p>
+
+{{ end }}
