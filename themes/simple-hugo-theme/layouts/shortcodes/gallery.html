@@ -38,7 +38,7 @@ Documentation and licence at https://github.com/liwenyip/hugo-easy-gallery/
 				<p>{{ $caption }}</p>
 			</figcaption>
 			<a href="{{ $linkURL }}" itemprop="contentUrl"></a><!-- put <a> last so it is stacked on top -->
-			{{ $image := .Scratch.Get ($.Get "dir") "/" .Name }}
+			{{ $image := ($.Get "dir") "/" .Name }}
 			{{ with $image.Exif }}
 			Date: {{ .Date }}
 			Lat/Long: {{ .Lat}}/{{ .Long }}
@@ -53,5 +53,6 @@ Documentation and licence at https://github.com/liwenyip/hugo-easy-gallery/
 	{{- else -}}
 	<!-- If no directory was specified, include any figure shortcodes called within the gallery -->
 	{{ .Inner }}
+	{{- end }}
 	{{- end }}
 </div>
