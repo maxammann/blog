@@ -1,5 +1,5 @@
 #!/bin/bash
 
 git push
-hugo
-rsync -r --progress public/ maxammann.org:~/public_html/
+hugo --gc
+rsync -r --progress public/ maxammann.org:~/public_html/ --delete --exclude=l
