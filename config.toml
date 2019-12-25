@@ -31,13 +31,17 @@ pygmentsUseClasses = true
     name = "blog"
     weight = 1
   [[menu.main]]
+    url = "/galleries/"
+    name = "galleries"
+    weight = 2
+  [[menu.main]]
     url = "/about/"
     name = "about"
-    weight = 2
+    weight = 5
   [[menu.main]]
     url = "/contact/"
     name = "contact"
-    weight = 3
+    weight = 6
 
   # Footer
   [[menu.footer]]

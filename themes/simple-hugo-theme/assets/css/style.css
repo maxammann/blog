@@ -1,202 +1,163 @@
 body {
-    font-family: "sans";
-    line-height: 1.6;
-    font-size: 16px;
-    color: #444;
-    margin: 0;
+  font-family: "sans";
+  line-height: 1.6;
+  font-size: 16px;
+  color: #444;
+  margin: 0;
 }
 
 .wrapper {
-    margin: 40px auto;
-    max-width: 750px;
-    padding: 0 10px;
+  margin: 40px auto;
+  max-width: 750px;
+  padding: 0 10px;
 }
 
 h1,
 h2,
 h3 {
-    line-height: 1.2;
-    font-family: "serif"
+  line-height: 1.2;
+  font-family: "serif";
 }
 
 div.header h1 {
-    padding-top: 0;
-    padding-bottom: 8px;
-    margin-bottom: 24px;
-    font-size: 16px;
-    font-weight: 400;
-    border-bottom: 1px solid;
+  padding-top: 0;
+  padding-bottom: 8px;
+  margin-bottom: 24px;
+  font-size: 16px;
+  font-weight: 400;
+  border-bottom: 1px solid;
 }
 
 .header-menu {
-    float: right;
+  float: right;
 }
 
 ul.pagination {
-    list-style-type: none;
-    text-align: center;
-    padding: 0;
+  list-style-type: none;
+  text-align: center;
+  padding: 0;
 }
 
 ul.pagination > li {
-    padding: 0 8px;
-    display: inline-block;
+  padding: 0 8px;
+  display: inline-block;
 }
 
 div.footer {
-    border-top: 1px solid;
-    text-align: center;
+  border-top: 1px solid;
+  text-align: center;
 }
 
 img {
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 blockquote {
-    padding-right: 5rem;
-    padding-left: 1.25rem;
-    padding: .5rem 1rem;
-    margin: .8rem 0;
-    color: #7a7a7a;
-    border-left: .25rem solid #e5e5e5;
+  padding-right: 5rem;
+  padding-left: 1.25rem;
+  padding: 0.5rem 1rem;
+  margin: 0.8rem 0;
+  color: #7a7a7a;
+  border-left: 0.25rem solid #e5e5e5;
 }
 
-code { 
-    background-color: #f8f8f8;
-    font-family: "monospace";
-    font-size: 14px;
- }
+code {
+  background-color: #f8f8f8;
+  font-family: "monospace";
+  font-size: 14px;
+}
 
 /* Fix formatting of code blocks if there is only a single line */
-/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0 0.4em 0 0.4em; margin-right: 0.4em; border: 0; }
-/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0 0.4em 0 0.4em; margin-right: 0.4em; border: 0; width: auto; overflow: auto; display: block; }
-/* LineNumbersTable */ .chroma .lnt { margin: 0; padding: 0; }
-/* LineNumbers */ .chroma .ln { margin: 0; padding: 0; }
+/* LineTableTD */
+.chroma .lntd {
+  vertical-align: top;
+  padding: 0 0.4em 0 0.4em;
+  margin-right: 0.4em;
+  border: 0;
+}
+/* LineTable */
+.chroma .lntable {
+  border-spacing: 0;
+  padding: 0 0.4em 0 0.4em;
+  margin-right: 0.4em;
+  border: 0;
+  width: auto;
+  overflow: auto;
+  display: block;
+}
+/* LineNumbersTable */
+.chroma .lnt {
+  margin: 0;
+  padding: 0;
+}
+/* LineNumbers */
+.chroma .ln {
+  margin: 0;
+  padding: 0;
+}
 
 /*
 Put this file in /static/css/hugo-easy-gallery.css
 Documentation and licence at https://github.com/liwenyip/hugo-easy-gallery/
 */
 
-
-/*
-Grid Layout Styles
-*/
 .gallery {
-    overflow: hidden;
-}
-.gallery .box {
-    float: left;
-    position: relative;
-    /* Default: 1 tile wide */
-    width: 50%;
-    padding-bottom: 50%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+
+  background-color: #363737;
 }
 
-/*
-Transition styles
-*/
-.gallery.hover-transition div,
-.gallery.hover-effect-zoom .img, 
-.gallery:not(.caption-effect-appear) figcaption,
-.fancy-figure:not(.caption-effect-appear) figcaption {
-    transition: all 0.3s ease-in-out;
-}
-/*
-figure styles
-*/
-figure {
-    position: relative; /* purely to allow absolution positioning of figcaption */
-    overflow: hidden;
-}
-.gallery div {
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-}
-.gallery.hover-effect-slidedown div:hover {
-    transform: translateY(5px);
-}
-.gallery.hover-effect-slideup div:hover {
-    transform: translateY(-5px);
+.gallery .element {
+  flex-basis: 50%;
+  height: 80vh;
+
+  position: relative;
+  overflow: hidden;
 }
 
-/*
-img / a styles
-*/
-
-.gallery .img {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-size: cover;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-}
-.gallery img {
-    display: none; /* only show the img if not inside a gallery */
-}
-figure a {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+.gallery .element img:hover {
+  transform: scale(1.01);
+  transition: all 0.3s ease-in-out;
 }
 
-/*
-figcaption styles
-*/
-.gallery figcaption,
-.fancy-figure figcaption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #000;
-    color: #FFF;
-    text-align: center;
-    font-size: 75%; /* change this if you want bigger text */
-    background: rgba(0, 0, 0, 0.5);
-    opacity: 1;
-}
-.gallery.caption-position-none figcaption,
-.fancy-figure.caption-position-none figcaption  {
-    display: none;
-}
-.gallery.caption-position-center figcaption,
-.fancy-figure.caption-position-center figcaption {
-    top: 0;
-    padding: 40% 5px;
-}
-.gallery.caption-position-bottom figcaption,
-.fancy-figure.caption-position-bottom figcaption {
-    padding: 5px;
-}
-.gallery.caption-effect-fade div:not(:hover) figcaption,
-.gallery.caption-effect-appear div:not(:hover) figcaption,
-.fancy-figure.caption-effect-fade div:not(:hover) figcaption,
-.fancy-figure.caption-effect-appear div:not(:hover) figcaption {
-    background: rgba(0, 0, 0, 0);
-    opacity: 0;
-}
-.gallery.caption-effect-slide.caption-position-bottom div:not(:hover) figcaption,
-.fancy-figure.caption-effect-slide.caption-position-bottom div:not(:hover) figcaption {
-    margin-bottom: -100%;
-}
-.gallery.caption-effect-slide.caption-position-center div:not(:hover) figcaption,
-.fancy-figure.caption-effect-slide.caption-position-center div:not(:hover) figcaption  {
-    top: 100%;
-}
-figcaption p {
-    margin: auto; /* override style in theme */
+.element img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
+.element .caption {
+  position: absolute;
+  bottom: 0;
+
+  width: 100%;
+  text-align: center;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.gallery a {
+  text-decoration: inherit;
+  color: inherit;
+}
+
+.gallery-title {
+  width: 100%;
+  text-align: center;
+  
+  padding: 50px 0;
+
+  background-color: #363737;
+  color: white;
+
+  font-family: "sans";
+  font-size: 2em;
+}
