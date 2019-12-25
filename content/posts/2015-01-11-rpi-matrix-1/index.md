@@ -1,7 +1,6 @@
 ---
 layout: post
 title: "RPi Matrix #1: Getting this project started!"
-featured_image: /imgmatrix/header1.jpg
 date: 2015-01-11
 slug: rpi-matrix-1
 ---
@@ -13,12 +12,12 @@ Controlling this with a Raspberry Pi worked pretty fine. Luckily there was alrea
 
 After getting the wiring right:
 
-![](/img/matrix/DSC05771.JPG)
-![](/img/matrix/DSC05770.JPG)
+{{< resourceFigure "DSC05771.JPG" />}}
+{{< resourceFigure "DSC05770.JPG" />}}
 
 I saw the first results:
 
-![](/img/matrix/DSC05763.JPG)
+{{< resourceFigure "DSC05763.JPG" />}}
 
 You can even see the display updating by setting a low exposure time!
 

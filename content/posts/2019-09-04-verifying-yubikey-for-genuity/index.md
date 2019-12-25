@@ -10,7 +10,8 @@ Therefore I looked for a way to verify its authenticity. The device appeared phy
 A check whether the key was manufactured by Yubico seems like a sufficient way to make sure that the security key is an original.
 
 I found [YubiKey Verification](https://www.yubico.com/genuine/) which successfully identified my Key as a Yubikey 5 NFC:
-![Positive verification result](/verifying-yubikey-is-genuine/verification-result.png)
+{{< resourceFigure "verification-result.png" "Positive verification result" />}}
+
 
 But there is no information on how this check works. As a security interrested person I digged a bit deeper on how to do this verification manually and found two ways.
 
@@ -93,7 +94,7 @@ Modulus:
 The next method goes a little bit deeper into how WebAuthn works internally.
 We start by getting a WebAuthn response from our Yubikey. Even tough there are probably cooler ways I just got it from the [Yubikey WebAuthn demo site](https://demo.yubico.com/webauthn-technical/registration). After registering you key there you can get the response in the technical details:
 
-![WebAuthn response](/verifying-yubikey-is-genuine/webauthn-response.png)
+{{< resourceFigure "webauthn-response.png" "WebAuthn response" />}}
 
 Using the MIT licensed [code](https://medium.com/@herrjemand/verifying-fido-u2f-attestations-in-fido2-f83fab80c355) by [Ackermann Yuriy](https://medium.com/@herrjemand) we are able to verify the signature ourselves. Props go to him for reading all those RFCs!
 

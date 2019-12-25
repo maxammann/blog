@@ -35,4 +35,4 @@ TEXT
 ```
 Result:
 
-![](/img/conky-window-title.png)
+{{< resourceFigure "conky-window-title.png" "Conky Window Title Result" />}}

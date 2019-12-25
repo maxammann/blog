@@ -37,8 +37,7 @@ union io_bits {
 
 The size of this struct is 26 → less than 32 so we can use a 32-bit integer to define our register output.
 
-![](/img/GPSET0_Location.png)
-*Source: http://www.pieter-jan.com/images/RPI_LowLevelProgramming/GPSET0_Location.png*
+{{< resourceFigure "GPSET0_Location.png" "Table about RPI GPIOs" >}}Source: http://www.pieter-jan.com/images/RPI_LowLevelProgramming/GPSET0_Location.png{{< /resourceFigure >}}
 
 The register we're going to write the struct into is the has the address 0x001C. *(Note: You first need to write to the 0x0028 register to clear the GPIO pins first)*
 

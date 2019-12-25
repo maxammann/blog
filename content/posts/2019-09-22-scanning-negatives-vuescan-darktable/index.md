@@ -3,6 +3,13 @@ layout: post
 title: "Scanning black and white negatives: Vuescan and Post-processing"
 date: 2019-09-22
 slug: scanning-negatives-vuescan-darktable
+
+resources:
+- name: linear-icc
+  src: 'RTv4_sRGB_Linear_g=1.0.icc'
+- src: '*.png'
+- name: wrong-colorspace-example
+  src: 'wrong-colorspace-example/**.tiff'
 ---
 
 I recently got my hands on a Nikon Coolscan 2000 (LS-2000) scanner. 
@@ -51,20 +58,25 @@ My workflow for converting between the linear RGB image data to the sRGB color s
 magick input.tif -set colorspace RGB -colorspace sRGB output.tif
 ```
 
-This interprets the input as linear RGB and converts it to the sRGB color space by applying the correct gamma. You can also do this using an [linear sRGB ICC profile](/scanning-negatives-vuescan-darktable/RTv4_sRGB_Linear_g=1.0.icc) (created with [RawTherapee](http://rawpedia.rawtherapee.com/ICC_Profile_Creator)) in GIMP and then converting it to sRGB. 
+This interprets the input as linear RGB and converts it to the sRGB color space by applying the correct gamma. You can also do this using an {{< resourceHref linear-icc >}}linear sRGB ICC profile{{< /resourceHref >}} (created with [RawTherapee](http://rawpedia.rawtherapee.com/ICC_Profile_Creator)) in GIMP and then converting it to sRGB. 
 
 If you do not do this then you will have troubles with correcting the colors in the post-processing step.
 Without converting the color space (and therefore not adjusting the gamma) before importing the image into Darktable I was not able to adjust the details properly.
 The following example should demonstrate this. The negative is an overexposed example of a tree during a sunset.
 
 The first image was post-processed without converting the color space. This means the image data was interpreted by Darktable as non-linear sRGB:
-![Example without gamma correction](/scanning-negatives-vuescan-darktable/wrong-colorspace-example/raw0021.webp)
-<sup>[Raw TIFF](/scanning-negatives-vuescan-darktable/wrong-colorspace-example/raw0021.tif) and [XMP](/scanning-negatives-vuescan-darktable/wrong-colorspace-example/raw0021.tif.xmp)</sup>
+
+{{< resourceFigure "wrong-colorspace-example/raw0021.webp" "Example without gamma correction" >}}
+    {{< resourceHref "wrong-colorspace-example/raw0021.tif" >}}RAW TIFF{{< /resourceHref >}} and
+    {{< resourceHref "wrong-colorspace-example/raw0021.tif.xmp" >}}XMP{{< /resourceHref >}}
+{{< /resourceFigure >}}
 
 As you can see I was not able to make the clouds as visible as in the second example:
 
-![Example with gamma correction](/scanning-negatives-vuescan-darktable/wrong-colorspace-example/raw0025-srgb.webp)
-<sup>[Raw TIFF](/scanning-negatives-vuescan-darktable/wrong-colorspace-example/raw0025-srgb.tif) and [XMP](/scanning-negatives-vuescan-darktable/wrong-colorspace-example/raw0025-srgb.tif.xmp)</sup>
+{{< resourceFigure "wrong-colorspace-example/raw0025-srgb.webp" "Example with gamma correction" >}}
+    {{< resourceHref "wrong-colorspace-example/raw0025-srgb.tif" >}}RAW TIFF{{< /resourceHref >}} and
+    {{< resourceHref "wrong-colorspace-example/raw0025-srgb.tif.xmp" >}}XMP{{< /resourceHref >}}
+{{< /resourceFigure >}}
 
 Maybe there is a hacky way around this. The proper way is to convert color spaces though. The image is not a good shot but should demonstrate the importance of the interpretation of the raw data.
 
@@ -72,15 +84,15 @@ Maybe there is a hacky way around this. The proper way is to convert color space
 
 The following screenshots should give you an overview of the settings which are needed for raw scanning:
 #### Input tab
-![Input tab](/scanning-negatives-vuescan-darktable/input.png)
+{{< resourceFigure "input.png" "Input tab" />}}
 #### Crop tab
-![Crop tab](/scanning-negatives-vuescan-darktable/crop.png)
+{{< resourceFigure "crop.png" "Crop tab" />}}
 #### Filter tab
-![Filter tab](/scanning-negatives-vuescan-darktable/filter.png)
+{{< resourceFigure "filter.png" "Filter tab" />}}
 #### Color tab
-![Color tab](/scanning-negatives-vuescan-darktable/color.png)
+{{< resourceFigure "color.png" "Color tab" />}}
 #### Output tab
-![Output tab](/scanning-negatives-vuescan-darktable/output.png)
+{{< resourceFigure "output.png" "Output tab" />}}
 
 # Post-processing using Darktable
 

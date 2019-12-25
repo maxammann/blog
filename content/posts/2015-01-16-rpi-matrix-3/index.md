@@ -91,8 +91,7 @@ font->scaler = scaler;
 
 I really want to use the advantages vector fonts bring. Like [Kerning](https://en.wikipedia.org/wiki/Kerning), which sounds absolutely
 awesome. Maybe we can save some space on our small matrix. Challenge: Setting the coordinate origin to the top-left:
-![top-left](/img/Computer_coordinates_2D.png)
-*Source: http://programarcadegames.com/chapters/05_intro_to_graphics/Computer_coordinates_2D.png*
+{{< resourceFigure "Computer_coordinates_2D.png" "top-left" >}}Source: http://programarcadegames.com/chapters/05_intro_to_graphics/Computer_coordinates_2D.png{{< /resourceFigure >}}
 
 Note: You'll often see something like **>> 6**. A right-bit-shift by 6 is equivalent to dividing
 by 64. We need to do this as FreeType uses a 26.6 fixed-point format. When FreeType wants a 16.16 fixed-point format we just shift by 10.
@@ -158,8 +157,7 @@ for (n = 0; n < length; n++) {
 
 Now we come to an interesting part. FreeType usually uses a normal cartesian coordinate system,
 but we want our origin at the top-left corder. So we need to find the highest **bearingY** we can find.
-![](/img/Image3.png)
-*Source: https://www.freetype.org/freetype2/docs/glyphs/*
+{{< resourceFigure "Image3.png" "Glyphs" >}}Source: https://www.freetype.org/freetype2/docs/glyphs/{{< /resourceFigure >}}
 
 *(bearingY is basically the height of a character starting at the origin)*
 
