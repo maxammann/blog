@@ -1,0 +1,58 @@
+
+.gallery {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+  
+    background-color: #363737;
+  }
+  
+  .gallery .element {
+    flex-basis: 50%;
+    height: 80vh;
+  
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .gallery .element img:hover {
+    transform: scale(1.01);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .element img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .element .caption {
+    position: absolute;
+    bottom: 0;
+  
+    width: 100%;
+    text-align: center;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .gallery a {
+    text-decoration: inherit;
+    color: inherit;
+  }
+  
+  .gallery-title {
+    width: 100%;
+    text-align: center;
+    
+    padding: 50px 0;
+  
+    background-color: #363737;
+    color: white;
+  
+    font-family: "sans";
+    font-size: 2em;
+  }
+  
