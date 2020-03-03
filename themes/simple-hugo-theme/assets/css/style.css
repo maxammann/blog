@@ -65,6 +65,10 @@ blockquote {
   border-left: 0.25rem solid #e5e5e5;
 }
 
+article {
+  overflow-wrap: break-word;
+}
+
 code {
   background-color: #f8f8f8;
   font-family: "monospace";
