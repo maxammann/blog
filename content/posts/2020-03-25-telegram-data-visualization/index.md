@@ -133,3 +133,7 @@ Here is an example output:
 {{< resourceFigure "timestamps" "Example visualization from January until December" />}}
 
 The data was generated randomly.
+
+# More resources about Telegram reverse-engineering
+
+You can find more information on the [dflab blog](https://dflab.blogspot.com/2019/01/cache4db-file-of-telegram-for-android_3.html) about reversing the Telegram database. Thanks for sharing the knowledge!
