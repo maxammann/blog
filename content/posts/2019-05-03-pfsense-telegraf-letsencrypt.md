@@ -5,12 +5,12 @@ date: 2019-05-03
 slug: pfsense-telegraf-letsencrypt
 ---
 
-I had problem to connect a InfluxDB from the pfSense because of a invalid certificate chain. The main problem here is that if you are configuring Telegraf with the pfSense ui then you are not using the system certificate chain (on FreeBSD that is `/etc/ssl/cert.pem`). In fact the generated telegraf config is using: `/usr/local/etc/telegraf.ca`
+I had problem to connect a InfluxDB from the pfSense because of a invalid certificate chain. The main problem here is that if you are configuring Telegraf with the pfSense UI then you are not using the system certificate chain (on FreeBSD that is `/etc/ssl/cert.pem`). In fact the generated Telegraf config is using: `/usr/local/etc/telegraf.ca`
 The pfSense is generating that chain from your pfSense CAs and certificates (See [here](https://github.com/pfsense/FreeBSD-ports/blob/f6facf5cd7ecf2c24f0bed05c3e56f4c1ae9618c/net-mgmt/pfSense-pkg-Telegraf/files/usr/local/pkg/telegraf.inc#L68) for the code which generates the chain).
 
 So in order to make this working we need to add the needed CAs to the pfSense. In my case that is `Acmecert: O=Let's Encrypt, CN=Let's Encrypt Authority X3, C=US` and `Digital Signature Trust Co., CN=DST Root CA X3`. If you are missing only one of them the verification of the chain will fail.
 
-So add those two CAs using the pfSense ui (System > Cert. Manager > CAs). A private key is not needed:
+So add those two CAs using the pfSense UI (System > Cert. Manager > CAs). A private key is not needed:
 
 Let's Encrypt Authority X3:
 ```pem
@@ -76,7 +76,7 @@ To test the TLS connection with the system certificate chain:
 openssl s_client -connect $HOST:8086
 ```
 
-To test the TLS connection with the telegraf certificate chain:
+To test the TLS connection with the Telegraf certificate chain:
 ```bash
 openssl s_client -connect $HOST:8086 -CAfile /usr/local/etc/telegraf.ca
 ```
@@ -127,4 +127,4 @@ openssl verify /usr/local/etc/telegraf.ca
 
 # Notes and Links
 
-See here for a guide to setup telegraf: https://blog.lbdg.me/pfsense-monitoring/
+See here for a guide to setup Telegraf: https://blog.lbdg.me/pfsense-monitoring/

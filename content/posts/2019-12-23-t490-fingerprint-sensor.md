@@ -6,11 +6,11 @@ slug: t490-fingerprint
 ---
 
 The firmware and drivers for the Fingerprint Reader for Linux are finally ready [as promised a few months ago](https://forums.lenovo.com/t5/Other-Linux-Discussions/Linux-on-T495/m-p/4474320#M13440). I'm not sure whether this was an accomplishment of Lenovo of [the open-source community](https://gitlab.freedesktop.org/libfprint/libfprint/issues/181) ¯\_(ツ)_/¯.
-I suggest to wait until the frimware reached a stable state. But if you are feeling adventurous you can get it working right now!
+I suggest to wait until the firmware reached a stable state. But if you are feeling adventurous you can get it working right now!
 
 You can check whether you have the reader I'm talking about by using `lsusb`. Make sure to have a device with the id `06cb:00bd`.
 
-# Installing the latest fimrware
+# Installing the latest firmware
 
 You have the install the following two firmwares from LVFS:
   * [Synaptics Inc. Prometheus Fingerprint Reader](https://fwupd.org/lvfs/devices/com.synaptics.prometheus.firmware)
@@ -20,9 +20,9 @@ You have the install the following two firmwares from LVFS:
 You can install these using `fwupdmgr install <fw.cab>` or enable the testing remote using `fwupdmgr enable-remote lvfs-testing` as root user.
 Power off your laptop and start it again.
 
-# Getting the lastest libfprint
+# Getting the latest libfprint
 
-The `libfprint` which is packaged for most distributions is not ready for the firmwares yet. You can clone the latest `libfprint` though to communicate with the fingerprint reader:
+The `libfprint` which is packaged for most distributions is not ready for the firmware yet. You can clone the latest `libfprint` though to communicate with the fingerprint reader:
 * `git clone https://gitlab.freedesktop.org/libfprint/libfprint.git`
 * `git checkout b8e558452a97ac5cd026456b4e5a514d628b6747`
 * `cd libfprint && meson builddir`

@@ -53,7 +53,7 @@ Finally you can login on your embedded system using as usual (default credential
 
 ## Add an authorized key
 
-In order to login using different SSH keys to unlock your root parition you can add your public key to `/etc/dropbear-initramfs/authorized_keys`. After that you need to update your initramfs:
+In order to login using different SSH keys to unlock your root partition you can add your public key to `/etc/dropbear-initramfs/authorized_keys`. After that you need to update your initramfs:
 
 * `update-initramfs -u`
 

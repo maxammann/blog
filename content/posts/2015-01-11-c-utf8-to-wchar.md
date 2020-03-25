@@ -10,8 +10,8 @@ which accepts **unsigned long*** as input to render a single character. So I had
 The confusion already started with the [difference between UTF-8 and unicode][unicode-utf]. So my conclusion was I had to convert UTF-8 to
 some other encoding. Probably some encoding which supports one long (or wchar_t) per character.
 
-The problem even get's bigger if you want cross-platform support. On the linux side you have **[iconv][iconv_open]**. On windows you have some ugly **MultiByteToWideChar(...)** function.
-Luckily I only have to support linux.
+The problem even get's bigger if you want cross-platform support. On the Linux side you have **[iconv][iconv_open]**. On windows you have some ugly **MultiByteToWideChar(...)** function.
+Luckily I only have to support Linux.
 
 So let's get started with some code:
 
