@@ -1,6 +1,12 @@
 {
-  "spellright.language": ["English (American)", "German_de_DE"],
-  "spellright.documentTypes": ["markdown", "latex", "plaintext"],
+  "spellright.language": [
+    "en_US"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
+  ],
   "latex-workshop.latex.outDir": "%DIR%/build",
   "latex-workshop.view.pdf.viewer": "tab",
   "workbench.colorTheme": "Default Light+",

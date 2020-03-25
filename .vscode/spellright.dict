@@ -1,3 +1,17 @@
 toolchain
 Raspbian
 ROS
+Telegraf
+config
+UI
+TLS
+LVFS
+Lenovo
+bootloader
+syslinux
+bootable
+MSDOS
+coreboot
+APU
+MBR
+VPN
