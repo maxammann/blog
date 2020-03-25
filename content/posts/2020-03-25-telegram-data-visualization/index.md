@@ -136,4 +136,6 @@ The data was generated randomly.
 
 # More resources about Telegram reverse-engineering
 
-You can find more information on the [dflab blog](https://dflab.blogspot.com/2019/01/cache4db-file-of-telegram-for-android_3.html) about reversing the Telegram database. Thanks for sharing the knowledge!
+You can find more information on the [dflab blog](https://dflab.blogspot.com/2019/01/cache4db-file-of-telegram-for-android_3.html) about reversing the Telegram database. Thanks for sharing the knowledge! The following section was the key to this post:
+
+> if "mid" is negative, "uid" is negative or positive and has a length of about 19 characters[6] – the interlocutor’s data can be find in the "Enc_chats" table by the converted "uid" value. To find the appropriate contact in the "Enc_chats" table, you need to convert the decimal "uid" number to hexadecimal, then cut off the last 8 zeros from the received number and convert the eight-digit hexadecimal number back to decimal;
