@@ -15,6 +15,8 @@ resources:
 I recently got my hands on a Nikon Coolscan 2000 (LS-2000) scanner. 
 The drivers and the scanning software VueScan is distributed by [Hamrick Software](https://www.hamrick.com/). The original software [Nikon Scan](https://www.nikonimgsupport.com/ni/NI_article?articleNo=000003301&configured=1&lang=en_US) is discontinued. There maybe are ways to get it working on Windows 10 but I did not further investigate it after the first try.
 
+The setup of the scanner and its drivers is described [here]({{< ref "2020-03-28-notes-scsi-scanner" >}}).
+
 # Settings in VueScan
 
 The goal of this guide it to get the data as raw as possible from the over 20 year old scanner. The scan quality is acceptable with 2700dpi and 12bit ADC resolution. The VueScan software has two stages: [**Scanning** & **Processing**] (https://www.hamrick.com/vuescan/html/vuesc20.htm#topic14).
