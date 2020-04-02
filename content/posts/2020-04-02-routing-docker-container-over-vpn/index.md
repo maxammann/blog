@@ -218,6 +218,11 @@ When researching how to do this I sometimes has to lookup how routing and filter
 
 The packets from docker only go through `PREROUTING`, Routing Decision, `FORWARD`, Routing Decision, `POSTROUTING`. The best point to filter packets is at the `FORWARD`/`DOCKER-USER` chain as we can see from where the packet is coming and where it is going. Filtering by processes only works in the left part of the figure where the concept of Local Processes exists.
 
+# References
+
+* [Good post about routing tables.](https://kindlund.wordpress.com/2007/11/19/configuring-multiple-default-routes-in-linux/)
+* If you are interested in WireGuard you can read [here](https://nbsoftsolutions.com/blog/routing-select-docker-containers-through-wireguard-vpn) more.
+
 # Further noes
 
 [^priority]: 
