@@ -19,3 +19,6 @@ Adaptec
 UEFI
 mainboard
 PCI
+subnet
+IPtables
+eth0
