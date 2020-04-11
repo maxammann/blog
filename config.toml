@@ -68,4 +68,6 @@ pygmentsUseClasses = true
 
 [params]
   datefmt  = "2 Jan, 2006"
-
+  author = "Maximilian Ammann"
+  description = "Blog about various technical topics"
+  genre = "Technical"

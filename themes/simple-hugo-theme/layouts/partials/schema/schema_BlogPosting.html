@@ -1,0 +1,54 @@
+{{/*  https://github.com/Baseflow/HugoStructuredData/blob/master/layouts/partials/schemas/schema_BlogPosting.html  */}}
+
+
+<script type="application/ld+json">
+	{
+		"@context":"http://schema.org",
+		"@type": "BlogPosting", {{ with .Resources.Match "icon" }}{{ with index . 0 }}
+		"image": "{{ .Permalink }}", {{ end }}{{ end }}
+		"url": "{{ .Permalink }}",
+		"headline": "{{ .Title }}",
+		"alternativeHeadline": "{{ .Title }}",
+		"dateCreated": "{{ .Date.Format "2006-01-02T15:04:05" }}",
+		"datePublished": "{{ .PublishDate.Format "2006-01-02T15:04:05" }}",
+		"dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05"  }}",
+		"inLanguage": "{{ .Site.LanguageCode }}",
+		"isFamilyFriendly": "true",
+		"contentLocation": {
+			"@type": "Place",
+			"name": "Milkyway, Earth"
+		},
+        {{ if isset .Site.Params "author" }}{{ $author := .Site.Params.author }}
+		"copyrightYear": "{{ .PublishDate.Format "2006" }}",
+		"copyrightHolder": "{{ $author }}",
+		"accountablePerson": {
+			"@type": "Person",
+			"name": "{{ $author }}",
+			"url": "{{ .Site.BaseURL }}"
+		},
+		"author": {
+			"@type": "Person",
+			"name": "{{ $author }}",
+			"url": "{{ .Site.BaseURL }}"
+		},
+		"creator": {
+			"@type": "Person",
+			"name": "{{ $author }}",
+			"url": "{{ .Site.BaseURL }}"
+        },
+		"publisher": {
+			"@type": "Person",
+			"name": "{{ $author }}",
+			"url": "{{ .Site.BaseURL }}"
+		},
+		{{ end }}
+		"mainEntityOfPage": "True",
+		"keywords": [ {{ if .Keywords }}
+			{{ range $i, $e := .Keywords }}{{ if $i }}, {{ end }}"{{ $e }}"{{ end }}
+		{{ else }} 
+			{{ range $i, $e := .Site.Params.keywords }}{{ if $i }}, {{ end }}"{{ $e }}"{{ end }}{{ end }}
+		],
+		"genre":["{{ .Site.Params.genre }}"],
+		"articleBody": {{ .Plain }}
+	}
+</script>

@@ -6,6 +6,8 @@ slug: routing-docker-container-over-vpn
 
 resources:
 - src: "*.jpg"
+
+keywords: [ vpn, docker, routing]
 ---
 
 A docker setup can be very helpful when trying to separate services if they are not packaged otherwise.
