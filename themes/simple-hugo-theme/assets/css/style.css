@@ -75,6 +75,35 @@ code {
   font-size: 14px;
 }
 
+table {
+  border-collapse:collapse;
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+table td,
+table th {
+  margin: 4px 5px;
+}
+
+table tr, thead {
+  border-bottom: 1px solid black;
+}
+
+table tr:last-child {
+  border-bottom: none;
+}
+
+table thead {
+  border-bottom: 1px solid black;
+}
+
+table thead th {
+  font-family: serif;
+  font-size: 15px;
+  font-weight: bold;
+}
+
 /* Fix formatting of code blocks if there is only a single line */
 /* LineTableTD */
 .chroma .lntd {
