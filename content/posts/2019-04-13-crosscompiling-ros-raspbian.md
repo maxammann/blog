@@ -19,7 +19,7 @@ Along the way you'll need to do these steps:
 * Compile ROS
 * Prepare a Raspbian image for production
 
-# Setup a Debian environment to compile for Raspbian
+# Setup a Debian Environment to Compile for Raspbian
 
 It really makes sense to cross-compile in an environment which is similar to your target. Raspbian is basically just a Debian which supports ARMv6 and therefore the Raspberry Pi 1 and Raspberry Pi Zero. There can be some confusion with the term armhf (ARM hard-float), because Debian [means the ARMv7 architecture](https://wiki.debian.org/ArmHardFloatPort).
 
@@ -45,7 +45,7 @@ If you want to switch to the container later just run:
 docker start build_ros -i
 ```
 
-# Build and compile a recent toolchain to target ARMv6
+# Build and Compile a Recent Toolchain to Target ARMv6
 
 Install some general packages for compiling and the dependencies we need for ROS in the docker image.
 ```bash
@@ -78,7 +78,7 @@ ct-ng build
 This task about 20 minutes on my machine. After that your toolchain will be in `/root/x-tools6h-new`. You can leave the terminal window with docker open for later.
 
 
-# Setup and prepare a sysroot
+# Setup and Prepare a Sysroot
 
 *Now switch to your host and continue with the following steps.*
 
@@ -162,7 +162,7 @@ GROUP ( libpthread.so.0 libpthread_nonshared.a )
 Now the sysroot is setup for cross compilation!
 
 
-# Compile and prepare ROS dependencies
+# Compile and Prepare ROS Dependencies
 
 *Now change back to the docker image.*
 
@@ -269,7 +269,7 @@ wstool update -t src -j8
 Now run the compilation again like in [Compile Ros](#compile-ros)
 
 
-# Prepare a Raspbian image for production
+# Prepare a Raspbian image for Production
 
 You have compiled now everything in the Raspbian `sysroot` directory. You should resize the original Raspbian image now and install the dependencies there again.
 

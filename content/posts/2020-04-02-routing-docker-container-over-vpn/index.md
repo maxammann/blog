@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Routing network of docker container over a specific host interface like a VPN"
+title: "Routing Docker Container over a Specific Host Interface Like a VPN"
 date: 2020-04-02
 slug: routing-docker-container-over-vpn
 
@@ -18,7 +18,7 @@ As docker has its own network stack we can route the traffic from containers. Us
 
 In this post we take the "proxy idea" to the next level. We will route the traffic of a whole docker container though a specific interface. If the interface goes down then the docker container is not allowed to communicate through any other interface.
 
-# Configuration of docker
+# Configuration of Docker
 
 First configure docker such that it does not get into our way in `/etc/docker/daemon.json`:
 
@@ -30,7 +30,7 @@ First configure docker such that it does not get into our way in `/etc/docker/da
 
 Depending on your docker setup you may not need this.
 
-# Configuration of docker network
+# Configuration of Docker Network
 
 First we create a new docker network such that we can use proper interface names in our configuration and previously installed containers are not affected.
 
@@ -55,7 +55,7 @@ You can validate the settings by checking `ip a`:
 
 The docker host gets the IP `172.18.0.1`.
 
-# Setting up a docker container
+# Setting up a Docker Container
 
 Next we will create docker contains within the created subnet.
 ```bash
@@ -88,7 +88,7 @@ and look at the configuration:
 We can also test the connection to the internet with `curl -4 ifconfig.co`.
 
 
-# Routing a docker container through a OpenVPN network
+# Routing a Docker Container through an OpenVPN Interface
 
 The next step is to setup the routes which traffic from 172.18.0.0/16 through a vpn. We use OpenVPN here as it is wildly used. OpenVPN offers a way to setup routes with a `--up` and `--down` script. First we tell OpenVPN not to mess with the routing in any way with `pull-filter ignore redirect-gateway`. Here is a sample OpenVPN config to use with this setup:
 
@@ -183,7 +183,7 @@ local_gateway=192.168.178.1
 /bin/ip route del $trusted_ip via $local_gateway dev eth0
 ```
 
-# Setup IPtables to reject packages which fallback to another interface 
+# Setup IPtables to Reject Packets which Fallback to Another Interface 
 
 Finally, we want to avoid that packets go over over the `eth0` interface if the OpenVPN on `tun0` is down.
 
@@ -211,7 +211,7 @@ IPtables rules are a bit of a pain with docker. Docker overwrites the iptables c
 
 If you want to have a network configuration which does not change you should set `"iptables": false` in `/etc/docker/daemon.json`. That way docker does not touch the IPtables rules. Before doing this I first copied the rules from IPtables when all containers are running. After stopping docker and setting the option to `false` I started the container again and applied the copied rules manually again.
 
-# Why does this work?
+# Why Does This Work?
 
 When researching how to do this I sometimes has to lookup how routing and filtering actually works on Linux. Some tries by myself were based on marking packets coming from a specific process and then rejecting them if they are not flowing where they should. A further naive idea is to use the [IPtables owner module](http://ipset.netfilter.org/iptables-extensions.man.html) with `--uid-owner` (`iptables -m owner --help`). This does not work with docker though because packets from docker never go though the `INPUT`, Routing Decision and `OUTPUT` chain as seen in the figure below.
 
@@ -225,7 +225,7 @@ The packets from docker only go through `PREROUTING`, Routing Decision, `FORWARD
 * [Good post about routing tables.](https://kindlund.wordpress.com/2007/11/19/configuring-multiple-default-routes-in-linux/)
 * If you are interested in WireGuard you can read [here](https://nbsoftsolutions.com/blog/routing-select-docker-containers-through-wireguard-vpn) more.
 
-# Further noes
+# Further notes
 
 [^priority]: 
 

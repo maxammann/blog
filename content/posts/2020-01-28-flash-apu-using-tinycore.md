@@ -30,7 +30,7 @@ Finally download Tiny Core Linux from [pcengines.ch](https://pcengines.ch):
 
 and extract it on the USB stick. Finally download the coreboot image you want to flash from [pcengines.github.io](https://pcengines.github.io/) and also extract it on the stick.
 
-# Flashing the coreboot image
+# Flashing the Coreboot Image
 
 After booting from the USB stick you can flash the firmware using [this guide](https://github.com/pcengines/apu2-documentation/blob/50f7e37d2301cfec232f4e5684160be53481ea9e/docs/firmware_flashing.md).
 

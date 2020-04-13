@@ -10,7 +10,7 @@ I suggest to wait until the firmware reached a stable state. But if you are feel
 
 You can check whether you have the reader I'm talking about by using `lsusb`. Make sure to have a device with the id `06cb:00bd`.
 
-# Installing the latest firmware
+# Installing the Latest Firmware
 
 You have the install the following two firmwares from LVFS:
   * [Synaptics Inc. Prometheus Fingerprint Reader](https://fwupd.org/lvfs/devices/com.synaptics.prometheus.firmware)
@@ -20,7 +20,7 @@ You have the install the following two firmwares from LVFS:
 You can install these using `fwupdmgr install <fw.cab>` or enable the testing remote using `fwupdmgr enable-remote lvfs-testing` as root user.
 Power off your laptop and start it again.
 
-# Getting the latest libfprint
+# Getting the Latest libfprint
 
 The `libfprint` which is packaged for most distributions is not ready for the firmware yet. You can clone the latest `libfprint` though to communicate with the fingerprint reader:
 * `git clone https://gitlab.freedesktop.org/libfprint/libfprint.git`

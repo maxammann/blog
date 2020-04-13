@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Mounting qcow2 images
+title: Mounting qcow2 Images
 date: 2019-04-14
 slug: mounting-qcow
 ---

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Using Telegraf and InfluxDB on pfSense with Let’s Encrypt certificate
+title: Using Telegraf and InfluxDB on pfSense with Let’s Encrypt Certificate
 date: 2019-05-03
 slug: pfsense-telegraf-letsencrypt
 ---
@@ -67,7 +67,7 @@ Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 -----END CERTIFICATE-----
 ```
 
-# Additional debugging steps
+# Additional Debugging Steps
 
 If some other CAs are missing or you are using a self-signed CA you can use these steps to debug further:
 

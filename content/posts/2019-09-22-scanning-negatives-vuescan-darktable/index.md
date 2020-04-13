@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Scanning black and white negatives: Vuescan and Post-processing"
+title: "Scanning Black and White Negatives: Vuescan and Post-processing"
 date: 2019-09-22
 slug: scanning-negatives-vuescan-darktable
 
@@ -35,7 +35,7 @@ In the **Crop** tab set [Crop size](https://www.hamrick.com/vuescan/html/vuesc30
 
 The above settings control how the scanner does the scan. The next settings are resposible processing the scan.
 
-## Processing settings
+## Processing Settings
 
 In the **Filter** tab untick everything. For B/W film the cleaning using the infrared channel also does not work as noted in [this article](http://crawfordphotoschool.com/digital/bw-neg-scanning.php):
 
@@ -43,7 +43,7 @@ In the **Filter** tab untick everything. For B/W film the cleaning using the inf
 
 The settings in the **Color** can all be set to default values as the raw image will be saved before the color correction takes place during the **Processing** stage. The values there only affect the view of the scan in the right side bar of VueScan. If you use the [Input \| Lock film base color](https://www.hamrick.com/vuescan/html/vuesc29.htm#inputlockfilmbasecolor) setting the color of the film will appear in this tab. You can also choose a film model which is close to yours to get a good preview of the result you can achieve from the raw output. 
 
-## Outputting the image data
+## Outputting the Image Data
 
 The scanner offers linear CCD (charge-coupled device) sensors for the red, green, blue and infrared channel. The **Output** tab allows to capture this raw data by ticking the setting [RAW file](https://www.hamrick.com/vuescan/html/vuesc33.htm#outputrawfile). The [TIFF file](https://www.hamrick.com/vuescan/html/vuesc33.htm#outputtifffile), [JPEG file](https://www.hamrick.com/vuescan/html/vuesc33.htm#outputjpegfile), [PDF file](https://www.hamrick.com/vuescan/html/vuesc33.htm#outputpdffile) and [Index file](https://www.hamrick.com/vuescan/html/vuesc33.htm#outputindexfile) options can be left unticked as the output in these formats is already color corrected by VueScan. Furthermore it is important to choose 64bit RGBI for [Raw file type](https://www.hamrick.com/vuescan/html/vuesc33.htm#outputrawfiletype) and "Scan" for [Raw output with](https://www.hamrick.com/vuescan/html/vuesc33.htm#outputrawoutputwith) to output the scan just after the **Scanning** stage before the **Processing** stage. Make sure [Raw save film](https://www.hamrick.com/vuescan/html/vuesc33.htm#outputrawsavefilm) is unticked such that the value of "Raw output with" is used.
 

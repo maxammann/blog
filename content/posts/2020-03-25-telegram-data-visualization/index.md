@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Data visualization of Telegram messages (encrypted chats)"
+title: "Data Visualization of Telegram messages (Encrypted Chats)"
 date: 2020-03-25
 slug: telegram-data-visualization
 
@@ -27,11 +27,11 @@ Using the sqlite3 tool we can get data and output it as CSV file.
 sqlite3 cache4.db -csv -header "SELECT 1;" > timestamps.csv
 ```
 
-The `timestamps.csv` should contain now a single 1. The following queries show how to query the timestamps for encrypted and non encrypted chats.
+The `timestamps.csv` should contain now a single 1. The following queries show how to query the timestamps for encrypted and non-encrypted chats.
 
-## Non encrypted chat
+## Non-Encrypted Chat
 
-For non encrypted chats you can use:
+For non-encrypted chats you can use:
 
 ```sql
 SELECT date FROM messages WHERE uid = (
@@ -70,7 +70,7 @@ SELECT * FROM (
 " > timestamps.csv
 ```
 
-# Creating a data visualization
+# Creating a Data Visualization
 
 The following script allows you to plot the data using pandas and matplotlib with the kxcd style:
 
@@ -134,7 +134,7 @@ Here is an example output:
 
 The data was generated randomly.
 
-# More resources about Telegram reverse-engineering
+# More Resources about Telegram Reverse-engineering
 
 You can find more information on the [dflab blog](https://dflab.blogspot.com/2019/01/cache4db-file-of-telegram-for-android_3.html) about reversing the Telegram database. Thanks for sharing the knowledge! The following section was the key to this post:
 

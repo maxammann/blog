@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Armbian: Encrypting the root partition"
+title: "Armbian: Encrypting the Root Partition"
 date: 2020-01-21
 slug: armbian-encrypt-root
 ---
@@ -28,7 +28,7 @@ This basically setup the full-disk encryption and a SSH server which runs before
 
 A GUI should open which allows you to choose the board, kernel version and other options. Choose to build an image if the setup asks you. After approx. 30 minutes you should have an `Armbian_\*.img` and `Armbian_\*.key` file in `output/images`.
 
-## Changing the password of the LUKS container
+## Changing the Password of the LUKS container
 
 After generating the image and copying it to your trustworthy host system you can change the password by binding the paritions of the `Armbian_\*.img` file to loopback devices:
 
@@ -40,7 +40,7 @@ After generating the image and copying it to your trustworthy host system you ca
 
 Now you added a new key slot and removed the previous one.
 
-## Booting the encrypted system
+## Booting the Encrypted System
 
 When you boot up your embedded system a dropbear SSH server is started on port 2222. You can use the `Armbian_\*.key` to login as root:
 
@@ -51,7 +51,7 @@ Finally you can login on your embedded system using as usual (default credential
 
 * `ssh root@192.168.123.123`
 
-## Add an authorized key
+## Add an Authorized Key
 
 In order to login using different SSH keys to unlock your root partition you can add your public key to `/etc/dropbear-initramfs/authorized_keys`. After that you need to update your initramfs:
 
