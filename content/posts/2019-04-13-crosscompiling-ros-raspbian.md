@@ -3,6 +3,8 @@ layout: post
 title: Cross-compiling ROS Melodic for Raspbian (ARMv6)
 date: 2019-04-13
 slug: crosscompiling-ros-raspbian
+
+keywords: [ ros, raspberry, compile ]
 ---
 
 **Disclaimer: This is probably not a step by step guide because there are a lot of dependencies involved. I tried to cover all the important aspects of cross-compiling ROS or actually any other software for Raspbian and ARMv6. This is at least a proof-of-concept that compiling ROS Melodic works for ARMv6.**

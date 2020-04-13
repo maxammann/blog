@@ -3,6 +3,8 @@ layout: post
 title: "Armbian: Encrypting the Root Partition"
 date: 2020-01-21
 slug: armbian-encrypt-root
+
+keywords: [ armbian, encryption ]
 ---
 
 The default Armbian images do not offer an encrypted root partition. Unfortunately it is requied to build the image yourself inorder to use LUKS on your root partition.

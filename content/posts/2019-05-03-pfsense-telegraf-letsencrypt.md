@@ -3,6 +3,8 @@ layout: post
 title: Using Telegraf and InfluxDB on pfSense with Let’s Encrypt Certificate
 date: 2019-05-03
 slug: pfsense-telegraf-letsencrypt
+
+keywords: [ encryption, letsencrypt, telegraf ]
 ---
 
 I had problem to connect a InfluxDB from the pfSense because of a invalid certificate chain. The main problem here is that if you are configuring Telegraf with the pfSense UI then you are not using the system certificate chain (on FreeBSD that is `/etc/ssl/cert.pem`). In fact the generated Telegraf config is using: `/usr/local/etc/telegraf.ca`

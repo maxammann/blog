@@ -7,6 +7,8 @@ slug: telegram-data-visualization
 resources:
 - name: timestamps
   src: timestamps.png
+
+keywords: [ telegram, reverse-engineering, encryption ]
 ---
 
 We are going to visualize the timestamps of messages in the Telegram database. This also includes encrypted chats as we analyze the SQLite database of the app.
