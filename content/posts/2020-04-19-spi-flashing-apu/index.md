@@ -96,7 +96,7 @@ md5sum old.bin
 md5sum old1.bin
 ```
 
-If the two checksums are the same then we can verify and flash the firmware.
+If the two check sums are the same then we can verify and flash the firmware.
 ```bash
 wget https://3mdeb.com/open-source-firmware/pcengines/apu1/apu1_v4.11.0.5.rom
 wget https://3mdeb.com/open-source-firmware/pcengines/apu1/apu1_v4.11.0.5.SHA256
