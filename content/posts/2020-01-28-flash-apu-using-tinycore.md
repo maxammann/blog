@@ -5,7 +5,7 @@ date: 2020-01-28
 slug: flash-apu-using-tinycore
 ---
 
-The documentation about setting up Tiny Core Linux to flash a new coreboot version on APU boards is quite outdated.
+The documentation about setting up Tiny Core Linux to flash a new coreboot version on APU boards is quite outdated. If you are interested in flashing the APU using a Raspberry PI then head over to [this post]({{< ref "2020-04-19-spi-flashing-apu" >}}).
 
 # Setup Tiny Core Linux on a USB stick
 

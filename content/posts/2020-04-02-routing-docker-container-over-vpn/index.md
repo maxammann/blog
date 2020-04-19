@@ -215,7 +215,7 @@ If you want to have a network configuration which does not change you should set
 
 When researching how to do this I sometimes has to lookup how routing and filtering actually works on Linux. Some tries by myself were based on marking packets coming from a specific process and then rejecting them if they are not flowing where they should. A further naive idea is to use the [IPtables owner module](http://ipset.netfilter.org/iptables-extensions.man.html) with `--uid-owner` (`iptables -m owner --help`). This does not work with docker though because packets from docker never go though the `INPUT`, Routing Decision and `OUTPUT` chain as seen in the figure below.
 
-{{< resourceFigure "routing-decisions.jpg" "Flow-chart of the packets in the Linux kernel" "400px" />}}
+{{< resourceFigure "routing-decisions.jpg" "Flow-chart of the packets in the Linux kernel" 400 />}}
 <sup>Source: https://askubuntu.com/questions/579231/whats-the-difference-between-prerouting-and-forward-in-iptables</sup>
 
 The packets from docker only go through `PREROUTING`, Routing Decision, `FORWARD`, Routing Decision, `POSTROUTING`. The best point to filter packets is at the `FORWARD`/`DOCKER-USER` chain as we can see from where the packet is coming and where it is going. Filtering by processes only works in the left part of the figure where the concept of Local Processes exists.

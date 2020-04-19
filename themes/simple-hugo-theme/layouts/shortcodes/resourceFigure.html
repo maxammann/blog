@@ -1,5 +1,14 @@
 {{ $img := $.Page.Resources.GetMatch (.Get 0)}}
+
 <figure>
-  <img src="{{ $img.RelPermalink }}" alt="{{ .Get 1 }}" width={{ .Get 2 }} />
+  {{ if (.Get 2) }}
+  {{ $resize := (printf "%dx" (.Get 2)) }}
+  {{ $width := (printf "%dpx" (.Get 2)) }}
+  {{ $resized := ($img.Resize $resize ) }}
+    <img src="{{ $resized.RelPermalink }}" alt="{{ .Get 1 }}" width={{ $width }} />
+  {{else }}
+    <img src="{{ $img.RelPermalink }}" alt="{{ .Get 1 }}" />
+  {{ end }}
+
   <figcaption>{{ .Inner }}</figcaption>
 </figure>
