@@ -18,6 +18,8 @@ pygmentsOptions = "linenos=true"
 pygmentsStyle = "tango"
 pygmentsUseClasses = true
 
+enableGitInfo = "true"
+
 # Taxonomies
 [taxonomies]
   tag = "tags"
@@ -71,3 +73,4 @@ pygmentsUseClasses = true
   author = "Maximilian Ammann"
   description = "Blog about various technical topics"
   genre = "Engineering"
+  githubProjectUrl = "https://github.com/maxammann/blog/"

@@ -13,11 +13,21 @@
     </div>
     {{ end }}
 
+    {{ if .IsPage }}
+        {{with .Site.Params.githubProjectUrl}}
+        <div class="git">
+            <a href="{{ . }}">Source On GitHub</a> @ <a
+                href="{{ . }}/commit/{{ $.GitInfo.Hash }}">{{ $.GitInfo.AbbreviatedHash }}</a>
+        </div>
+        {{ end }}
+    {{ end }}
+
     {{/* Display copyright if available */}}
     {{ if .Site.Copyright }}
     <div class="copyright">
         {{- .Site.Copyright -}}
     </div>
     {{ end }}
+
 </div>
 {{ end }}
