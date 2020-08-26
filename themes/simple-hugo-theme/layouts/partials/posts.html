@@ -1,6 +1,8 @@
 {{/* List all pages */}}
 <ul>
-    {{ range .Paginator.Pages }}
+    {{ $pages := where .Site.RegularPages "Type" "posts" }}
+
+    {{ range (.Paginate $pages 100).Pages }}
     <li>
         <a href="{{ .RelPermalink }}">
             {{- .Title | markdownify }}
