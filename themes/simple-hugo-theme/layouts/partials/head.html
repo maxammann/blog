@@ -12,12 +12,14 @@
     {{ $syntax := resources.Get "css/syntax.css" | minify -}}
     {{ $galleries := resources.Get "css/galleries.css" | minify -}}
     {{ $fonts := resources.Get "css/fonts.css" | minify -}}
+    {{ $projects := resources.Get "css/projects.css" | minify -}}
 
     <style>
         {{- $syntax.Content | safeCSS -}}
         {{- $styles.Content | safeCSS -}}
         {{- $galleries.Content | safeCSS -}}
         {{- $fonts.Content | safeCSS -}}
+        {{- $projects.Content | safeCSS -}}
     </style>
 
     {{ $pageTitle := .Site.Title }}
