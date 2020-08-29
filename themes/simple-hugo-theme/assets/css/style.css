@@ -38,6 +38,10 @@ div.header .title {
   float: right;
 }
 
+.header-menu > a {
+  margin-right: 5px;
+}
+
 ul.pagination {
   list-style-type: none;
   text-align: center;
