@@ -12,45 +12,45 @@ body {
   padding: 0 10px;
 }
 
-h1,
-h2,
-h3 {
+h1, h2, h3 {
   line-height: 1.2;
   font-family: "Roboto", "sans";
 }
 
-div.header h1 {
-  padding-top: 0;
-  padding-bottom: 8px;
-  margin-bottom: 24px;
-  font-size: 16px;
-  font-weight: 400;
-  border-bottom: 1px solid;
-}
+div.header {
+  h1 {
+    padding-top: 0;
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+    font-size: 16px;
+    font-weight: 400;
+    border-bottom: 1px solid;
+  }
 
-div.header .title {
-  color: inherit;
-  text-decoration: none;
-  font-weight: bold;
+  .title {
+    color: inherit;
+    text-decoration: none;
+    font-weight: bold;
+  }
 }
 
 .header-menu {
   float: right;
-}
 
-.header-menu > a {
-  margin-right: 5px;
+  > a {
+    margin-right: 5px;
+  }
 }
 
 ul.pagination {
   list-style-type: none;
   text-align: center;
   padding: 0;
-}
 
-ul.pagination > li {
-  padding: 0 8px;
-  display: inline-block;
+  > li {
+    padding: 0 8px;
+    display: inline-block;
+  }
 }
 
 div.footer {
@@ -86,32 +86,37 @@ code {
 }
 
 table {
-  border-collapse:collapse;
+  border-collapse: collapse;
   width: 100%;
   margin-bottom: 50px;
+
+  td, th {
+    margin: 4px 5px;
+  }
+
+  tr {
+    border-bottom: 1px solid black;
+  }
 }
 
-table td,
-table th {
-  margin: 4px 5px;
-}
-
-table tr, thead {
+thead {
   border-bottom: 1px solid black;
 }
 
-table tr:last-child {
-  border-bottom: none;
-}
+table {
+  tr:last-child {
+    border-bottom: none;
+  }
 
-table thead {
-  border-bottom: 1px solid black;
-}
+  thead {
+    border-bottom: 1px solid black;
 
-table thead th {
-  font-family: "Roboto", "sans";
-  font-size: 15px;
-  font-weight: bold;
+    th {
+      font-family: "Roboto", "sans";
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
 }
 
 /* Fix formatting of code blocks if there is only a single line */
