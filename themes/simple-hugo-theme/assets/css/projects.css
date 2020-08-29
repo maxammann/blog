@@ -1,0 +1,39 @@
+.projects {
+  margin-bottom: 10px;
+}
+
+.projects .anchor {
+  text-decoration: none;
+  color: inherit;
+}
+
+.projects .project-cards {
+  display: flex;
+  flex-direction: row;
+}
+
+.projects .projects-element {
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid #7a7a7a;
+  border-radius: 4px;
+  overflow: hidden;
+
+  padding: 10px;
+}
+
+.projects .projects-element .logo {
+  max-width: 200px;
+
+}
+
+.projects .projects-element .type {
+ 
+ 
+}
+
+
+.projects .projects-element .description {
+
+}
