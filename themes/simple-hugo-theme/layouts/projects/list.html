@@ -1,0 +1,41 @@
+{{ define "content" }}
+
+<h1>
+    Projects
+</h1>
+
+<div class="projects">
+    {{ $pages := where .Site.RegularPages "Type" "projects" }}
+
+    {{ range sort ($pages.GroupByParam "year") "Key" "asc" }}
+    <div class="project-group">
+        <h3>{{ .Key }}</h3>
+
+        <div class="project-cards">
+            {{ range .Pages }}
+            <a href="{{ .RelPermalink }}" class="anchor">
+                <div class="projects-element">
+                    <div class="logo">
+                        {{ $img := (.Resources.ByType "image").GetMatch "logo-light" }}
+                        {{ with $img }}
+                        <img src="{{ .RelPermalink }}" alt="{{ $.Title }}">
+                        {{ end }}
+                    </div>
+                    <div class="type">
+                        {{ .Params.project_type }}
+                    </div>
+                    <div class="description">
+                        {{ .Content }}
+                    </div>
+                </div>
+            </a>
+            {{ end }}
+
+        </div>
+    </div>
+    {{ end }}
+
+
+</div>
+
+{{ end }}
