@@ -5,9 +5,14 @@
         {{ if $img }}
         <div class="logo">
 
-            {{ with $img }}
-            <img src="{{ .RelPermalink }}" alt="{{ .Title }}">
+
+            {{ if not (eq $img.MediaType.SubType "svg" )}}
+            <img src="{{ ($img.Fit "300x100").RelPermalink }}" alt="{{ .Title }}">
+            {{ else }}
+
+            <img src="{{ $img.RelPermalink }}" alt="{{ .Title }}">
             {{ end }}
+
         </div>
         {{ end }}
 
@@ -35,7 +40,9 @@
             {{ end }}
             {{ range .Params.external }}
             {{ $url := urls.Parse . }}
-            <div> <a target="_blank" href="{{ . }}">{{ partial "svg" "link-outline" }}{{$url.Host}}{{cond (eq $url.Path "/") ""  $url.Path}}</a></div>
+            <div> <a target="_blank"
+                    href="{{ . }}">{{ partial "svg" "link-outline" }}{{$url.Host}}{{cond (eq $url.Path "/") ""  $url.Path}}</a>
+            </div>
             {{ end }}
         </div>
         <!--<div>

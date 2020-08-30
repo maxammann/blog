@@ -1,5 +1,5 @@
 {{/* List all pages */}}
-<ul>
+<ul class="content-list">
     {{ $pages := where .Site.RegularPages "Type" "posts" }}
 
     {{ range (.Paginate $pages 100).Pages }}
