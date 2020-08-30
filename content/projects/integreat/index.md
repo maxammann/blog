@@ -7,11 +7,13 @@ technologies: [ React, React Native]
 slug: integreat
 year: 2017
 active: true
-project_type: "Major Project"
+project_type: "Major project"
 github:
   - "https://github.com/Integreat/integreat-app"
+  - "https://github.com/Integreat/integreat-react-native-app"
+  - "https://github.com/Integreat/integreat-webapp"
 external:
   - "https://integreat.app/landing/en"
 ---
 
-II
+Integreat is your digital guide to life in Germany. Discover local information, events and advice. Always up to date and available in your own language.
