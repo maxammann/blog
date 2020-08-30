@@ -119,6 +119,15 @@ table {
   }
 }
 
+.inline-svg {
+  height: 20px;
+  width: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+  display: inline-block;
+  margin-right: 5px;
+}
+
 /* Fix formatting of code blocks if there is only a single line */
 /* LineTableTD */
 .chroma .lntd {

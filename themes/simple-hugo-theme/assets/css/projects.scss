@@ -9,20 +9,76 @@
   .project-cards {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .projects-element.inactive {
+    opacity: 0.5;
   }
 
   .projects-element {
-    display: flex;
-    flex-direction: column;
     border: 1px solid #7a7a7a;
     border-radius: 4px;
     overflow: hidden;
     padding: 10px;
+    margin: 5px;
 
-    .logo {
-      max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
+    margin: 10px;
+
+    max-width: calc(300px - 2 * 10px);
+    overflow-wrap: break-word;
+
+    > * {
+      margin: 5px 0;
     }
 
-    .type, .description {}
+    .logo {
+      img {
+        width: calc(300px - 2 * 10px);
+        height: 100px;
+        object-fit: contain;
+        object-position: 50% 50%;
+      }
+    }
+
+    .technology {
+      display: inline-block;
+      font-size: smaller;
+      padding: 0.3em; /* em unit */
+      border-radius: 0.25em;
+      line-height: 1;
+      text-align: center;
+      background: #4444;
+      color: #ffffff;
+    }
+
+    .title {
+      min-height: 20px;
+      font-weight: bold;
+
+      .type {
+        font-size: smaller;
+        font-style: normal;
+      }
+    }
+
+    .no-logo {
+      min-height: calc(50px + 100px + 2 * 5px);
+    }
+
+    .description {
+      p {
+        margin: 0;
+      }
+      flex-grow: 1
+    }
+
+    .links {
+     
+    }
   }
 }
