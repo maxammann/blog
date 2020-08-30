@@ -1,55 +1,6 @@
 <div class="project-cards">
     {{ range (.ByParam "active").Reverse }}
-    <div class="projects-element {{ cond .Params.active "" "inactive" }}">
-        {{ $img := (.Resources.ByType "image").GetMatch "logo-light" }}
-        {{ if $img }}
-        <div class="logo">
-
-
-            {{ if not (eq $img.MediaType.SubType "svg" )}}
-            <img src="{{ ($img.Fit "300x100").RelPermalink }}" alt="{{ .Title }}">
-            {{ else }}
-
-            <img src="{{ $img.RelPermalink }}" alt="{{ .Title }}">
-            {{ end }}
-
-        </div>
-        {{ end }}
-
-        <div class="title {{ cond (eq $img nil) "no-logo" "" }}">
-            {{ .Title }}
-
-            <div class="type">
-                {{ .Params.project_type }}
-            </div>
-        </div>
-
-        <div>
-            {{ range .Params.technologies }}
-            <span class="technology-wrapper"><span class="technology">{{ . }}</span></span>
-            {{ end }}
-        </div>
-
-        <div class="description">
-            {{ .Content }}
-        </div>
-        <div class="links">
-            {{ range .Params.github }}
-            {{ $url := urls.Parse . }}
-            <div> <a target="_blank" href="{{ . }}">{{ partial "svg" "logo-github" }}{{ substr $url.Path 1 }}</a></div>
-            {{ end }}
-            {{ range .Params.external }}
-            {{ $url := urls.Parse . }}
-            <div> <a target="_blank"
-                    href="{{ . }}">{{ partial "svg" "link-outline" }}{{$url.Host}}{{cond (eq $url.Path "/") ""  $url.Path}}</a>
-            </div>
-            {{ end }}
-        </div>
-        <!--<div>
-            {{ cond (not .Params.active) "inactive" ""}}
-        </div>-->
-    </div>
-
+       {{ partial "project-card" . }}
     {{ end }}
 
 </div>

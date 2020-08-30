@@ -1,8 +1,9 @@
 {{ define "content" }}
 
 <article>
-    {{ .Title }}
-    {{ .Content }}
+    <div class="projects">
+        {{ partial "project-card" . }}
+    </div>
 </article>
 
 {{ end }}
