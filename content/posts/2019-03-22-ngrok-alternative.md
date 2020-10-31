@@ -1,9 +1,11 @@
 ---
 layout: post
-title: "Ngrok alternative for the linux geek"
+title: "Ngrok alternative for the Linux Geek"
 date: 2019-03-22
 slug: ngrok-alternative
 ---
+
+**I created a updated guide [here]({{< ref "2020-10-31-ngrok-alternative-2" >}})!**
 
 Sometimes you want to expose a port running on localhost to the internet. The use of NAT with IPv4
 or firewalls make it difficult to expose a port. Sometimes you also lack the permission to do so. So
