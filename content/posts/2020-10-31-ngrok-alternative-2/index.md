@@ -21,10 +21,6 @@ This problem is not that complicated that it needs enterprise software. In fact 
 common Unix tools. All you need is `ssh` on your client, `socat` and a server running a SSH server. This server should have a IPv4 address and ports should be accessible.
 
 Out of this need for a simple solution I created a tool called [ndove](https://github.com/maxammann/ndove). To run this tool you just a public server with SSH and socat installed.
-The tools architecture is quite simple:
-
-![Architecture overview](./topology.drawio.svg)
-
 Using the tool is quite simple:
 
 ```txt
@@ -43,3 +39,12 @@ There is a quite overview of the parameters:
 |public-port|Port at which you want to access your local post on the public server|
 |public-ip4|The public IP where you want to have your local port exposed. Usually the same as the IP of the SSH server|
 |public-ip6|Like `public-ip4` but for IPv6|
+
+## Architecture
+
+The architecture of the tool is quite simple:
+
+![Architecture overview](./topology.drawio.svg)
+<sup>`./ndove.sh max@example.com $PRIVATE_PORT $PUBLIC_PORT $PUBLIC_IP4 $PUBLIC_IP6`</sup>
+
+Internally the tool uses a SSH reverse proxy.
