@@ -20,7 +20,7 @@ Also this solution falls short if you care about privacy.
 This problem is not that complicated that it needs enterprise software. In fact you can do this with
 common Unix tools. All you need is `ssh` on your client, `socat` and a server running a SSH server. This server should have a IPv4 address and ports should be accessible.
 
-Out of this need for a simple solution I created a tool called [ndove](https://github.com/maxammann/ndove). To run this tool you just a public server with SSH and socat installed.
+Out of this need for a simple solution I created a tool called [ndove](https://github.com/maxammann/ndove). To run this tool you just need a public server with SSH and socat installed.
 Using the tool is quite simple:
 
 ```txt
