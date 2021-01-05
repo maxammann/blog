@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "Keeping a Secret Safe"
+title: "Keeping a Secret Safe (and not only Secure)"
 date: 2021-01-05
 slug: keeping-secret-safe
 ---
 
-Keeping a secret like GPG keys safe is not a trivial task. It gets even more complicated if you want to backup it and have access in the more distant future. Digital secrets should be kept on an air gapped laptop. In my opinion it is enough to use a live CD and disconnect from LAN.
+Keeping a secret like GPG keys safe is not a trivial task. It gets even more complicated if you want to backup it and have access in the more distant future. Having your key on a HSM has the goal of keeping it secret. Keeping a secret safe means that it is not easy to loose your key. 
 
 ## Goals
 
@@ -44,7 +44,7 @@ sha256sum ubuntu-20.10-desktop-amd64.iso
 cat SHA256SUMS
 gpg --verify SHA256SUMS.sig
 ```
-
+In my opinion it is enough to use a live CD and disconnect from LAN.
 After installing the tools you can disconnect from the internet. Now nothing can leave your system, and you are safe to decrypt your GPG key. 
 
 ## Steps Explained
@@ -130,3 +130,5 @@ I showed how to backup huge GPG keys. The same procedure can also be used to bac
 Each QR code should be printed on a separate page. This makes it easier to scan them.
 
 I think I also covered all of my initial goals. The encrypted keys are now stored on paper and can be decrypted by `t` people even if I love my memory. The tools used are also so common that it is easy to do this on an air gapped laptop.
+
+**Disclaimer: Please test your backup procedure multiple times. This means print your secrets and then test whether you can reconstruct your key and have access. I know it is tedious, but a backup which does not work is worthless!**
