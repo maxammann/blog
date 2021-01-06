@@ -24,3 +24,12 @@ IPtables
 eth0systemd
 systemd
 SPI
+gapped
+GPG
+paperkey
+HSM
+ECC
+RSA
+unencrypted
+UTF-8
+PDFs
