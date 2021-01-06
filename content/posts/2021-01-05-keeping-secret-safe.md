@@ -3,6 +3,8 @@ layout: post
 title: "Keeping a Secret Safe (and not only Secure)"
 date: 2021-01-05
 slug: keeping-secret-safe
+
+keywords: [ encryption, gpg, backup ]
 ---
 
 Keeping a secret like GPG keys safe is not a trivial task. It gets even more complicated if you want to backup it and have access in the more distant future. Having your key on a HSM has the goal of keeping it secret. Keeping a secret safe means that it is not easy to loose your key. 
@@ -49,7 +51,9 @@ After installing the tools you can disconnect from the internet. Now nothing can
 
 ## Steps Explained
 
-Firstly, we will use `paperkey` to reduce the size of our exported key. This is maybe not needed if you use ECC. But it definitely makes sense with bulky RSA keys. QR Codes do not store infinite data and the more data they need to store the harder it is to scan them. We will use base64 to make the process more portable. QR codes support binary data by specification. This is not well implemented though. For example [zbar](http://zbar.sourceforge.net/) has problems with handling binary data. A more portable solution is to stick with text. A further simplification is not to use "Structured Append". This feature would allow us to split data automatically when creating QR codes with `qrencode`. Again zbar does not support it.
+Firstly, we will use `paperkey` to reduce the size of our exported key. This is maybe not needed if you use ECC, But it definitely makes sense with bulky RSA keys. QR Codes do not store infinite data and if you store a lot of data in them they get more difficult to scan. By stripping away metadata with `paperkey` you also get a benefit. Your `paperkey` can no longer expire as this part is not included. This goes more into the direction of what a backup of a GPG key should be: A copy of the private key!
+
+We will use base64 to make the process more portable. QR codes support binary data by specification. This is not well implemented though. For example [zbar](http://zbar.sourceforge.net/) has problems with handling binary data. A more portable solution is to stick with text. A further simplification is not to use "Structured Append". This feature would allow us to split data automatically when creating QR codes with `qrencode`. Again zbar does not support it.
 
 ```bash
 gpg --export-secret-keys $key_id > secret-key.gpg
@@ -105,7 +109,7 @@ zbarcam --raw > scan.base64
 base64 -d < scan.base64 | paperkey --pubring pub.gpg > secret-key.gpg
 ```
 
-You simply scan the codes one by one and write it to a file. `zbarcam` will add a new line after each scan. This is not a problem though because we used base64 encoding which is very portable. It will just ignore the new lines. Then we pass the decoded data to `paperkey` which required the public key to reconstruct the secret GPG key.
+You simply scan the codes one by one and write it to a file. `zbarcam` will add a new line after each scan. This is not a problem though because we used base64 encoding which is very portable. It will just ignore the new lines. Then we pass the decoded data to `paperkey` which required the public key to reconstruct the secret GPG key. When restoring the GPG you can get your public key from one of the key servers.
 
 We also need `t` out of `n` shares to get back to the passphrase.
 
