@@ -136,3 +136,62 @@ Each QR code should be printed on a separate page. This makes it easier to scan 
 I think I also covered all of my initial goals. The encrypted keys are now stored on paper and can be decrypted by `t` people even if I love my memory. The tools used are also so common that it is easy to do this on an air gapped laptop.
 
 **Disclaimer: Please test your backup procedure multiple times. This means print your secrets and then test whether you can reconstruct your key and have access. I know it is tedious, but a backup which does not work is worthless!**
+
+
+## TL;DR: The Complete Script
+
+Here is the complete script I used. Please adapt it to your needs and do not blindly cops it:
+
+```bash
+#!/bin/bash
+#
+# Combine shares of the password: ssss-combine -t 2
+# Combine paperkey: zbarimg --raw paperkey_split*.pdf | base64 -d | paperkey --pubring pub.gpg > secret-key.gpg
+#
+key_id=...
+apt install -y paperkey qrencode gnupg pwgen ssss ghostscript a2ps 
+mkdir -p output/
+rm output/*
+
+pw=$(pwgen 100 1)
+echo "Secret Password which will be split into shares: $pw"
+
+echo "Exporting secret key. Change password to the above using passwd and save."
+gpg --edit-key $key_id
+gpg --export-secret-keys $key_id > secret-key.gpg
+paperkey=paperkey.base64
+paperkey --secret-key=secret-key.gpg --output-type=raw | base64 -w 76 > $paperkey
+paperkey_sum=$(sha256sum "$paperkey" | cut -d " " -f 1)
+split $paperkey -d --lines=10 --additional-suffix=.base64 output/paperkey_split
+
+echo "Generating paperkey"
+paperkey --secret-key=secret-key.gpg | a2ps -R --columns=1 -f 10 --margin=0 --no-header -o - | gs \
+   -o "output/paperkey.pdf" -sDEVICE=pdfwrite -g5950x8420 -
+
+echo "Generating key splits"
+for split in output/paperkey_split*.base64; do
+  filename=$(basename -- "$split")
+  name="${filename%.*}"
+  split_sum=$(sha256sum "$split" | cut -d " " -f 1)
+  qrencode --read-from="$split" -l L --type=EPS --size 6 --output "output/$name.eps"
+  gs -q -o "output/$name.pdf" -sDEVICE=pdfwrite -g5950x8420 \
+     -c "/Helvetica findfont 15 scalefont setfont 40 800 moveto (QR-Code $name) show
+         /Helvetica findfont 12 scalefont setfont 40 700 moveto (SHA256 of split: $split_sum) show
+         /Helvetica findfont 12 scalefont setfont 40 680 moveto (SHA256 of paperkey: $paperkey_sum) show" \
+     -f "output/$name.eps"
+  rm "$split" "output/$name.eps"
+done
+
+echo "Generating shares"
+shares=$(echo "$pw" | ssss-split -q -t 2 -n 5) 
+echo "$shares"
+while IFS= read -r share; do
+    name=share-$(cut -d '-' -f 1 <<< "$share")
+    qrencode -l L --type=EPS --size 10 --output "output/$name.eps" <<< "$share";
+    gs -q -o "output/$name.pdf" -sDEVICE=pdfwrite -g5950x8420 \
+       -c "/Helvetica findfont 15 scalefont setfont 40 800 moveto (QR-Code $name) show
+           /Helvetica findfont 12 scalefont setfont 40 600 moveto ($share) show" \
+       -f "output/$name.eps"
+    rm "output/$name.eps"
+done <<< "$shares"
+```
