@@ -7,7 +7,7 @@ technologies: [ Python, Flask, HTML ]
 slug: vpg
 year: 2018
 active: true
-project_type: "Major project"
+project_type: "Project"
 github:
   - https://github.com/digitalfabrik/voucher-pdf-generator
 external:
