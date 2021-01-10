@@ -199,9 +199,13 @@ ul.content-list {
 .chroma .lnt {
   margin: 0;
   padding: 0;
+
+  user-select: none;
 }
 /* LineNumbers */
 .chroma .ln {
   margin: 0;
   padding: 0;
+
+  user-select: none;
 }
