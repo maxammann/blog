@@ -9,3 +9,5 @@ year: 2020
 active: false
 project_type: "Talk"
 ---
+
+Task about IoT Security aspects.
