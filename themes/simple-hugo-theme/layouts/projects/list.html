@@ -1,20 +1,16 @@
 {{ define "content" }}
 
-<h1>
-    Projects
-</h1>
-
 <div class="projects">
     {{ $pages := where .Site.RegularPages "Type" "projects" }}
 
     <h2>
-        Pinned
+        Pinned Projects
     </h2>
 
     {{ partial "project-cards" (where (where $pages "Params.project_type" "Major project"  ) "Params.active" true  )}}
 
     <h2>
-        All
+        All Projects
     </h2>
 
     {{ range sort ($pages.GroupByParam "year") "Key" "desc" }}

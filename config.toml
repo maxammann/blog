@@ -1,5 +1,5 @@
 baseurl = "https://maxammann.org/"
-title = "Blog by Max Ammann"
+title = "Max Ammann"
 languageCode = "en-us"
 
 # Theme to use
@@ -8,6 +8,8 @@ theme = "simple-hugo-theme"
 # Pagination
 paginate = 10
 paginatePath = "page"
+
+summaryLength = 30
 
 # Copyright
 copyright = "Attribution 4.0 International (CC BY 4.0)"
@@ -36,10 +38,10 @@ enableGitInfo = "true"
     url = "/projects/"
     name = "projects"
     weight = 2
-  [[menu.main]]
-    url = "/galleries/"
-    name = "galleries"
-    weight = 3
+#  [[menu.main]]
+#    url = "/galleries/"
+#    name = "galleries"
+#    weight = 3
   [[menu.main]]
     url = "/about/"
     name = "about"
@@ -52,19 +54,19 @@ enableGitInfo = "true"
   # Footer
   [[menu.footer]]
     url = "https://github.com/maxammann"
-    name = "GitHub"
+    name = "github"
     weight = 1
   [[menu.footer]]
     url = "/posts/index.xml"
-    name = "RSS"
+    name = "rss"
     weight = 2
   [[menu.footer]]
     url = "/maxammann.asc"
-    name = "GPG ASC"
+    name = "gpg asc"
     weight = 3
   [[menu.footer]]
     url = "mailto:max@maxammann.org"
-    name = "E-Mail"
+    name = "email"
     weight = 3
 
 
@@ -73,7 +75,7 @@ enableGitInfo = "true"
   posts = "/posts/:year/:month/:slug/"
 
 [params]
-  datefmt  = "2 Jan, 2006"
+  datefmt  = "Jan 2, 2006"
   author = "Maximilian Ammann"
   description = "Blog about various technical topics"
   genre = "Engineering"

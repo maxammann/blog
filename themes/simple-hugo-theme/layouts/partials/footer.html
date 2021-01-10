@@ -16,7 +16,7 @@
 
     {{with .Site.Params.githubProjectUrl}}
     <div class="git">
-        <a href="{{ . }}">Source On GitHub</a>
+        <a href="{{ . }}">git HEAD</a>
         {{ if $.GitInfo }}
         @ <a href="{{ . }}/commit/{{ $.GitInfo.Hash }}">{{ $.GitInfo.AbbreviatedHash }}</a>
         {{ end }}

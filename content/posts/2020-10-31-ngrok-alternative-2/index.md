@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Ngrok Alternative for the Linux Geek"
+title: "Ngrok Alternative for the Linux Geek (ndove)"
 date: 2020-10-31
 slug: ngrok-alternative-2
 ---

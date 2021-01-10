@@ -1,6 +1,8 @@
 {{ block "header" . }}
 <div class="header">
-    <a class="title" href="{{ .Site.BaseURL | relLangURL }}">{{- .Site.Title -}}</a>
+    <div class="title">
+        <a href="{{ .Site.BaseURL | relLangURL }}">{{- .Site.Title -}}</a>
+    </div>
     <div class="header-menu">
         {{- range .Site.Menus.main -}}
         {{ if eq (hasPrefix .URL "mailto:") true }}
