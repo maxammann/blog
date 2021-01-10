@@ -10,8 +10,6 @@ active: true
 project_type: "Major project"
 github:
   - "https://github.com/Integreat/integreat-app"
-  - "https://github.com/Integreat/integreat-react-native-app"
-  - "https://github.com/Integreat/integreat-webapp"
 external:
   - "https://integreat.app/landing/en"
 ---
