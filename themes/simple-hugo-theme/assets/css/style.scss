@@ -178,6 +178,14 @@ ul.content-list {
   margin-right: 5px;
 }
 
+.heading-link {
+  border-bottom: none;
+  &::before {
+    font-size: 1rem;
+    content: "🔗";
+  }
+}
+
 /* Fix formatting of code blocks if there is only a single line */
 /* LineTableTD */
 .chroma .lntd {
