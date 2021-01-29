@@ -1,6 +1,9 @@
 <head>
     <meta charset="utf-8">
+    <meta name="description" content="{{ cond .IsPage (cond (eq (len .Description) 0) .Summary .Description) .Site.Params.Description }}">
+    {{/*  <meta name="description" content="{{ cond (isset . "Description") .Description .Site.Params.Description }}">  */}}
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="{{ .Site.Params.Author }}" />
 
     <title>
         {{- block "title" . -}}
@@ -27,8 +30,6 @@
     {{ with .OutputFormats.Get "RSS" }}
     <link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ $pageTitle }}" />
     {{ end }}
-
-    {{ template "_internal/google_analytics_async.html" . }}
 
     {{ partial "head_custom" . }}
 </head>

@@ -3,6 +3,7 @@ layout: post
 title: "React Native: Inverting a ScrollView"
 date: 2021-01-06
 slug: react-native-invert-scrollview
+description: "Blog post about inverting or reversing a ScrollView on React-Native"
 
 keywords: [ react-native, react ]
 ---

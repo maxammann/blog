@@ -77,6 +77,6 @@ enableGitInfo = "true"
 [params]
   datefmt  = "Jan 2, 2006"
   author = "Maximilian Ammann"
-  description = "Blog about various technical topics"
+  description = "Blog about technical topics like Linux, security, web development, data analysis and hardware hacking."
   genre = "Engineering"
   githubProjectUrl = "https://github.com/maxammann/blog/"
