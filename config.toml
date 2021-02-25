@@ -61,7 +61,7 @@ enableGitInfo = "true"
     name = "rss"
     weight = 2
   [[menu.footer]]
-    url = "/maxammann.asc"
+    url = "https://keys.openpgp.org/vks/v1/by-fingerprint/2ADD079542215EE3BBD5021C97A215D378F168E7"
     name = "gpg asc"
     weight = 3
   [[menu.footer]]
