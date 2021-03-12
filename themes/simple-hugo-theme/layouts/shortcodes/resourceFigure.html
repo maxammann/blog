@@ -10,5 +10,5 @@
     <img src="{{ $img.RelPermalink }}" alt="{{ .Get 1 }}" />
   {{ end }}
 
-  <figcaption>{{ .Inner }}</figcaption>
+  <figcaption>{{ .Inner | markdownify }}</figcaption>
 </figure>
