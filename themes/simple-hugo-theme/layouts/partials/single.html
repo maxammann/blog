@@ -3,6 +3,11 @@
         {{- .Title | markdownify -}}
     </h1>
     {{ partial "post_meta_date.html" . }}
+    <div>
+        {{ range (.GetTerms "categories") }}
+            <span class="badge"><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></span>
+       {{ end }}
+    </div>
 </header>
 <article>
     {{ .Content }}

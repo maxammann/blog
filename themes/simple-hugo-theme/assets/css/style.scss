@@ -190,6 +190,22 @@ ul.content-list {
   }
 }
 
+.badge {
+  display: inline-block;
+  font-size: smaller;
+  padding: 0.3em; /* em unit */
+  border-radius: 0.25em;
+  line-height: 1;
+  text-align: center;
+  background: #4444;
+  color: #ffffff;
+
+  a {
+    border-bottom: none;
+    background: none;
+  }
+}
+
 /* Fix formatting of code blocks if there is only a single line */
 /* LineTableTD */
 .chroma .lntd {

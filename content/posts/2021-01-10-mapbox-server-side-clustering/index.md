@@ -86,7 +86,7 @@ Serving tiles using only Nginx:
 
 ### Create a Map of Germany within ... days?
 
-https://download.geofabrik.de/europe/germany.html
+https://download.geofabrik.de/europe/germany.html (.osm.xml vs .osm.pbf)
 https://openmaptiles.org/
 
 ### Converting Tiles

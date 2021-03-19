@@ -1,0 +1,16 @@
+
+
+{{ define "content" }}
+
+<ul class="content-list">
+    {{ range .Pages }}
+    <li>
+        <a href="{{ .RelPermalink }}">
+            {{- .Title | markdownify }}
+        </a>
+        {{ partial "post_meta.html" . }}
+    </li>
+    {{ end }}
+</ul>
+
+{{ end }}
