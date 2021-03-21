@@ -10,7 +10,7 @@ resources:
 - src: "*.jpg"
 
 keywords: [ ]
-categories: [ ]
+categories: [ research-blog ]
 ---
 
 
