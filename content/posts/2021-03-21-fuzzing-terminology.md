@@ -14,8 +14,8 @@ categories: [ research-blog ]
 ---
 
 
-Research in Fuzzing has gained a lot of traction in the last decade. A lot of open source fuzzers have been implemented and are available on Github. Everyone who already developed any application knows the pain of naming things. It is very difficult to have a common understanding of the terms used in a project. A standard software engineering practice is to use a Glossary. This usually only scaled to a team or a small company but not to thousands of fuzzers on Github.
-Also documentation is more of a gimmick than a comprehensive guide in most projects.
+Research in Fuzzing has gained a lot of traction in the last decade. A lot of open source fuzzers have been implemented and are available on Github. Everyone who already developed any application knows the pain of naming things. It is very difficult to have a common understanding of the terms used in a project. A standard software engineering practice is to use a glossary. This usually only scaled to a team or a small company but not to thousands of fuzzers on Github.
+Also, documentation is more of a gimmick than a comprehensive guide in most projects.
 
 Therefore, the paper "The Art, Science, and Engineering of Fuzzing" tries to create a common terminology of fuzzing. It also gives a simple common view on how fuzzers work and includes a major survey of fuzzers and their relations to each other.
 In this post I'll try to give an overview of the terminology.
