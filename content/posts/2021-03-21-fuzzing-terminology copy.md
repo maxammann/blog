@@ -5,10 +5,6 @@ date: 2021-03-21T14:00:33+01:00
 slug: fuzzing-terminology
 draft: false
 
-resources:
-- src: "*.png"
-- src: "*.jpg"
-
 keywords: [ ]
 categories: [ research-blog ]
 ---
