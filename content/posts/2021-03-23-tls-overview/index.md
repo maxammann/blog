@@ -829,5 +829,5 @@ For transmitting application data a new key is derived from the secrets. The pro
 It is very difficult to have a formal model of TLS because of all the versions, extensions ambiguity of the RFC spec.
 -->
 
-[^1]: [Messy State of the Union]()
+[^1]: [Messy State of the Union](https://www.ieee-security.org/TC/SP2015/papers-archived/6949a535.pdf)
 [^2]: [RFC8446 1.2](https://tools.ietf.org/html/rfc8446#section-1.2)
