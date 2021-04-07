@@ -71,54 +71,53 @@ Note that this model has an attack hidden! This means the query `query attacker(
 
 We want to create symbolic traces now from this model.
 
-## Symbolic Traces
-
-### Happy Path Trace
+## Happy Path Trace
 
 An example for a happy symbolic trace would be:
 
 {{< katex >}}
 \begin{align}
-spawn(A);spawn(B);\\
-\color{green}sk_A = gen\_sk(A); out_A(pk(sk_A));\\
-\color{blue}sk_B = gen\_sk(B);out_B(pk(sk_B)); \\
-\color{blue}pk_X = in_B();\\
-\color{blue}out_B(aenc(sign((pk_B,k_1),sk_B),pk_X)));\\
-\color{green}k^{signed} = in_A();\\
-\color{green}k = checksign_A(k^{signed},pk_B);\\
-\color{green}out_A(senc(message, k));\\
-\color{blue}\{message\}_k = in_B();\\
-\color{blue}sdec(\{message\}_k, k);
+A := spawn\_session(); B := spawn\_session();\\
+\color{green}sk_A := gen\_sk(); out(pk(sk_A));\\
+\color{blue}sk_B := gen\_sk();out(pk(sk_B)); \\
+\color{blue}pk_X := in();\\
+\color{blue}out(aenc(sign((pk_B,k),sk_B),pk_X)));\\
+\color{green}k^{signed} := in();\\
+\color{green}k := checksign_A(k^{signed},pk_B);\\
+\color{green}out(senc(message, k));\\
+\color{blue}encMessage := in();\\
+\color{blue}sdec(encMessage, k).
 \end{align}
  {{< /katex >}}
 
-Messages in green are triggered by A and those in blue by B.
+Messages in green are triggered by $A$ and those in blue by $B$.
 
-### Attack Trace
+## Attack Trace
 
 {{< katex >}}
 \begin{align}
-spawn(A);spawn(B);\\
-\color{green}sk_A = gen\_sk(A); out_A(pk(sk_A));\\
-\color{blue}sk_B = gen\_sk(B);out_B(pk(sk_B)); \\
+A := spawn\_session(); B := spawn\_session();\\
+\color{green}sk_A := gen\_sk(); out(pk(sk_A));\\
+\color{blue}sk_B := gen\_sk();out(pk(sk_B)); \\
 
-\color{red}sk_{E} = gen\_sk(E); out_E(pk(sk_E));\\
+\color{red}sk_E := gen\_sk(E); out(pk(sk_E));\\
 
-\color{blue}\overbrace{pk_X}^{\text{pk of Eve}} = in_B();\\ 
-\color{blue}out_B(aenc(sign((pk_B,k_1),sk_B),pk_X)));\\
+\color{blue}\overbrace{pk_X}^{\text{pk of Eve}} := in();\\ 
+\color{blue}out(aenc(sign((pk_B,k_1),sk_B),pk_X)));\\
 
-\color{red}out_E(aenc(sign((pk_B,k_1),sk_B),\overbrace{pk_A}^{\text{Attacking A}})));\\
+\color{red}out(aenc(sign((pk_B,k_1),sk_B),\overbrace{pk_A}^{\rightarrow \text{Attacking A}})));\\
 
-\color{green}k^{signed} = in_A();\\
-\color{green}k = checksign_A(k^{signed},pk_B);\\
-\color{green}out_A(senc(message, k));\\
+\color{green}k^{signed} := in();\\
+\color{green}k := checksign(k^{signed},pk_B);\\
+\color{green}out(senc(message, k));\\
 
-\color{red}\{message\}_k = in_B();\\
-\color{red}sdec(\{message\}_k, k); \text{E has message!}
+\color{red}encMessage := in();\\
+\color{red}sdec(encMessage, k).
 \end{align}
  {{< /katex >}}
 
-Messages in orange are from the attacker.
+Messages in orange are from the attacker $E$.
+The attacker got access to the $message$ by reusing the signature created by $B$.
 The visual attack trace can be inspected [here](./trace_attack.svg).
 
 ## Linking to Implementations
@@ -129,24 +128,30 @@ Now lets jump back to our simple protocol.
 More or less one could imagine that a library implementing that protcol could have the following interface:
 
 ```typescript
+type Context = {
+    actor: Channel,
+    sk: skey,
+    k: Key
+}
+
 skey gen_sk();
 pkey pk(sk: skey);
 
-ByteArray HelloClient(sk_A: pkey);                      // eq. 5
-ByteArray HelloServer(sk_B: pkey);                      // eq. 6
+ByteArray HelloClient(ctx, sk_A: pkey);                      // eq. (5)
+ByteArray HelloServer(ctx, sk_B: pkey);                      // eq. (6)
 
-(ByteArray, Key) SendNewKey(pk_X: pkey, sk_B: skey);    // eq. 7-8, k is generated
-ByteArray RecvKey(pk_B: pkey, sk_A: skey)               // eq. 9-10
+ByteArray SendNewKey(ctx, pk_X: pkey, sk_B: skey);           // eq. (7-8), k is generated
+ByteArray RecvKey(ctx, pk_B: pkey, sk_A: skey)               // eq. (9-10)
             throws SignatureError;
 
-ByteArray SendEncMessage(message: ByteArray, key: Key);     // eq. 11
-ByteArray ReceiveEncMessage(message: ByteArray, key: Key);  // eq. 12-13
+ByteArray SendEncMessage(ctx, message: ByteArray, key: Key);     // eq. (11)
+ByteArray ReceiveEncMessage(ctx, message: ByteArray, key: Key);  // eq. (12-13)
 ```
 
 Furthermore, we provide a utility interface:
 
 ```typescript
-Channel spawn(fn: () => void);                          // eq. 4
+Channel spawn(fn: () => void);                               // eq. (4)
 
 // Probably used internally
 void send(to: Channel, bytes: ByteArray);
@@ -157,9 +162,25 @@ The goal of the driver/test harness is now to call the correct entry functions d
 
  Also the security context is filled with the symmetric key $k$ for example. Also when running `SendNewKey` we store the identity of the sender and the receiver. That could be **B** and **E** for example. When running `ReceiveKey` we also store store the sender and receiver. The pair of sender and receiver does not match, but the implementation did not through the `SignatureError` then the bug oracle detected an authentification violation.
 
+Now this is very specific and just some guessing very specific to this example. ProVerif already provides queries to detect security properties. Like for example secrecy of a message `query attacker(message)` or authentification: `query x:key,y:pkey; event(termClient(x,y))==>event(acceptsServer(x,y))`. These queries define connections between events. Events can be triggered and recorded in the security context. After adding an event the security context can be checked by the bug oracle. The oracle then decides whether the context contains violations. For example for a given symmetric key `x` and public key `y`, if `termClient(x,y)` happens but `acceptsServer(x,y)` hasnt been recorded yet then we have an authentification violation.
+
+Therefore, the bug oracle is a function of: `Violations[] ask_oracle(ctx: SecurityContext)`. You provide it a security context and the oracle decides which violations are contained.
+
+## Open Questions
+
+* Which granularity of symbolic traces is appropiate?
+* Which data must be in the security context to model:
+    * Replay Attacks
+    * Secrecy
+    * Authentification
+    * Forward Secrecy
 
 
 ## Next Steps
+
+* Take a look on the OpenSSL/rustls/Go entry functions
+* Take a look at the TLS ProVerif model
+
 
 [^1]: [Fuzzing Terminology]({{< ref "2021-03-21-fuzzing-terminology" >}}#the-term-fuzzing)
 [^2]: [afl-fuzz whitepaper](https://lcamtuf.coredump.cx/afl/technical_details.txt)

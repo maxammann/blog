@@ -18,14 +18,15 @@ fun sign(bitstring, skey): bitstring.
 reduc forall m: bitstring, ssk: skey; getmess(sign(m,ssk)) = m.
 reduc forall m: bitstring, ssk: skey; checksign(sign(m,ssk),pk(ssk)) = m.
 
+query attacker(message).
+
 free message: bitstring [private].
 
 let ClientA(pkA: pkey, pkB: pkey, skA: skey) = 
     in(c, kEnc: bitstring);
     let signedK = adec(kEnc, skA) in
     let (rpkB: pkey, k: key) = checksign(signedK, pkB) in
-    if rpkB = pkB then
-        out(c, senc(message, k)).
+    out(c, senc(message, k)).
 
 let ServerB(pkB: pkey, pkA: pkey, skB: skey) = 
     in(c, pkX: pkey);
