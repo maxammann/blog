@@ -10,7 +10,12 @@
   "latex-workshop.latex.outDir": "%DIR%/build",
   "latex-workshop.view.pdf.viewer": "tab",
   "workbench.colorTheme": "Default Light+",
-  "editor.wordWrap": "on",
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wordWrapColumn": 60,
   "editor.wrappingIndent": "indent",
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[markdown]":{
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 80,
+},
 }
