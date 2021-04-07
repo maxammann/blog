@@ -90,9 +90,19 @@ img {
   margin-right: auto;
 }
 
-figcaption {
-  text-align: center;
+figure {
+  counter-increment: figureIndex;
+
+  figcaption::before {
+    content: "Figure " counter(figureIndex) ": ";
+  }
+  figcaption {
+    max-width: 90%;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
 }
+
 
 blockquote {
   padding-right: 5rem;
