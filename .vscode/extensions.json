@@ -2,6 +2,7 @@
     "recommendations": [
         "k--kato.intellij-idea-keybindings",
         "james-yu.latex-workshop",
-        "ban.spellright"
+        "ban.spellright",
+        "esbenp.prettier-vscode"
     ]
 }

@@ -18,4 +18,5 @@
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 80,
 },
+"markdown.preview.openMarkdownLinks": "inEditor",
 }
