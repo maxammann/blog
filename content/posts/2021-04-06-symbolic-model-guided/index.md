@@ -67,6 +67,8 @@ The model of this protocol looks like this:
 
 {{< readfile file="./handshake_model.pv" highlight="systemverilog" >}}
 
+Note that this model has an attack hidden! This means the query `query attacker(message)` evaluates to true.
+
 We want to create symbolic traces now from this model.
 
 ## Symbolic Traces
@@ -78,21 +80,46 @@ An example for a happy symbolic trace would be:
 {{< katex >}}
 \begin{align}
 spawn(A);spawn(B);\\
-\color{red}sk_A = gen\_sk(A); out_A(pk(sk_A));\\
-\color{blue}sk_B = hgen\_sk(B);out_B(pk(sk_B)); \\
+\color{green}sk_A = gen\_sk(A); out_A(pk(sk_A));\\
+\color{blue}sk_B = gen\_sk(B);out_B(pk(sk_B)); \\
 \color{blue}pk_X = in_B();\\
-\color{blue}out_B(aenc(sign((pk_B,pk_X,k_1),sk_B),pk_X)));\\
-\color{red}k^{signed} = in_A();\\
-\color{red}k = checksign_A(k^{signed},pk_B);\\
-\color{red}out_A(senc(message, k));\\
+\color{blue}out_B(aenc(sign((pk_B,k_1),sk_B),pk_X)));\\
+\color{green}k^{signed} = in_A();\\
+\color{green}k = checksign_A(k^{signed},pk_B);\\
+\color{green}out_A(senc(message, k));\\
 \color{blue}\{message\}_k = in_B();\\
 \color{blue}sdec(\{message\}_k, k);
 \end{align}
  {{< /katex >}}
 
-Messages in red are triggered by A and those in blue by B.
+Messages in green are triggered by A and those in blue by B.
 
 ### Attack Trace
+
+{{< katex >}}
+\begin{align}
+spawn(A);spawn(B);\\
+\color{green}sk_A = gen\_sk(A); out_A(pk(sk_A));\\
+\color{blue}sk_B = gen\_sk(B);out_B(pk(sk_B)); \\
+
+\color{red}sk_{E} = gen\_sk(E); out_E(pk(sk_E));\\
+
+\color{blue}\overbrace{pk_X}^{\text{pk of Eve}} = in_B();\\ 
+\color{blue}out_B(aenc(sign((pk_B,k_1),sk_B),pk_X)));\\
+
+\color{red}out_E(aenc(sign((pk_B,k_1),sk_B),\overbrace{pk_A}^{\text{Attacking A}})));\\
+
+\color{green}k^{signed} = in_A();\\
+\color{green}k = checksign_A(k^{signed},pk_B);\\
+\color{green}out_A(senc(message, k));\\
+
+\color{red}\{message\}_k = in_B();\\
+\color{red}sdec(\{message\}_k, k); \text{E has message!}
+\end{align}
+ {{< /katex >}}
+
+Messages in orange are from the attacker.
+The visual attack trace can be inspected [here](./trace_attack.svg).
 
 ## Linking to Implementations
 
@@ -126,7 +153,9 @@ void send(to: Channel, bytes: ByteArray);
 ByteArray receive(from: Channel);
 ```
 
-The goal of the driver/test harness is now to call the correct entry functions depending on the trace above. Also the security context is filled with the symmetric key $k$ for example.
+The goal of the driver/test harness is now to call the correct entry functions depending on the trace above.
+
+ Also the security context is filled with the symmetric key $k$ for example. Also when running `SendNewKey` we store the identity of the sender and the receiver. That could be **B** and **E** for example. When running `ReceiveKey` we also store store the sender and receiver. The pair of sender and receiver does not match, but the implementation did not through the `SignatureError` then the bug oracle detected an authentification violation.
 
 
 

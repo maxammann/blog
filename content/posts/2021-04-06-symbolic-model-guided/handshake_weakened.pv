@@ -23,18 +23,18 @@ free message: bitstring [private].
 let ClientA(pkA: pkey, pkB: pkey, skA: skey) = 
     in(c, kEnc: bitstring);
     let signedK = adec(kEnc, skA) in
-    let (rpkB: pkey, rpkX: pkey, k: key) = checksign(signedK, pkB) in
-    if rpkB = pkB && rpkX = pkA then
+    let (rpkB: pkey, k: key) = checksign(signedK, pkB) in
+    if rpkB = pkB then
         out(c, senc(message, k)).
 
 let ServerB(pkB: pkey, pkA: pkey, skB: skey) = 
     in(c, pkX: pkey);
     new k: key; 
-    out(c, aenc(sign((pkB, pkX, k), skB), pkX));
+    out(c, aenc(sign((pkB, k), skB), pkX));
     in(c, mEnc: bitstring);
     let z = sdec(mEnc, k) in 0.
 
-process 
+process
     new skA : skey ;
     new skB : skey ;
     let pkA = pk(skA) in out(c, pkA);
