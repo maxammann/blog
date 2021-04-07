@@ -1,0 +1,16 @@
+<!-- 
+    Allows to insert markdown, code or html.
+
+    Adapted from:
+    https://gohugo.io/templates/files/#readfile-example-add-a-project-file-to-content
+-->
+
+{{$file := printf "%s%s" .Page.File.Dir (.Get "file")}}
+
+{{- if eq (.Get "markdown") "true" -}}
+{{- $file  | readFile }}
+{{- else if  (.Get "highlight") -}}
+{{-  highlight ($file  | readFile) (.Get "highlight") "" -}}
+{{- else -}}
+{{ $file  | readFile | safeHTML }}
+{{- end -}}

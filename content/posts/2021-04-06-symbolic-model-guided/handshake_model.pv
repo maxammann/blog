@@ -1,0 +1,20 @@
+{1}new skA: skey;
+{2}new skB: skey;
+{3}let pkA: pkey = pk(skA) in
+{4}out(c, pkA);
+{5}let pkB: pkey = pk(skB) in
+{6}out(c, pkB);
+(
+    {7}in(c, kEnc: bitstring);
+    {8}let signedK: bitstring = adec(kEnc,skA) in
+    {9}let (rpkB: pkey,rpkX: pkey,k: key) = checksign(signedK,pkB) in
+    {10}if ((rpkB = pkB) && (rpkX = pkA)) then
+    {11}out(c, senc(message,k))
+) | (
+    {12}in(c, pkX: pkey);
+    {13}new k_1: key;
+    {14}out(c, aenc(sign((pkB,pkX,k_1),skB),pkX));
+    {15}in(c, mEnc: bitstring);
+    {16}let z: bitstring = sdec(mEnc,k_1) in
+    0
+)

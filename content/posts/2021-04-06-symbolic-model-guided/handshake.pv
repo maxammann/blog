@@ -1,0 +1,42 @@
+free c:channel.
+
+(* Symmetric Encryption *)
+type key.
+fun senc(bitstring, key): bitstring.
+reduc forall m: bitstring, k: key; sdec(senc(m, k), k) = m.
+
+(* Asymmetric Encryption *)
+type skey.
+type pkey.
+fun pk(skey): pkey.
+fun aenc(bitstring, pkey): bitstring.
+reduc forall m: bitstring, k: skey; adec(aenc(m, pk(k)), k) = m.
+
+(* Sign *)
+fun sign(bitstring, skey): bitstring.
+
+reduc forall m: bitstring, ssk: skey; getmess(sign(m,ssk)) = m.
+reduc forall m: bitstring, ssk: skey; checksign(sign(m,ssk),pk(ssk)) = m.
+
+free message: bitstring [private].
+
+let ClientA(pkA: pkey, pkB: pkey, skA: skey) = 
+    in(c, kEnc: bitstring);
+    let signedK = adec(kEnc, skA) in
+    let (rpkB: pkey, rpkX: pkey, k: key) = checksign(signedK, pkB) in
+    if rpkB = pkB && rpkX = pkA then
+        out(c, senc(message, k)).
+
+let ServerB(pkB: pkey, pkA: pkey, skB: skey) = 
+    in(c, pkX: pkey);
+    new k: key; 
+    out(c, aenc(sign((pkB, pkX, k), skB), pkX));
+    in(c, mEnc: bitstring);
+    let z = sdec(mEnc, k) in 0.
+
+process 
+    new skA : skey ;
+    new skB : skey ;
+    let pkA = pk(skA) in out(c, pkA);
+    let pkB = pk(skB) in out(c, pkB);
+    ClientA(pkA, pkB, skA) | ServerB(pkB, pkA, skB)
