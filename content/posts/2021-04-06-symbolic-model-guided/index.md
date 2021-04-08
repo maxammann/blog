@@ -120,6 +120,10 @@ Messages in orange are from the attacker $E$.
 The attacker got access to the $message$ by reusing the signature created by $B$.
 The visual attack trace can be inspected [here](./trace_attack.svg).
 
+{{< resourceFigure "trace_attack.svg" >}}
+Visualisation of the attack trace.
+{{< /resourceFigure >}}
+
 ## Linking to Implementations
 
 Now there is some manual work to do to link this to an implementation. We need to transform the symbolic trace to actual function calls of e.g. OpenSSL. Within the library we expose internals through the security context. We add there for example the secrets and the used nonce values.
@@ -134,27 +138,26 @@ type Context = {
     k: Key
 }
 
-skey gen_sk();
-pkey pk(sk: skey);
+skey gen_sk()
+pkey pk(sk: skey)
 
-ByteArray HelloClient(ctx, sk_A: pkey);                      // eq. (5)
-ByteArray HelloServer(ctx, sk_B: pkey);                      // eq. (6)
+ByteArray HelloClient(ctx, sk_A: pkey)                          // eq. (5)
+ByteArray HelloServer(ctx, sk_B: pkey)                          // eq. (6)
 
-pkey ReceiveHello(ctx);                                      // eq. (7)
+pkey ReceiveHello(ctx)                                          // eq. (7)
 
-ByteArray SendNewKey(ctx, pk_X: pkey, sk_B: skey);           // eq. (8), k is generated
-Key RecvKey(ctx, pk_B: pkey, sk_A: skey)                     // eq. (9-10)
-            throws SignatureError;
+ByteArray SendNewKey(ctx, pk_X: pkey, sk_B: skey)               // eq. (8), k is generated
+Key RecvKey(ctx, pk_B: pkey, sk_A: skey)                        // eq. (9-10)
+            throws SignatureError
 
-ByteArray SendEncMessage(ctx, message: ByteArray, key: Key);     // eq. (11)
-ByteArray ReceiveEncMessage(ctx, message: ByteArray, key: Key);  // eq. (12-13)
+ByteArray SendEncMessage(ctx, message: ByteArray, key: Key)     // eq. (11)
+ByteArray ReceiveEncMessage(ctx, message: ByteArray, key: Key)  // eq. (12-13)
 ```
 
 An example concrete trace would be:
 
 ```typescript
 let c = new Channel()
-
 let ctxClient = c.newContext()
 let ctxServer = c.newContext()
 
@@ -163,7 +166,7 @@ let skB: skey = gen_sk()
 
 // We suppose in our model that keys are preshared.
 let pkA: pkey = pk(skA)
-let pkB: pkey = pk(skA)
+let pkB: pkey = pk(skB)
 
 HelloClient(ctxClient, skA)
 HelloServer(ctxServer, skB)
@@ -180,18 +183,7 @@ The goal of the driver/test harness is now to call the correct entry functions d
 
 Now this is very specific and just some guessing very specific to this example. ProVerif already provides queries to detect security properties. Like for example secrecy of a message `query attacker(message)` or authentification: `query x:key,y:pkey; event(termClient(x,y))==>event(acceptsServer(x,y))`. These queries define connections between events. Events can be triggered and recorded in the security context. After adding an event the security context can be checked by the bug oracle. The oracle then decides whether the context contains violations. For example for a given symmetric key `x` and public key `y`, if `termClient(x,y)` happens but `acceptsServer(x,y)` hasnt been recorded yet then we have an authentification violation.
 
-Therefore, the bug oracle is a function of: `Violations[] ask_oracle(ctx: SecurityContext)`. You provide it a security context and the oracle decides which violations are contained.
-
-## Open Questions
-
-* Which granularity of symbolic traces is appropiate?
-* Which data must be in the security context to model:
-    * Replay Attacks
-    * Secrecy
-    * Authentification
-    * Forward Secrecy
-
-
+Therefore, the bug oracle is a function of: `Violations[] ask_oracle(securityCtx: SecurityContext)`. You provide it a security context and the oracle decides which violations are contained.
 ## Next Steps
 
 * Take a look on the OpenSSL/rustls/Go entry functions
