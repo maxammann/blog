@@ -73,6 +73,8 @@ We want to create symbolic traces now from this model.
 
 ## Happy Path Trace
 
+> ⚠️ The following notation is very ambiguous right now. There is no clear syntax defined. These should be taken with a grain of salt.
+
 An example for a happy symbolic trace would be:
 
 {{< katex >}}
