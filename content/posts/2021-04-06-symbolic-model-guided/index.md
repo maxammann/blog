@@ -129,7 +129,7 @@ More or less one could imagine that a library implementing that protcol could ha
 
 ```typescript
 type Context = {
-    actor: Channel,
+    channel: Channel,
     sk: skey,
     k: Key
 }
@@ -140,8 +140,10 @@ pkey pk(sk: skey);
 ByteArray HelloClient(ctx, sk_A: pkey);                      // eq. (5)
 ByteArray HelloServer(ctx, sk_B: pkey);                      // eq. (6)
 
-ByteArray SendNewKey(ctx, pk_X: pkey, sk_B: skey);           // eq. (7-8), k is generated
-ByteArray RecvKey(ctx, pk_B: pkey, sk_A: skey)               // eq. (9-10)
+pkey ReceiveHello(ctx);                                      // eq. (7)
+
+ByteArray SendNewKey(ctx, pk_X: pkey, sk_B: skey);           // eq. (8), k is generated
+Key RecvKey(ctx, pk_B: pkey, sk_A: skey)                     // eq. (9-10)
             throws SignatureError;
 
 ByteArray SendEncMessage(ctx, message: ByteArray, key: Key);     // eq. (11)
@@ -151,12 +153,38 @@ ByteArray ReceiveEncMessage(ctx, message: ByteArray, key: Key);  // eq. (12-13)
 Furthermore, we provide a utility interface:
 
 ```typescript
-Channel spawn(fn: () => void);                               // eq. (4)
-
-// Probably used internally
-void send(to: Channel, bytes: ByteArray);
-ByteArray receive(from: Channel);
+Context spawn(channel: Channel, fn: (ctx: Context) => void);     // eq. (4)
 ```
+
+An example concrete trace would be:
+
+```typescript
+let c = new Channel()
+let skA: skey = gen_sk()
+let skB: skey = gen_sk()
+
+// We suppose in our model that keys are preshared.
+let pkA: pkey = pk(skA)
+let pkB: pkey = pk(skA)
+
+ctxClient = spawn(c, (ctx) => {
+    HelloClient(ctx, skA)
+    let rpkB: pkey = ReceiveHello(ctx)
+    let k: = ReceiveKey(ctx, rpkB, skA)
+    SendEncMessage(ctx, "Hello World!", k)
+})
+
+ctxServer = spawn(c, (ctx) => {
+    HelloServer(ctx, skB)
+    let pkX: pkey = ReceiveHello(ctx)
+    SendNewKey(ctx, pkX, skB)
+    let message = ReceiveEncMessage(ctx, k)
+})
+
+// Wait until both are finished
+await(ctxClient, ctxServer)
+```
+
 
 The goal of the driver/test harness is now to call the correct entry functions depending on the trace above.
 
@@ -185,3 +213,4 @@ Therefore, the bug oracle is a function of: `Violations[] ask_oracle(ctx: Securi
 [^1]: [Fuzzing Terminology]({{< ref "2021-03-21-fuzzing-terminology" >}}#the-term-fuzzing)
 [^2]: [afl-fuzz whitepaper](https://lcamtuf.coredump.cx/afl/technical_details.txt)
 [^3]: [Code Coverage](https://en.wikipedia.org/wiki/Code_coverage)
+0
