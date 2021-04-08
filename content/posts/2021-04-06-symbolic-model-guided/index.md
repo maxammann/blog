@@ -150,16 +150,14 @@ ByteArray SendEncMessage(ctx, message: ByteArray, key: Key);     // eq. (11)
 ByteArray ReceiveEncMessage(ctx, message: ByteArray, key: Key);  // eq. (12-13)
 ```
 
-Furthermore, we provide a utility interface:
-
-```typescript
-Context spawn(channel: Channel, fn: (ctx: Context) => void);     // eq. (4)
-```
-
 An example concrete trace would be:
 
 ```typescript
 let c = new Channel()
+
+let ctxClient = c.newContext()
+let ctxServer = c.newContext()
+
 let skA: skey = gen_sk()
 let skB: skey = gen_sk()
 
@@ -167,24 +165,14 @@ let skB: skey = gen_sk()
 let pkA: pkey = pk(skA)
 let pkB: pkey = pk(skA)
 
-ctxClient = spawn(c, (ctx) => {
-    HelloClient(ctx, skA)
-    let rpkB: pkey = ReceiveHello(ctx)
-    let k: = ReceiveKey(ctx, rpkB, skA)
-    SendEncMessage(ctx, "Hello World!", k)
-})
-
-ctxServer = spawn(c, (ctx) => {
-    HelloServer(ctx, skB)
-    let pkX: pkey = ReceiveHello(ctx)
-    SendNewKey(ctx, pkX, skB)
-    let message = ReceiveEncMessage(ctx, k)
-})
-
-// Wait until both are finished
-await(ctxClient, ctxServer)
+HelloClient(ctxClient, skA)
+HelloServer(ctxServer, skB)
+let pkX: pkey = ReceiveHello(ctxServer)
+SendNewKey(ctxServer, pkX, skB)
+let k: = ReceiveKey(ctxClient, pkB, skA)
+SendEncMessage(ctxClient, "Hello World!", k)
+let message = ReceiveEncMessage(ctxSer er, k)
 ```
-
 
 The goal of the driver/test harness is now to call the correct entry functions depending on the trace above.
 
