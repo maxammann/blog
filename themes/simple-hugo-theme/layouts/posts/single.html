@@ -2,6 +2,10 @@
 
 {{ partial "schema/schema_BlogPosting.html" . }}
 
+{{ if in .Params.categories "research-blog"}}
+{{ "> ⚠️ 🧪 This post is work-in-progress. Changes are expected as this post is part of my research series." | markdownify }}
+{{ end }}
+
 {{ partial "single" . }}
 
 <div class="article-contact">
