@@ -31,7 +31,7 @@ The state machine of TLS is not formally specified [^1]. Therefore, each TLS lib
 
 I am also doing here something similar like the above illustration. My approach is just more manual and simpler. I will create here a connection to the HTTP server of this blog and send some data: `openssl s_client -msg -connect maxammann.org:443`. This command logs all messages of the handshake as hex.
 
-This approach has the advantage that it requirest just OpenSSL and some tool to interpret binary messages like WireShark. It does not require any complex setup to look inside of encrypted TLS messages.
+This approach has the advantage that it requires just OpenSSL and some tool to interpret binary messages like WireShark. It does not require any complex setup to look inside of encrypted TLS messages.
 
 💻 denotes a client and ☁️ a server which could be hosted in the cloud.
 
@@ -104,7 +104,7 @@ The ClientHello includes 0x0136 bytes of Handshake data:
 Now we can simply import this data into Wireshark to analyze it in a simple way. I fist used CyberChef to create a properly formatted hex dump from the values and then loaded them in Wirehark. The plain OpenSSL output can be seen in {{< resourceHref openssl_messages.txt >}}openssl_messages.txt{{< /resourceHref >}}. From this file I {{< resourceHref openssl_messages.hex >}}cleaned it up{{< /resourceHref >}} by adding missing TLS record headers like `16 03 01 01 36` where the last 2 bytes specify the length of the next message. These were crafted manually in order to make it possible to parse them with wireshark. Finally, I removed the comments and put it into [CyberChef](https://gchq.github.io/CyberChef/#recipe=From_Hex('Auto')To_Hexdump(16,false,false,false)) to create a {{< resourceHref openssl_messages.hexdump >}}hexdump{{< /resourceHref >}}.
 
 You have to tell Wireshark to generate a dummy TCP header around it, else the detection fails. The final pcap file can be downloaded {{< resourceHref openssl_messages.pcap >}}here{{< /resourceHref >}}.
-You can now expor this as JSON or use a pretty printed version (Right-click on TLS packet and "Copy > All Visible Items")
+You can now export this as JSON or use a pretty printed version (Right-click on TLS packet and "Copy > All Visible Items")
 
 {{< collapsible "Client Hello Header" >}}
 ```yaml
@@ -725,7 +725,7 @@ TLSv1.3 Record Layer: Handshake Protocol: Finished
 
 ### 💻 ➔ ☁️ Change Cipher Spec
 
-This message if not encrypted and is only here for backward compatablity with TLS 1.2.
+This message if not encrypted and is only here for backward compatibility with TLS 1.2.
 
 {{< collapsible "Disassembly" >}}
 ```yaml

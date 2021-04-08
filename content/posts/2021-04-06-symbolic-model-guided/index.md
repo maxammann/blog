@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Symbolid-model Guided Fuzzing"
+title: "Symbolic-model Guided Fuzzing"
 date: 2021-04-06
 slug: symbolic-model-guided
 draft: true
@@ -11,9 +11,9 @@ keywords: []
 categories: [research-blog]
 ---
 
-Traditionally, Fuzzing works on the bit level as "to fuzz" means to "generate a stream of random characters to be consumed by a target program"[^1]. The notion of characters is used equaivalent with bytes here. Fuzzers like AFL start with some seed which could be a JPEG file for example. Then AFL starts to execute the JPEG parser and randomly muates bytes of the input to generate a seed pool. This is done by flipping bits or applying arithmetic operations.
+Traditionally, Fuzzing works on the bit level as "to fuzz" means to "generate a stream of random characters to be consumed by a target program"[^1]. The notion of characters is used equivalent with bytes here. Fuzzers like AFL start with some seed which could be a JPEG file for example. Then AFL starts to execute the JPEG parser and randomly mutates bytes of the input to generate a seed pool. This is done by flipping bits or applying arithmetic operations.
 
-This has major shortcomings when used to fuzz protocols. The messages sent by a protocols often depend on previous messages. This means by randomly flipping bits you maybe not reach deep states within the protocol. Even if you reach good coverage of executed lines, this does not mean that interresting traces of the protocol have been executed.
+This has major shortcomings when used to fuzz protocols. The messages sent by a protocols often depend on previous messages. This means by randomly flipping bits you maybe not reach deep states within the protocol. Even if you reach good coverage of executed lines, this does not mean that interesting traces of the protocol have been executed.
 
 This is also mentioned in the [AFL README](https://github.com/google/AFL/blob/fab1ca5ed7e3552833a18fc2116d33a9241699bc/README.md#1-challenges-of-guided-fuzzing): "Unfortunately, fuzzing is also relatively shallow; blind, random mutations make it very unlikely to reach certain code paths in the tested code, leaving some vulnerabilities firmly outside the reach of this technique".
 The AFL approach uses branch (edge) coverage [^2]. That means that every edge between two code blocks in a control flow graph have been visited by the PUT. They use a clever method to instrument programs efficiently to detect differences between the two execution traces `A -> B` and `B -> A`, where `A` and `B` are code blocks. AFL uses three variables `cur_location`, `shared_mem` and `prev_location`.
@@ -121,7 +121,7 @@ The attacker got access to the $message$ by reusing the signature created by $B$
 The visual attack trace can be inspected [here](./trace_attack.svg).
 
 {{< resourceFigure "trace_attack.svg" >}}
-Visualisation of the attack trace.
+Visualization of the attack trace.
 {{< /resourceFigure >}}
 
 ## Linking to Implementations
@@ -129,7 +129,7 @@ Visualisation of the attack trace.
 Now there is some manual work to do to link this to an implementation. We need to transform the symbolic trace to actual function calls of e.g. OpenSSL. Within the library we expose internals through the security context. We add there for example the secrets and the used nonce values.
 
 Now lets jump back to our simple protocol.
-More or less one could imagine that a library implementing that protcol could have the following interface:
+More or less one could imagine that a library implementing that protocol could have the following interface:
 
 ```typescript
 type Context = {
@@ -179,9 +179,9 @@ let message = ReceiveEncMessage(ctxSer er, k)
 
 The goal of the driver/test harness is now to call the correct entry functions depending on the trace above.
 
- Also the security context is filled with the symmetric key $k$ for example. Also when running `SendNewKey` we store the identity of the sender and the receiver. That could be **B** and **E** for example. When running `ReceiveKey` we also store store the sender and receiver. The pair of sender and receiver does not match, but the implementation did not through the `SignatureError` then the bug oracle detected an authentification violation.
+ Also the security context is filled with the symmetric key $k$ for example. Also when running `SendNewKey` we store the identity of the sender and the receiver. That could be **B** and **E** for example. When running `ReceiveKey` we also store store the sender and receiver. The pair of sender and receiver does not match, but the implementation did not through the `SignatureError` then the bug oracle detected an authentication violation.
 
-Now this is very specific and just some guessing very specific to this example. ProVerif already provides queries to detect security properties. Like for example secrecy of a message `query attacker(message)` or authentification: `query x:key,y:pkey; event(termClient(x,y))==>event(acceptsServer(x,y))`. These queries define connections between events. Events can be triggered and recorded in the security context. After adding an event the security context can be checked by the bug oracle. The oracle then decides whether the context contains violations. For example for a given symmetric key `x` and public key `y`, if `termClient(x,y)` happens but `acceptsServer(x,y)` hasnt been recorded yet then we have an authentification violation.
+Now this is very specific and just some guessing very specific to this example. ProVerif already provides queries to detect security properties. Like for example secrecy of a message `query attacker(message)` or authentication: `query x:key,y:pkey; event(termClient(x,y))==>event(acceptsServer(x,y))`. These queries define connections between events. Events can be triggered and recorded in the security context. After adding an event the security context can be checked by the bug oracle. The oracle then decides whether the context contains violations. For example for a given symmetric key `x` and public key `y`, if `termClient(x,y)` happens but `acceptsServer(x,y)` hasn't been recorded yet then we have an authentication violation.
 
 Therefore, the bug oracle is a function of: `Violations[] ask_oracle(securityCtx: SecurityContext)`. You provide it a security context and the oracle decides which violations are contained.
 ## Next Steps
