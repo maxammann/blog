@@ -34,7 +34,7 @@ Now let's take a look at related approaches which use a model to fuzz TLS.
 * [tlsfuzzer](https://tlsfuzzer.readthedocs.io/en/latest/testimonials.html)
 
   Allows one to create test-cases which send and expect TLS packets. *tlsfuzzer* can be run against a server to check for vulnerabilities like DROWN or ROBOT.
-* ["Symbolic-Model-Aware Fuzzing of Cryptographic Protocols" by Guilhem](https://members.loria.fr/LHirschi/#teaching)
+* ["Symbolic-Model-Aware Fuzzing of Cryptographic Protocols"](https://members.loria.fr/LHirschi/#teaching)
 
   Uses [IJON](https://github.com/RUB-SysSec/ijon) to guide the fuzzer. The input for the PUT is a binary file which represents an abstract execution trace. This trace is mutated by standard AFL methods. The execution is guided by IJON, which uses a scoring. 
 * [flexTLS (abandoned)](https://mitls.org/pages/flextls) and [miTLS fstar (TLS 1.3)](https://github.com/project-everest/mitls-fstar)
@@ -73,7 +73,7 @@ let st,_ = FlexCCS.send(st)in
 ...
 ```
 
-The work by Guilhem guides the fuzzer using the IJON. Clients and servers are represented by agents. The input of an abstract execution trace creates agents, does a handshake between them, creates messages and terms. Messages are then sent between the agents.
+The work about "Symbolic-Model-Aware Fuzzing" guides the fuzzer using the IJON. Clients and servers are represented by agents. The input of an abstract execution trace creates agents, does a handshake between them, creates messages and terms. Messages are then sent between the agents.
 After each execution of a trace a score is calculated which is used to evaluate the run.
 It is not possible to modify messages of the handshake. Therefore, there is still work to do in order to allow traces which diverge from the happy path.
 
