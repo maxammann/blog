@@ -37,7 +37,7 @@ Now lets dive into the terminology. I want to do this in a table and give short 
 |Security Policy|e.g. "PUT does not write outside of indented memory", "PUT follows the TLS state machine" [^3]|
 |Fuzz Testing|Use of fuzzing to test whether a PUT violates a security policy|
 |Fuzzer|The program which fuzz tests the PUT|
-|Fuzz Campaign|Specific execution of the of a PUT|
+|Fuzz Campaign|Specific execution of the PUT|
 |Bug Oracle|Decides if an execution violates the security policy|
 |Fuzz Configuration|Parameters of the Fuzzer program|
 |Seed|(Well-)structured input of the PUT which is mutated while fuzzing|
@@ -47,7 +47,14 @@ Now lets dive into the terminology. I want to do this in a table and give short 
 
 One may ask what the difference between fuzzing and software testing is. From a technical point of view there isn't any. Both try to find bugs in software.
 But there is a significant difference in the intention of fuzzing.
-The term fuzzing is mostly used for security related testing [^4]. Often source code if not available when testing for security issues. Usually when testing software as a software engineer you have the source code which allows you to write unit tests.
+The term fuzzing is mostly used for security related testing [^4]. Often source code is not available when testing for security issues. Usually when testing software as a software engineer you have the source code which allows you to write unit tests.
+
+<!-- TODO Lucca:
+* fuzzing is one testing paradigm (so one is one particular case of the other)
+* fuzzing is designed to reach a high coverage, ideally 100% while unitary testing might not reach such coverage level that easily
+* fuzzing is often fully automated
+* fuzzing scales better.
+-->
 
 ## Usual implementation of a Fuzzer
 
@@ -97,8 +104,15 @@ There are multiple points at which fuzzers can be optimized. Notably the importa
 |input_eval|Faster execution by using in-memory fuzzing or avoiding stdout|
 |conf_update|For evolutionary algorithms: choose a good fitness indicator|
 
+<!-- 
+TODO Lucca:
+another opportunity is to increase the coverage.
+the survey nicely explains the inherent tension in fuzzing: trying to prioritize test cases that are likely to trigger bugs versus trying to prioritize semantically diverse/radically different test cases that will increase the coverage or another metric and that could later become better candidates to find a bug. Focusing too much on the first one -> get stuck in one portion of the code and never find a bug. Focusing too much on the second one -> solely optimizing the wrong metric (improving the coverage or another metric) will lead to miss bugs.
+-->
+
 An other way to improve fuzzing coverage or speed is to skip checksum checks. For example it is notoriously difficult to generate an input which passes the checksum AND triggers a bug. This is also called PUT mutation.
 
+<!-- TODO: Lucca: Another approach to address this problem is to use the "encoder model": fuzz the plaintext and then apply the genuine function that computes the checksum (as opposed to fuzz the whole plaintext+checksum). -->
 
 ## Guided Fuzzing
 

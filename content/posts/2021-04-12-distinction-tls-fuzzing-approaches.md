@@ -41,7 +41,7 @@ Now let's take a look at related approaches which use a model to fuzz TLS.
 
   Similar to *tlsfuzzer* and *TLS-Attacker* as flexTLS also describes testcases for TLS communications.
 
-[frankencerts](https://github.com/sumanj/frankencert) focuses only on the certificates and therefore it not really interesting when fuzzing a protocol as a whole. It could serve as a building block though to increase coverage.
+*frankencerts* focuses only on the certificates and therefore it not really interesting when fuzzing a protocol as a whole. It could serve as a building block though to increase coverage.
 
 *tlsfuzzer* and *TLS-Attacker* are quite similar in the sense that they offer a programmatic way to specify and execute traces. They don't focus on automated fuzzing though[^2]. They are more tools to define explicit test cases. They are not automatically creating interesting traces based on feedback of the PUT.
 As they are implemented in Python and Java respectively it is also doubtful whether the code is usable in fuzzing because of performance reasons. Fuzzing usually requires a lot of runs to reach good edge or path coverage.
@@ -113,11 +113,31 @@ println!("{:?}", decoded_message);
 
 The above mentioned approaches all go in the direction of a model guided Fuzzer. They are able to create and serialize messages, inject messages or leave them out and fill fields of message with arbitrary values. This is a very good start. What is missing here though is that no tool has a proper algorithm to generate deviant or happy traces and give feedback on them. They are very manual in the sense that they are not fuzzing tools but testing frameworks.
 
+
+<!-- 
+TODO Lucca:
+
+The Three Dimensions of Fuzzing:
+
+What you wrote is correct. Here are some more details that may interest you and that are not well covered in the fuzzing survey you cite:
+
+* first dimension to categorize fuzzers: smart fuzzer (input structure aware) vs. dumb fuzzer (not aware of the input structure). Structure could be specified as grammar, formal specification, etc.
+* second dimension: generation-based fuzzer vs. mutation-based fuzzer. The first one corresponds to fuzzers that do not need an initial seed pool but that instead use a description of the input space to generate inputs from scratch. The second may not have a specification of the input space but uses instead a seed pool corresponding to many valid executions (e.g., unitary tests, happy flow in a protocol), mutations will then be used to generate new test cases. Note that generation-based fuzzers may also use mutations to mutate test cases generated before or mutated before.
+* white-box/gray-box/black-box fuzzers (should be self-explanatory).
+
+In the survey they "define" model-based as smart+generation-based.
+That is fine and you don't need to modify your write-up.
+-->
+
 <!--
 ## Limitations of TLS Attacker
 
 ## Protobuf as binary format between Rust and OpenSSL
 -->
+
+## Other projects in this direction
+
+* [tlsbunny](https://github.com/artem-smotrakov/tlsbunny)
 
 [^1]: [The Art, Science, and Engineering of Fuzzing: A Survey](https://arxiv.org/abs/1812.00140)
 [^2]: [TLS Test Framework How to check if your SSL server is standards compliant and client compatible](https://youtu.be/fChzF_UkAGc?t=450)
