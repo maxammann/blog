@@ -13,7 +13,7 @@ This research blog focuses on novel ways to fuzz the TLS cryptographic protocol.
 
 The classical example for a model which creates fuzz inputs is a grammar. A grammar of a programming language can directly generate syntactically correct programs encoded as text. Furthermore, such a grammar can generate abstract syntax trees (AST), which is just an encoding of the program which is easier to mutate. After mutating an abstract syntax tree it is possible to  serialize it to a text-file before passing it to the PUT. 
 
-Note that an AST is similar indeed also a model. Therefore, one should differentiate between models which generate inputs (meta-model) and models which represent inputs.
+Note that an AST is also a model. Therefore, one should differentiate between models which generate inputs (meta-model) and models which represent inputs.
 
 ## Bit-level Fuzzing
 
@@ -25,21 +25,14 @@ This approach is not suitable for protocols, especially cryptographic ones. Late
 
 Now let's take a look at related approaches which use a model to fuzz TLS.
 
-* [frankencerts](https://github.com/sumanj/frankencert)
+|Framework|Short description|
+|---|---|
+|[frankencerts](https://github.com/sumanj/frankencert)|Generates "frankenstein" certificates for testing certificate validation|
+|[TLS-Attacker](https://github.com/tls-attacker/TLS-Attacker)|Basically a TLS client which executes traces in configurable ways. Like: Send ClientHello with ECPointFormat and HeartbeatExtension. Expect ServerHello and Certificate messages from server. This allows to check for vulnerabilities like Heartbleed.|
+|[tlsfuzzer](https://tlsfuzzer.readthedocs.io/en/latest/testimonials.html)|Allows one to create test-cases which send and expect TLS packets. *tlsfuzzer* can be run against a server to check for vulnerabilities like DROWN or ROBOT.|
+|["Symbolic-Model-Aware Fuzzing of Cryptographic Protocols"](https://members.loria.fr/LHirschi/#teaching)|Uses [IJON](https://github.com/RUB-SysSec/ijon) to guide the fuzzer. The input for the PUT is a binary file which represents an abstract execution trace. This trace is mutated by standard AFL methods. The execution is guided by IJON, which uses a scoring. |
+|[flexTLS (abandoned)](https://mitls.org/pages/flextls) and [miTLS fstar (TLS 1.3)](https://github.com/project-everest/mitls-fstar)|Similar to *tlsfuzzer* and *TLS-Attacker* as flexTLS also describes testcases for TLS communications.|
   
-  Generates "frankenstein" certificates for testing certificate validation
-* [TLS-Attacker](https://github.com/tls-attacker/TLS-Attacker)
-
-  Basically a TLS client which executes traces in configurable ways. Like: Send ClientHello with ECPointFormat and HeartbeatExtension. Expect ServerHello and Certificate messages from server. This allows to check for vulnerabilities like Heartbleed.
-* [tlsfuzzer](https://tlsfuzzer.readthedocs.io/en/latest/testimonials.html)
-
-  Allows one to create test-cases which send and expect TLS packets. *tlsfuzzer* can be run against a server to check for vulnerabilities like DROWN or ROBOT.
-* ["Symbolic-Model-Aware Fuzzing of Cryptographic Protocols"](https://members.loria.fr/LHirschi/#teaching)
-
-  Uses [IJON](https://github.com/RUB-SysSec/ijon) to guide the fuzzer. The input for the PUT is a binary file which represents an abstract execution trace. This trace is mutated by standard AFL methods. The execution is guided by IJON, which uses a scoring. 
-* [flexTLS (abandoned)](https://mitls.org/pages/flextls) and [miTLS fstar (TLS 1.3)](https://github.com/project-everest/mitls-fstar)
-
-  Similar to *tlsfuzzer* and *TLS-Attacker* as flexTLS also describes testcases for TLS communications.
 
 *frankencerts* focuses only on the certificates and therefore it not really interesting when fuzzing a protocol as a whole. It could serve as a building block though to increase coverage.
 
