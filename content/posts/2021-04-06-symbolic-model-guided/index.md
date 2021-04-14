@@ -163,8 +163,8 @@ let c = new Channel()
 let ctxClient = c.newContext()
 let ctxServer = c.newContext()
 
-let skA: skey = gen_sk()
-let skB: skey = gen_sk()
+let skA: skey = ctxClient.gen_sk()
+let skB: skey = ctxServer.gen_sk()
 
 // We suppose in our model that keys are preshared.
 let pkA: pkey = pk(skA)
