@@ -19,4 +19,5 @@
     "editor.wordWrapColumn": 80,
 },
 "markdown.preview.openMarkdownLinks": "inEditor",
+"explorer.sortOrder": "mixed",
 }
