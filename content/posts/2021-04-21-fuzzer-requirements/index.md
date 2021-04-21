@@ -143,6 +143,9 @@ More requirements:
 >
 > Random: Create *VariableData* out of random other *VariableData* and use it in fields of messages
 
+> Support key establishment through (resumption & external) pre-shared keys & 0-RTT mode. (Allows to model Selfie attack) 
+
+ > Possibility to share variables like PSK between one or multiple parties. Allow to declare that specific types of variables are shared.
 
 ### Components: "Symbolic Traces Seed Pool" and "Mutate Symbolic Traces"
 
