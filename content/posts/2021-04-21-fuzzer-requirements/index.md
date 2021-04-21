@@ -103,19 +103,31 @@ Apart from triggering the bug we also want to be able to detect it. Therefore, w
 > * Downgrade attacks → Caused by implementation bugs
 > * Selfie Attack → More generally reflection attacks
 
-> Detect known attack traces against OpenSSL like a violation of authentication or denial of service.
+---
+
+Detect known attack traces against OpenSSL like a violation of authentication or denial of service.
 
 More requirements:
 
 > Agents can not only eavesdrop on messages but also change them. This is required to detect issues like in Needham-Schröder.
 
+---
+
 > It must be possible to have more than two agents. The minimum is 3 agents which must be possible.
+
+---
 
 > The PUT should be able to act as a TLS client and TLS server.
 
+---
+
 > Variables owned by an agent must remain secret.
 
+---
+
 > Data received during the execution must be available through variables.
+
+---
 
 > It must be possible to do a complete TLS handshake between:
 > * a dishonest agent (custom implementation in Rust) and an OpenSSL client and
@@ -123,13 +135,26 @@ More requirements:
 >
 > It is not required that we can perform a handshake between two dishonest agents as in that case we would not test the PUT.
 
+---
+
+> Ability to combine variables using explicit or random cryptographic functions. 
+>
+> Explicit: For example after the `ServerHello` the secret `client_handshake_traffic_secret` can be derived using the [Key Schedule in RFC 8446](https://tools.ietf.org/html/rfc8446#section-7.1). This secret must be stored as a *VariableData*.
+>
+> Random: Create *VariableData* out of random other *VariableData* and use it in fields of messages
+
+
 ### Components: "Symbolic Traces Seed Pool" and "Mutate Symbolic Traces"
 
 Requirements:
 
 > The initial seed pool must allow the generation of infinitely many traces.
 
+---
+
 > The generator of traces should favor those which are meaningful and reach deep states withing TLS.
+
+---
 
 > Feedback of executions must be used to guide the mutations.
 
@@ -144,6 +169,8 @@ Requirements:
 Requirements:
 
 > The fuzzer should not only observe crashes, but also violations of security properties like authentication.
+
+---
 
 > The bug oracle must be able to decide whether an attack on
 > * authentication,
