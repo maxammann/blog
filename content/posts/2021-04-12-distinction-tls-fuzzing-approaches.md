@@ -48,6 +48,10 @@ As they are implemented in Python and Java respectively it is also doubtful whet
 
 The fuzzing is only basic though. For example the SmackTLS tool, which is based on flexTLS checks that deviant traces finish with an alert message and terminate properly [^4]. This is indeed very similar to *tlsfuzzer*: "While [tlsfuzzer] uses fuzzing techniques for testing (randomisation of passed in inputs), the scripts are generally written in a way that verifies correct error handling: unlike typical fuzzers it doesn't check only that the system under test didn't crash, it checks that it returned correct error messages."
 
+<!-- TODO Lucca:
+But FlexTLS is used with custom mutators and security policies/bug oracle to capture some sort of logical attacks right?
+-->
+
  A *flexTLS* script looks like this[^3]:
 
 ```rust
@@ -68,10 +72,10 @@ let st,_ = FlexCCS.send(st)in
 
 The work about "Symbolic-Model-Aware Fuzzing" guides the fuzzer using the IJON. Clients and servers are represented by agents. The input of an abstract execution trace creates agents, does a handshake between them, creates messages and terms. Messages are then sent between the agents.
 After each execution of a trace a score is calculated which is used to evaluate the run.
-It is not possible to modify messages of the handshake. Therefore, there is still work to do in order to allow traces which diverge from the happy path.
+It is possible to simulate that an adversary is able to control several fields in messages like `ClientHello`. 
 
 
-In order to produce deviant attack traces one can not use a preexisting TLS library which is used in production as they try hard not to create invalid traces[^2]. That is their job in the first place.
+In order to produce deviant attack traces one can not use a preexisting TLS library, which is used in production as they try hard not to create invalid traces[^2]. Their job is to create happy paths and avoid deviant ones.
 The only exception I know so far is [rustls](https://github.com/ctz/rustls). It is quite easy to create and parse packets there. To serialize a message:
 
 ```rust
@@ -104,7 +108,7 @@ decoded_message.decode_payload();
 println!("{:?}", decoded_message);
 ```
 
-The above mentioned approaches all go in the direction of a model guided Fuzzer. They are able to create and serialize messages, inject messages or leave them out and fill fields of message with arbitrary values. This is a very good start. What is missing here though is that no tool has a proper algorithm to generate deviant or happy traces and give feedback on them. They are very manual in the sense that they are not fuzzing tools but testing frameworks.
+The above mentioned approaches all go in the direction of a model guided fuzzer. They are able to create and serialize messages, inject messages or leave them out and fill fields of message with arbitrary values. This is a very good start. What is missing here though is that no tool has a proper algorithm to generate deviant or happy traces and give feedback on them. They are very manual in the sense that they are not fuzzing tools but testing frameworks.
 
 
 <!-- 
