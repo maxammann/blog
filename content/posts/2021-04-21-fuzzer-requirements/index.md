@@ -42,12 +42,12 @@ For used teminology refer to the [glossary]({{< ref "2021-04-24-tlspuffin-glossa
 **An attacker** is able to craft arbitrary traces. An attacker can generate variables, receive variables and combine them using function and therefore deduce new variables.
 In an abstract way one could write:
 
-$$ t_1 = (new(a_1, n), new(a_1, k), Send(a_1, encode(f(v_1, ... v_n))) $$
+$$ t_1 = (\text{new}(a_1, n), \text{new}(a_1, k), \text{Send}(a_1, \text{encode}(f(v_1, ... v_n))) $$
 
 where $t_1$ is a trace which contains steps, 
-$new(a, v)$ creates new local variable $v$ which is private to $a$,
-$Send(a, d)$ publishes the bitstring $d$ from agent $a$ to the public channel and
-$encode(d)$ creates a sane TLS message from the data $d$.
+$\text{new}(a, v)$ creates new local variable $v$ which is private to $a$,
+$\text{Send}(a, d)$ publishes the bitstring $d$ from agent $a$ to the public channel and
+$\text{encode}(d)$ creates a sane TLS message from the data $d$.
 
 $f(v_1, ... v_n)$ is a chain of functions which a potential attacker can compute e.g. $f(v_1, ... v_n) = f(n,k) = enc(hash(n), k))$, where
 $hash(d)$ hashes the data $d$ and 
@@ -59,21 +59,22 @@ In reality some variables can be compromised but certain security properties wou
 
 **Honest agents** are able to send message to the attacker, e.g. when the attacker is eavesdropping. They are also able to receive messages of the attacker. Honest agents in our fuzzer usually use the PUT like OpenSSL. Their implementation tries to follow the RFC spec. Let's extend the previous trace by appending steps:
 
-$$ t_2 = (...t_1, Expect<ClientHello>(a_2)) $$
+$$ t_2 = (...t_1, \text{Expect\<ClientHello\>}(a_2)) $$
 
 where 
-$...$ spreads the previous trace and places the previous steps into $t_2$,
-$Expect<ClientHello>(c)$ expects that $c$ receives a message of type $ClientHello$. If $c$ is the PUT, like OpenSSL then it would parse the received message, collection received variables and then send out the next message like a `ServerHello`.
+$...t_1$ spreads the previous trace $t_1$ and places the previous steps into $t_2$ amd
+$\text{Expect\<ClientHello\>}(c)$ expects that $c$ receives a message of type $\text{ClientHello}$. 
+If $c$ is the PUT, like OpenSSL then it would parse the received message, collection received variables and then send out the next message like a $\text{ServerHello}.
 
 
 This notation defines what is happening in the network of agents. It leaves a lot of freedom on how a concrete trace would look like. If we want to create concrete executions when we need to fix certain components:
 
 * Define who receives messages (see [below](#message-passing-semantics))
-* An attacker can choose an arbitrary $f$. We need a way of generating specific function chains for $f$.
+* An attacker can choose an arbitrary $f$. We need a way of generating specific functions $f$.
 
 #### Message Passing Semantics
 
-In the previous traces we wrote that $Send(a_1, d)$ and described that it sends a message "to the public channel". This is of course arbitrary. This semantic makes sense in the case of MITM scenario, where the attacker has access to all messages. Now lets consider that the attacker is sitting on a ring bus part of a ring bus. 
+In the previous traces we wrote that $Send(a_1, d)$ and described that it sends a message "to the public channel". This semantic is of course arbitrary. This semantic makes sense in the case of MITM scenario, where the attacker has access to all messages. Now lets consider that the attacker is sitting on a ring bus part of a ring bus. 
 
 {{< resourceFigure "ring.drawio.svg" >}}
 Comparison of a ring and a star topology. The red symbol denotes an attacker. Once the attacker can only see traffic between two agents. In the other case the attacker can see all traffic in the network.
@@ -116,7 +117,7 @@ Note that the adversary does not have access to the random data generated and us
 #### From Abstract Traces to Concrete Traces
 
 The above traces are quite abstract and are not easily executable. The idea for the fuzzer is to use the abstract definitions to generate very concrete traces. In the Practical Approach below I will show how to create concrete traces which are executable.
-The generator and mutator of tlspuffin has the job of creating proper concrete traces.
+The generator and mutator of tlspuffin have the job of creating proper concrete traces.
 There are two ways of doing this:
 
 * Use an abstract model of traces and generate all (infinitely many) possible concrete traces. This means that because $f$ can be chosen arbitrary the attacker has an infinitely small change of guessing secrets like private keys.
