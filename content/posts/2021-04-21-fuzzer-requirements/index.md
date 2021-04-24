@@ -35,20 +35,94 @@ On a high level we try to build sane TLS messages. We do not try to produce inva
 **Therefore, a sane TLS message is defined as being parsable. In this fuzzer we are aiming for logical flaws in implementations.**
 Sending a TLS 1.3 `ClientHello` message without any extensions is a sane packet because it is parsable, even though the server will reject it as the Key Share extension is required in the latest version of TLS.
 
-### Theoretical Approach
+### Modeling Capabilities of Attackers and Honest Agents 
 
-Theoretically, we can achieve generating sane messages by chaining cryptographic functions together and in the end encoding this as a TLS packet. In an abstract way you could write:
+**An attacker** is able to craft arbitrary traces. An attacker can generate variables, receive variables and combine them using function and therefore deduce new variables.
+In an abstract way one could write:
 
-$$ t = (new(n), new(k), Send(c_1, c_2, encode(enc(hash(n), k))), Expect(...)) $$
+$$ t_1 = (new(a_1, n), new(a_1, k), Send(a_1, encode(f(v_1, ... v_n))) $$
 
-where $t$ is a trace, $new(v)$ creates new local variable $v$, $Send(c_1, c_2, d)$ sends the bitstring $d$ from client $c_1$ to $c_2$, $encode(d)$ creates a sane TLS message from the data $d$, $hash(d)$ hashes the data $d$ and $enc(d, k)$ encrypts data $d$ using the key $k$.
+where $t_1$ is a trace which contains steps, 
+$new(a, v)$ creates new local variable $v$ which is private to $a$,
+$Send(a, d)$ publishes the bitstring $d$ from agent $a$ to the public channel and
+$encode(d)$ creates a sane TLS message from the data $d$.
 
-$hash$ and $enc$ are and example randomly chosen cryptographic functions for this abstract trace. One could imagine to chain arbitrary functions together in order to create arbitrary TLS messages.
+$f(v_1, ... v_n)$ is a chain of functions which a potential attacker can compute e.g. $f(v_1, ... v_n) = f(n,k) = enc(hash(n), k))$, where
+$hash(d)$ hashes the data $d$ and 
+$enc(d, k)$ encrypts data $d$ using the key $k$.
 
-Difference between two approaches:
-* 
+$hash$ and $enc$ are and example randomly chosen cryptographic functions for this trace. One could imagine to chain arbitrary functions together in order to create arbitrary TLS messages.
 
-### Practical Approach
+In reality some variables can be compromised but certain security properties would still hold. That means it would be interesting to see what an attacker does if secrets are compromised.
+
+**Honest agents** are able to send message to the attacker, e.g. when the attacker is eavesdropping. They are also able to receive messages of the attacker. Honest agents in our fuzzer usually use the PUT like OpenSSL. Their implementation tries to follow the RFC spec. Let's extend the previous trace by appending steps:
+
+$$ t_2 = (...t_1, Expect<ClientHello>(a_2)) $$
+
+where 
+$...$ spreads the previous trace and places the previous steps into $t_2$,
+$Expect<ClientHello>(c)$ expects that $c$ receives a message of type $ClientHello$. If $c$ is the PUT, like OpenSSL then it would parse the received message, collection received variables and then send out the next message like a `ServerHello`.
+
+
+This notation defines what is happening in the network of agents. It leaves a lot of freedom on how a concrete trace would look like. If we want to create concrete executions when we need to fix certain components:
+
+* Define who receives messages (see [below](#message-passing-semantics))
+* An attacker can choose an arbitrary $f$. We need a way of generating specific function chains for $f$.
+
+#### Message Passing Semantics
+
+In the previous traces we wrote that $Send(a_1, d)$ and described that it sends a message "to the public channel". This is of course arbitrary. This semantic makes sense in the case of MITM scenario, where the attacker has access to all messages. Now lets consider that the attacker is sitting on a ring bus part of a ring bus. 
+
+{{< resourceFigure "ring.drawio.svg" >}}
+Comparison of a ring and a star topology. Once the attacker can only see traffic between two agents. In the other case the attacker can see all traffic in the network.
+ {{< /resourceFigure >}}
+
+ This means additionally to specifying who receives and sends messages, we also can define who is able to receive them. There are multiple ways of doing this:
+
+ * Publish every message to every agent except one self (MITM)
+ * Send message only to a specific agent (MITM)
+ * Send message to the next client who will receives a message according to the trace. In the example above this could mean that $a_1$ sends only to $a_2$.
+ * Send to the next two agents who will receive a message.
+
+<!-- TODO
+That's not exactly the way I saw this approach (that's might explain your comment above). Indeed, I don't see a notion of "honest agents" versus attacker here. Here is informally a grammar for something I had in mind:
+
+
+message ::=
+| new n [type] // adversary creates a new random n of "type" type (e.g., DH key, IDsession ,etc.)
+| messageHandle // a messageHandle yields a message
+| f(message_1,...,message_n) // apply any function symbol f (such as encyrption, hash, etc) to a series of messages
+
+trace ::= action*
+
+role ::= client | server
+
+action ::=
+  newAgent(role,idS)  // create a new agent playing role, identified by the session identifier idS (message of type IDsession)
+| setValueHonest(idS,variable,value) // set the internal value of variable to value of the agent identified by idS
+| in(idS, message) // send message to the agent identified by idS and make him parse and progress accordingly in the protocol (but stop before outputting anything)
+| out(idS, messageHandle) // make the agent identified by idS send message and refer to this message with messageHandle
+
+You can clearly see here the separation between 
+(i) honest agents that process messages in an honest way (with in(idS...) and out(idS,...) and 
+(ii) the adversary that can compute any message he wants (grammar of `message`) with the data he has gotten from honest agents' outputs (messageHandle), own keys and other kinds of random data (new), and through deduction capabilities (f(message_1....)). 
+
+Note that the adversary does not have access to the random data generated and used by honest parties (like key). One could add some compromise capabilities where the adversary gets such data. Note, however, that the adversary can already simulate/execute fully compromised agents with through the computations of any message` (by applying the appropriate function symbols).
+
+-->
+
+#### From Abstract Traces to Concrete Traces
+
+The above traces are quite abstract and are not easily executable. The idea for the fuzzer is to use the abstract definitions to generate very concrete traces. In the Practical Approach below I will show how to create concrete traces which are executable.
+The generator and mutator of tlspuffin has the job of creating proper concrete traces.
+There are two ways of doing this:
+
+* Use an abstract model of traces and generate all (infinitely many) possible concrete traces. This means that because $f$ can be chosen arbitrary the attacker has an infinitely small change of guessing secrets like private keys.
+* Start with a seed of some concrete traces. Mutate these to generate (infinitely many) more concrete traces.
+
+Before going either direction we first have to focus on the execution and implementation of concrete traces.
+
+### Practical Approach of Executing Concrete Traces
 
 This is a very theoretical idea which I want to concretize now in order to implement it using Rust. The following diagram shows the terms which will be explained in the following.
 
@@ -83,6 +157,9 @@ let trace = trace::Trace {
 ```
 
 They can have different implementations of the TLS protocol and can be honest or dishonest. That means there are agents which follow the TLS specifications one some which don't.
+<!--
+TODO How do you implement agents that do not follow the spec? 
+-->
 There are currently two different kinds of *Agents*. Firstly, a dishonest agent, which can craft arbitrary TLS messages and an OpenSSL agent, which uses OpenSSL to craft messages and respond to messages. 
 
 The *TraceContext* contains a list of *VariableData*, of which each has a *type* and an *owner*. *Send Actions* consume *VariableData*, whereas *Expect Actions* produce *VariableData*. *VariableData* can also be produced by initiating a *TraceContext* with predefined *VariableData*. *VariableData* can contain data of various types. For example client and server extensions, cipher suits, session ids etc.
