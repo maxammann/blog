@@ -1,12 +1,6 @@
 {
-  "spellright.language": [
-    "en_US"
-  ],
-  "spellright.documentTypes": [
-    "markdown",
-    "latex",
-    "plaintext"
-  ],
+  "spellright.language": ["en_US"],
+  "spellright.documentTypes": ["markdown", "latex", "plaintext"],
   "latex-workshop.latex.outDir": "%DIR%/build",
   "latex-workshop.view.pdf.viewer": "tab",
   "workbench.colorTheme": "Default Light+",
@@ -14,10 +8,10 @@
   "editor.wordWrapColumn": 60,
   "editor.wrappingIndent": "indent",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[markdown]":{
+  "[markdown]": {
     "editor.wordWrap": "wordWrapColumn",
-    "editor.wordWrapColumn": 80,
-},
-"markdown.preview.openMarkdownLinks": "inEditor",
-"explorer.sortOrder": "mixed",
+    "editor.wordWrapColumn": 80
+  },
+  "markdown.preview.openMarkdownLinks": "inEditor",
+  "explorer.sortOrder": "mixed"
 }
