@@ -35,6 +35,8 @@ On a high level we try to build sane TLS messages. We do not try to produce inva
 **Therefore, a sane TLS message is defined as being parsable. In this fuzzer we are aiming for logical flaws in implementations.**
 Sending a TLS 1.3 `ClientHello` message without any extensions is a sane packet because it is parsable, even though the server will reject it as the Key Share extension is required in the latest version of TLS.
 
+For used teminology refer to the [glossary]({{< ref "2021-04-24-tlspuffin-glossary" >}}) of tlspuffin.
+
 ### Modeling Capabilities of Attackers and Honest Agents 
 
 **An attacker** is able to craft arbitrary traces. An attacker can generate variables, receive variables and combine them using function and therefore deduce new variables.
@@ -74,7 +76,7 @@ This notation defines what is happening in the network of agents. It leaves a lo
 In the previous traces we wrote that $Send(a_1, d)$ and described that it sends a message "to the public channel". This is of course arbitrary. This semantic makes sense in the case of MITM scenario, where the attacker has access to all messages. Now lets consider that the attacker is sitting on a ring bus part of a ring bus. 
 
 {{< resourceFigure "ring.drawio.svg" >}}
-Comparison of a ring and a star topology. Once the attacker can only see traffic between two agents. In the other case the attacker can see all traffic in the network.
+Comparison of a ring and a star topology. The red symbol denotes an attacker. Once the attacker can only see traffic between two agents. In the other case the attacker can see all traffic in the network.
  {{< /resourceFigure >}}
 
  This means additionally to specifying who receives and sends messages, we also can define who is able to receive them. There are multiple ways of doing this:
@@ -84,7 +86,7 @@ Comparison of a ring and a star topology. Once the attacker can only see traffic
  * Send message to the next client who will receives a message according to the trace. In the example above this could mean that $a_1$ sends only to $a_2$.
  * Send to the next two agents who will receive a message.
 
-<!-- TODO
+<!--
 That's not exactly the way I saw this approach (that's might explain your comment above). Indeed, I don't see a notion of "honest agents" versus attacker here. Here is informally a grammar for something I had in mind:
 
 
@@ -130,14 +132,22 @@ This is a very theoretical idea which I want to concretize now in order to imple
 A diagram which shows the used concepts and how they are linked with each other. No methods or functions are shown, only data.
  {{< /resourceFigure >}}
 
-A *Trace* consists of several *Steps*. Each has either an *Send-* or an *Expect-Action*. Each *Step* references two *Agents* by name. 
-In case of a *Send* *Action* the *Agents* denote respectively: *From* which *agent* *to* which *agent* a message is sent.
-In case of an *Expect* *Action* the *Agents* denote: *From* which *agent* is the message expected and *to* which *agent* the message should be sent.
+A *Trace* consists of several *Steps*. Each has either an *Send-* or an *Expect-Action*. Each *Step* references an *Agents* by name. 
+In case of a *Send* *Action* the *Agent* denotes: From which *Agent* a message is sent.
+In case of an *Expect* *Action* the *Agent* denotes: Which *Agent* is expecting a message.
 
 *Agents* represent communication participants like Alice, Bob or Eve. 
-Each *Agent* has an *inbound* and an *outbound channel*. These are currently implemented by using an in-memory buffer. 
+Each *Agent* has an *inbound* and an *outbound channel*. These are currently implemented by using an in-memory buffer.
 
-The *Agent* Alice can add data to the *inbound channel* of Bob. Bob can then read the data from his *inbound channel* and put data in his *outbound channel*. If Bob is an OpenSSL *Agent* then then OpenSSL handles this. An *Expect Action* can then verify whether the *outbound channel* contains the expected message and extract *VariableData* from it. After extracting the variables Bob adds the data from his *outbound channel* to the *inbound channel* of Alice.
+One might ask why we need two channels. There two reasons for this:
+* Having two buffers resembles how networking works in reality: Each computer has an send buffer and an receive buffer. In case of TCP the receive buffer can become full and therefore the transmission is throttled. 
+* It is beneficial to model each agent with two buffers according to the Single-responsibility principle. When sending or receiving data each agent only has to look at its own two buffers. If each agent would have only one buffer then you would need to read from an other agent which has the data you want. Or if you design it the other way around you would need to write to the buffer of the agent to which you want send data.
+* By having two buffers it is possible to define message passing semantics outside of the scope of the agents. The routine which is executing a trace can decide which message should be send to which agents.
+
+The *Agent* Alice can add data to the *inbound channel* of Bob. Bob can then read the data from his *inbound channel* and put data in his *outbound channel*. If Bob is an OpenSSL *Agent* then then OpenSSL handles this.
+Not the message passing semantics make sure that messages are fetched from agents and delivered to others.
+
+An *Expect Action* can then verify whether the *inbound channel* contains the expected message and extract *VariableData* from it.
 
 The implementation of this trace looks like this:
 
@@ -145,22 +155,23 @@ The implementation of this trace looks like this:
 let trace = trace::Trace {
   steps: vec![
         Step {
-            from: dishonest_agent, to: openssl_server_agent,
+            agent: dishonest_agent,
             action: &ClientHelloSendAction::new()
         },
         Step {
-            from: dishonest_agent, to: openssl_server_agent,
+            agent: openssl_server_agent,
             action: &ServerHelloExpectAction::new()
         },
     ],
 };
 ```
 
-They can have different implementations of the TLS protocol and can be honest or dishonest. That means there are agents which follow the TLS specifications one some which don't.
 <!--
 TODO How do you implement agents that do not follow the spec? 
 -->
-There are currently two different kinds of *Agents*. Firstly, a dishonest agent, which can craft arbitrary TLS messages and an OpenSSL agent, which uses OpenSSL to craft messages and respond to messages. 
+There are currently two different kinds of *Agents*. Firstly, a dishonest agent, which can craft arbitrary TLS messages and do not need to follow the RFC spec. Remember the arbitrary $f$ which can perform computations not defined in any RFCs.
+
+Secondly, there are OpenSSL agents, which use OpenSSL to craft messages and respond to messages.
 
 The *TraceContext* contains a list of *VariableData*, of which each has a *type* and an *owner*. *Send Actions* consume *VariableData*, whereas *Expect Actions* produce *VariableData*. *VariableData* can also be produced by initiating a *TraceContext* with predefined *VariableData*. *VariableData* can contain data of various types. For example client and server extensions, cipher suits, session ids etc.
 
