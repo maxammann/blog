@@ -14,7 +14,7 @@ categories: [research-blog]
 My symbolic-model guided fuzzer for OpenSSL has now a name. It is called `tlspuffin` and stands for **T**LS **P**rotocols **U**nder **F**uzz**IN**g.
 
 The first implementation of the fuzzer will written in [Rust](https://www.rust-lang.org/) and be based on [LibAFL](https://github.com/AFLplusplus/LibAFL) [^1].
-We will jump on to the Rust hype-🚆! That is actually beneficial for the project as the fuzzing community is currently testing the waters by using Rust for the implementation of fuzzing algorithms[^2].
+We will jump on to the Rust Hype-🚆! That is actually beneficial for the project as the fuzzing community is currently testing the waters by using Rust for the implementation of fuzzing algorithms[^2].
 LibAFL promises to provide a framework to build on top. It has a concept of Executors, Generators, Observers or Feedback which will be helpful when after designing how the input of the fuzzer will look like.
 
 I went with OpenSSL as the first fuzzing target. There are multiple reasons for this decision. Rust is not able to call C++ libraries directly [^3]. That means [https://botan.randombit.net/](https://botan.randombit.net/) is not an ideal choice. While it would be possible to wrap Botan in a C library and then call that from Rust, it would involve quite some work.
@@ -29,9 +29,9 @@ Last but not least, the long history of vulnerabilities in OpenSSL allows us to 
 
 ## Architecture of the Fuzzer
 
-Let's remember that we aim to fuzz OpenSSL on a protocol level. That means we try to find implementation bugs which lead to security issues on a logical level. Let's say for example that our TLS client uses a DH private key for authentication. Now the server receives that request via a `ClientCertificate` message. Because of an implementation bug the OpenSSL server allow the client to skip the usually mandatory `ClientCertificateVerify` message. This violates the authentication security, as the server thinks that the client is authenticated without proving that the client owns the private key to the sent certificate. This vulnerability actually existed in OpenSSL and is known as SKIP and CVE-2015-0205 [^4].
+Let's remember that we aim to fuzz OpenSSL on a protocol level. That means we try to find implementation bugs which lead to security issues on a logical level. Let's say for example that our TLS client uses a DH private key for authentication. Now the server receives that request via a `ClientCertificate` message. Because of an implementation bug the OpenSSL server allow the client to skip the usually mandatory `ClientCertificateVerify` message. This violates the authentication security, as the server thinks that the client is authenticated without proving that the client owns the private key of the sent certificate. This vulnerability actually existed in OpenSSL and is known as SKIP and CVE-2015-0205 [^4].
 
-On a high level we try to build sane TLS messages. We do not try to produce invalid TLS packets which are not parsable. For example we are not trying to build TLS message, which contain only 4 extensions but the integer field in the message says that there are 10. This is not a sane TLS message. 
+On a high level we try to build sane TLS messages. We do not try to produce invalid TLS packets which are not parsable. For example, we are not trying to build TLS message, which contain only 4 extensions, but the integer field in the message says that there are 10. This is not a sane TLS message. 
 **Therefore, a sane TLS message is defined as being parsable. In this fuzzer we are aiming for logical flaws in implementations.**
 Sending a TLS 1.3 `ClientHello` message without any extensions is a sane packet because it is parsable, even though the server will reject it as the Key Share extension is required in the latest version of TLS.
 
@@ -42,7 +42,7 @@ For used teminology refer to the [glossary]({{< ref "2021-04-24-tlspuffin-glossa
 **An attacker** is able to craft arbitrary traces. An attacker can generate variables, receive variables and combine them using function and therefore deduce new variables.
 In an abstract way one could write:
 
-$$ t_1 = (\text{new}(a_1, n), \text{new}(a_1, k), \text{Send}(a_1, \text{encode}(f(v_1, ... v_n))) $$
+$$ t_1 = (\text{new}(a_1, n), \text{new}(a_1, k), \text{Send}(a_1, \text{encode}(f(v_1, ... v_n))) $$,
 
 where $t_1$ is a trace which contains steps, 
 $\text{new}(a, v)$ creates new local variable $v$ which is private to $a$,
@@ -53,16 +53,16 @@ $f(v_1, ... v_n)$ is a chain of functions which a potential attacker can compute
 $hash(d)$ hashes the data $d$ and 
 $enc(d, k)$ encrypts data $d$ using the key $k$.
 
-$hash$ and $enc$ are and example randomly chosen cryptographic functions for this trace. One could imagine to chain arbitrary functions together in order to create arbitrary TLS messages.
+$hash$ and $enc$ are and example randomly chosen cryptographic functions for this trace. One could imagine chaining arbitrary functions together in order to create arbitrary TLS messages.
 
-In reality some variables can be compromised but certain security properties would still hold. That means it would be interesting to see what an attacker does if secrets are compromised.
+In reality some variables can be compromised, but certain security properties would still hold. That means it would be interesting to see what an attacker does if secrets are compromised.
 
 **Honest agents** are able to send message to the attacker, e.g. when the attacker is eavesdropping. They are also able to receive messages of the attacker. Honest agents in our fuzzer usually use the PUT like OpenSSL. Their implementation tries to follow the RFC spec. Let's extend the previous trace by appending steps:
 
 $$ t_2 = (...t_1, \text{Expect\<ClientHello\>}(a_2)) $$
 
 where 
-$...t_1$ spreads the previous trace $t_1$ and places the previous steps into $t_2$ amd
+$...t_1$ spreads the previous trace $t_1$ and places the previous steps into $t_2$ and
 $\text{Expect\<ClientHello\>}(c)$ expects that $c$ receives a message of type $\text{ClientHello}$. 
 If $c$ is the PUT, like OpenSSL then it would parse the received message, collection received variables and then send out the next message like a $\text{ServerHello}.
 
@@ -84,7 +84,7 @@ Comparison of a ring and a star topology. The red symbol denotes an attacker. On
 
  * Publish every message to every agent except one self (MITM)
  * Send message only to a specific agent (MITM)
- * Send message to the next client who will receives a message according to the trace. In the example above this could mean that $a_1$ sends only to $a_2$.
+ * Send message to the next client who will receive a message according to the trace. In the example above this could mean that $a_1$ sends only to $a_2$.
  * Send to the next two agents who will receive a message.
 
 <!--
@@ -133,7 +133,7 @@ This is a very theoretical idea which I want to concretize now in order to imple
 A diagram which shows the used concepts and how they are linked with each other. No methods or functions are shown, only data.
  {{< /resourceFigure >}}
 
-A *Trace* consists of several *Steps*. Each has either an *Send-* or an *Expect-Action*. Each *Step* references an *Agents* by name. 
+A *Trace* consists of several *Steps*. Each has either a *Send-* or an *Expect-Action*. Each *Step* references an *Agents* by name. 
 In case of a *Send* *Action* the *Agent* denotes: From which *Agent* a message is sent.
 In case of an *Expect* *Action* the *Agent* denotes: Which *Agent* is expecting a message.
 
@@ -141,11 +141,11 @@ In case of an *Expect* *Action* the *Agent* denotes: Which *Agent* is expecting 
 Each *Agent* has an *inbound* and an *outbound channel*. These are currently implemented by using an in-memory buffer.
 
 One might ask why we need two channels. There two reasons for this:
-* Having two buffers resembles how networking works in reality: Each computer has an send buffer and an receive buffer. In case of TCP the receive buffer can become full and therefore the transmission is throttled. 
-* It is beneficial to model each agent with two buffers according to the Single-responsibility principle. When sending or receiving data each agent only has to look at its own two buffers. If each agent would have only one buffer then you would need to read from an other agent which has the data you want. Or if you design it the other way around you would need to write to the buffer of the agent to which you want send data.
-* By having two buffers it is possible to define message passing semantics outside of the scope of the agents. The routine which is executing a trace can decide which message should be send to which agents.
+* Having two buffers resembles how networking works in reality: Each computer has a input and a output buffer. In case of TCP the input buffer can become full and therefore the transmission is throttled. 
+* It is beneficial to model each agent with two buffers according to the Single-responsibility principle. When sending or receiving data each agent only has to look at its own two buffers. If each agent had only one buffer, then you would need to read from another agent which has the data you want. Or if you design it the other way around you would need to write to the buffer of the agent to which you want to send data.
+* By having two buffers it is possible to define a message passing semantic. The routine which is executing a trace can decide which message should be sent to which agents.
 
-The *Agent* Alice can add data to the *inbound channel* of Bob. Bob can then read the data from his *inbound channel* and put data in his *outbound channel*. If Bob is an OpenSSL *Agent* then then OpenSSL handles this.
+The *Agent* Alice can add data to the *inbound channel* of Bob. Bob can then read the data from his *inbound channel* and put data in his *outbound channel*. If Bob is an OpenSSL *Agent* then OpenSSL handles this.
 Not the message passing semantics make sure that messages are fetched from agents and delivered to others.
 
 An *Expect Action* can then verify whether the *inbound channel* contains the expected message and extract *VariableData* from it.
@@ -174,7 +174,7 @@ There are currently two different kinds of *Agents*. Firstly, a dishonest agent,
 
 Secondly, there are OpenSSL agents, which use OpenSSL to craft messages and respond to messages.
 
-The *TraceContext* contains a list of *VariableData*, of which each has a *type* and an *owner*. *Send Actions* consume *VariableData*, whereas *Expect Actions* produce *VariableData*. *VariableData* can also be produced by initiating a *TraceContext* with predefined *VariableData*. *VariableData* can contain data of various types. For example client and server extensions, cipher suits, session ids etc.
+The *TraceContext* contains a list of *VariableData*, of which each has a *type* and an *owner*. *Send Actions* consume *VariableData*, whereas *Expect Actions* produce *VariableData*. *VariableData* can also be produced by initiating a *TraceContext* with predefined *VariableData*. *VariableData* can contain data of various types. For example client and server extensions, cipher suits, session IDs etc.
 
 
 ## Functional Requirements
@@ -201,7 +201,7 @@ Execute traces of known attacks against OpenSSL caused by implementation bugs. E
 * SKIP → Skipping of messages
 * Certificate Swapping → Replacing certificates via MITM
 * Downgrade attacks → Caused by implementation bugs
-* Selfie Attack → More generally reflection attacks
+* Selfie Attack → More generally reflection attacks.
 
 ---
 
@@ -246,7 +246,7 @@ Ability to combine variables using explicit or random cryptographic functions.
 
 ---
 
-Support key establishment through (resumption & external) pre-shared keys & 0-RTT mode. (Allows to model Selfie attack) 
+Support key establishment through (resumption & external) pre-shared keys & 0-RTT mode. (Allows modeling Selfie attack) 
 
 ---
 
