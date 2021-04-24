@@ -120,8 +120,8 @@ The above traces are quite abstract and are not easily executable. The idea for 
 The generator and mutator of tlspuffin have the job of creating proper concrete traces.
 There are two ways of doing this:
 
-* Use an abstract model of traces and generate all (infinitely many) possible concrete traces. This means that because $f$ can be chosen arbitrary the attacker has an infinitely small change of guessing secrets like private keys.
-* Start with a seed of some concrete traces. Mutate these to generate (infinitely many) more concrete traces.
+* **Use an abstract model of traces and generate all (infinitely many) possible concrete traces. This means that because $f$ can be chosen arbitrary the attacker has an infinitely small change of guessing secrets like private keys.**
+* **Start with a seed of some concrete traces. Mutate these to generate(infinitely many) more concrete traces.**
 
 Before going either direction we first have to focus on the execution and implementation of concrete traces.
 
