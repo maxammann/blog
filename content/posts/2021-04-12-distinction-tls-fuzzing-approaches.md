@@ -28,13 +28,14 @@ Now let's take a look at related approaches which use a model to fuzz TLS.
 |Framework|Short description|
 |---|---|
 |[frankencerts](https://github.com/sumanj/frankencert)|Generates "frankenstein" certificates for testing certificate validation|
+|[CertificateFuzzer](https://github.com/franziskuskiefer/CertificateFuzzer)|Fuzzes certificates|
 |[TLS-Attacker](https://github.com/tls-attacker/TLS-Attacker)|Basically a TLS client which executes traces in configurable ways. Like: Send ClientHello with ECPointFormat and HeartbeatExtension. Expect ServerHello and Certificate messages from server. This allows to check for vulnerabilities like Heartbleed.|
 |[tlsfuzzer](https://tlsfuzzer.readthedocs.io/en/latest/testimonials.html)|Allows one to create test-cases which send and expect TLS packets. *tlsfuzzer* can be run against a server to check for vulnerabilities like DROWN or ROBOT.|
 |["Symbolic-Model-Aware Fuzzing of Cryptographic Protocols"](https://members.loria.fr/LHirschi/#teaching)|Uses [IJON](https://github.com/RUB-SysSec/ijon) to guide the fuzzer. The input for the PUT is a binary file which represents an abstract execution trace. This trace is mutated by standard AFL methods. The execution is guided by IJON, which uses a scoring. |
 |[flexTLS (abandoned)](https://mitls.org/pages/flextls) and [miTLS fstar (TLS 1.3)](https://github.com/project-everest/mitls-fstar)|Similar to *tlsfuzzer* and *TLS-Attacker* as flexTLS also describes testcases for TLS communications.|
   
 
-*frankencerts* focuses only on the certificates and therefore it not really interesting when fuzzing a protocol as a whole. It could serve as a building block though to increase coverage.
+*frankencerts*, *CertificateFuzzer* focuse only on the certificates and therefore it not really interesting when fuzzing a protocol as a whole. It could serve as a building block though to increase coverage.
 
 *tlsfuzzer* and *TLS-Attacker* are quite similar in the sense that they offer a programmatic way to specify and execute traces. They don't focus on automated fuzzing though[^2]. They are more tools to define explicit test cases. They are not automatically creating interesting traces based on feedback of the PUT.
 As they are implemented in Python and Java respectively it is also doubtful whether the code is usable in fuzzing because of performance reasons. Fuzzing usually requires a lot of runs to reach good edge or path coverage.
