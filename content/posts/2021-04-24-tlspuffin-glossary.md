@@ -9,7 +9,7 @@ keywords: []
 categories: [research-blog]
 ---
 
-In the previous posts we already used some terms quite loosely. Therefore I present a glossary in this post.
+In the previous posts we already used some terms quite loosely.
 
 
 |Term|Description|

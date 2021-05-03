@@ -13,22 +13,20 @@ categories: [research-blog]
 
 ## Syntax
 
+* Cryptographic operations are modeled by symbols of fixed arity $F=\\{f\/n,g\/m,...\\}$. $F$ contains both constructors $F_c$ and destructors $F_d$.
+* $N_{pub}$ contains all publicly known names. Usually this set contains only the session identifiers of the participating agents. Therefore, the public set of names could contain the session identifiers for a client $c$ and a server $s$ modeled as symbol names.
+* The rewriting systemd $R$ defines the spaces of terms which the attacker can compute. For example if the attacker knows the term $aenc(m, pk(k))$ and $k$, she can use the recipe $ξ=adec(ax_1, ax_2)$ to compute $m$, where $ax_1$ and $ax_2$ are handles to the messages already received.
+* A rewriting system is usually not enough when the protocol contains terms like $g^{ab}$ as there is no way to know that it is equal to $g^{ba}$. As this kind of computation is important in DH, the attack should be able to reason about it.
+* The set of opaque states $State$. Each state contains the internal states of all agents. For example at some point in time the state $st \in State$ contains the shared key between a client $c \in N_{pub}$ and a server $s  \in N_{pub}$.
+* The set of all axioms which represent handles to messages $\mathcal{AX} = \\{ax_n | n \in \mathbb{N} \\}$. Not all message handles are used.
+* The set of all terms is described by $\mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{AX} \cup dom(\Phi))$.
 
-## Rewriting Systems
-
-## Equivalence System
-
-### Symbols
+### Rewriting Systems
 
 TODO
+### Equivalence System
 
-* N_pub
-* State
-* Axioms
-* N_priv?
-* F_c, F_d, F
-* Rewriting System R
-
+TODO
 ### Trace
 
 A trace is defined as follows:
@@ -36,57 +34,55 @@ A trace is defined as follows:
 {{< katex >}}
 \begin{align*}
 T, R := && 0                \qquad&&\text{null} \\
-        && \bar{u}(ax_n)    \qquad&& \text{send} \\
-        && u(t)             \qquad&&\text{receive}
+        && \bar{u}(ax_n).T  \qquad&& \text{send} \\
+        && u(t).T           \qquad&&\text{receive}
 \end{align*}
 {{< /katex >}}
 
-where the handle $ax_n \in \mathcal{AX}$, the handle id $n \in \mathbb{N}$, $t\$ is a term and $u \in N_{pub}$.
+where the handle $ax_n \in \mathcal{AX}$, the handle id $n \in \mathbb{N}$, $t\$ is a term and $u \in N_{pub}$. Actions can be concatenated using a $.$ to create a trace which does several things e.g. $\bar{c}(ax_1).s(t_1).\bar{s}(ax_2)$.
 
 ### Extended Trace
 
-An extended process is a pair $A = (\varUpsilon, \Phi, st)$
+An extended trace is a pair $A = (T, st, \Phi)$
 
-* $\varUpsilon$ is a multiset of closed plain traces
-* $\Phi = \\{ ax_1 \mapsto t_1, ..., ax_n \mapsto t_n \\}$, called the frame is a substitution from axioms to ground constructor terms
+* $T$ is a closed plain trace
 * $st \in State$ is an opaque state which resembles the internal states of all sessions
+* $\Phi = \\{ ax_1 \mapsto t_1, ..., ax_n \mapsto t_n \\}$, called the frame is a substitution from axioms to ground constructor terms
 
 ## Semantics
 
-
-
 {{< katex >}}
 \begin{align}
-(\varUpsilon \cup \{\!\!\{0\}\!\!\}, \Phi, st) 
+(0.T, st, \Phi) 
 \xrightarrow{\epsilon} 
-(\varUpsilon, \Phi, st)
+(T, st, \Phi)
 \tag{NULL}
 \end{align}
 
 
 \begin{align}
-(\varUpsilon \cup \{\!\!\{\bar{u}(ax_n).T\}\!\!\}, \Phi, st) 
+(\bar{u}(ax_n).T, st, \Phi) 
 \xrightarrow{\bar {\xi}(ax_n)} 
 (
-    \varUpsilon \cup \{\!\!\{T\}\!\!\}, 
-    \Phi \cup \{ax_n \mapsto out(\tilde{st}, \xi), \}, 
-    \tilde{st}
+    T, 
+    \tilde{st},
+    \Phi \cup \{ax_n \mapsto out(\tilde{st}, \xi), \}
 ) \\
 \text{where $\tilde{st} = next(st, \xi, \sigma)$} \\
-\text{if $\xi \in N_{pub}$ and $Msg(out(\tilde{st}, \xi)$}
+\text{if $\xi \in N_{pub}$ and $Msg(out(\tilde{st}, \xi))$}
 \tag{SEND}
 \end{align}
 
 
 \begin{align}
-(\varUpsilon \cup \{\!\!\{u(t).T\}\!\!\}, \Phi, st) 
+(u(t).T, st, \Phi) 
 \xrightarrow{\xi(\zeta)} 
 (
-    \varUpsilon \cup \{\!\!\{T\}\!\!\}, 
-    \Phi, 
-    next(st, \xi, t)
+    T, 
+    next(st, \xi, t\Phi),
+    \Phi
 ) \\
-\text{if $\xi \in N_{pub}$ and $t \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{AX} \cup dom(\Phi))$}
+\text{if $\xi \in N_{pub}$, the recipe $t \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{AX})$ and $Msg(t\Phi)$}
 \tag{REC}
 \end{align}
 
@@ -98,7 +94,7 @@ We use two black-box functions in our semantics. The first one maps an opaque st
 
 {{< katex >}}
 \begin{equation*}
-next: State \times N_{pub} \times \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{AX} \cup dom(\Phi) \cup \{\sigma\}) \rightarrow State
+next: State \times N_{pub} \times \mathcal{T}(\mathcal{F}, N_{pub} \cup dom(\Phi) \cup \{\sigma\}) \rightarrow State
 \end{equation*}
 {{< /katex >}}
 
@@ -106,13 +102,52 @@ The other function gets a single term from a session referenced by a session nam
 
 {{< katex >}}
 \begin{equation*}
-out: State \times N_{pub} \rightarrow \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{AX} \cup dom(\Phi))
+out: State \times N_{pub} \rightarrow \mathcal{T}(\mathcal{F}, N_{pub} \cup dom(\Phi))
 \end{equation*}
 {{< /katex >}}
 
 
 ### Example
 
+{{< katex >}}
+$$
+T:=\bar{c}(ax_1).s(t_1).\bar{s}(ax_2)
+$$
+$$
+N_{pub}=\{c,s\}
+$$
+$$
+State=\{s_1, s_2, s_3\}
+$$
+$$
+F_c=\{CH\backslash5\}\\
+F_d=\{s\backslash1, r\backslash1, ex\backslash1, co\backslash1, ci\backslash1\}\\
+F=F_c \cup F_d
+$$
+{{< /katex >}}
+
+Rewriting System $R$:
+
+{{< katex >}}
+$$
+CH(s(t), r(t), ex(t), co(t), ci(t)) = t
+
+s(CH(x, y, z, d, e)) = x\\
+r(CH(x, y, z, d, e)) = y\\
+ex(CH(x, y, z, d, e)) = z\\
+co(CH(x, y, z, d, e)) = d\\
+ci(CH(x, y, z, d, e)) = e
+$$
+{{< /katex >}}
+
+
+Terms for abbreviations:
+
+{{< katex >}}
+$$
+\Xi := CH(s(ax_1), r(ax_1), \emptyset, co(ax_1), ci(ax_1))
+$$
+{{< /katex >}}
 
 {{< resourceFigure "graph.drawio.svg" >}}
 
