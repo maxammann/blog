@@ -6,27 +6,56 @@ slug: tlspuffin-formal-model
 draft: false
 
 katex: true
+hypothesis: true
 
 keywords: []
 categories: [research-blog]
 ---
 
+
+
 ## Syntax
 
 * Cryptographic operations are modeled by symbols of fixed arity $F=\\{f\/n,g\/m,...\\}$. $F$ contains both constructors $F_c$ and destructors $F_d$.
 * $N_{pub}$ contains all publicly known names. Usually this set contains only the session identifiers of the participating agents. Therefore, the public set of names could contain the session identifiers for a client $c$ and a server $s$ modeled as symbol names.
-* The rewriting systemd $R$ defines the spaces of terms which the attacker can compute. For example if the attacker knows the term $aenc(m, pk(k))$ and $k$, she can use the recipe $ξ=adec(ax_1, ax_2)$ to compute $m$, where $ax_1$ and $ax_2$ are handles to the messages already received.
-* A rewriting system is usually not enough when the protocol contains terms like $g^{ab}$ as there is no way to know that it is equal to $g^{ba}$. As this kind of computation is important in DH, the attack should be able to reason about it.
+* The rewriting systemd $R$ defines the spaces of terms which the attacker can compute. For example if the attacker knows the term $aenc(m, pk(k))$ and $k$, she can use the recipe $\Xi=adec(ax_1, ax_2)$ to compute $m$, where $ax_1$ and $ax_2$ are handles to the messages already received.
 * The set of opaque states $State$. Each state contains the internal states of all agents. For example at some point in time the state $st \in State$ contains the shared key between a client $c \in N_{pub}$ and a server $s  \in N_{pub}$.
 * The set of all axioms which represent handles to messages $\mathcal{AX} = \\{ax_n | n \in \mathbb{N} \\}$. Not all message handles are used.
 * The set of all terms is described by $\mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{AX} \cup dom(\Phi))$.
+<!--
+* A rewriting system is usually not enough when the protocol contains terms like $g^{ab}$ as there is no way to know that it is equal to $g^{ba}$. As this kind of computation is important in DH, the attack should be able to reason about it.
+-->
 
 ### Rewriting Systems
 
-TODO
-### Equivalence System
+In this post we try to model what an attacker can compute. Everything which an attacker can deduce from its knowledge should be the input space of the fuzzer. That way we can be sure that all attacks which are possible are indeed fuzzed. Classically, this is also called an inference system. A rule in a inference system looks like this:
 
-TODO
+$$
+{\text{senc}(x,y) \quad y \over x}
+$$
+
+This means if an attacker has the cipher text and $y$ then he is able to deduce $x$. This is sufficient to model symmetric and asymmetric encryption. An inference system is not able to model modular expansion [^1].
+
+$$
+{\text{exp}(\text{exp}(x, y), z) \over \text{exp}(\text{exp}(x, z), y)}
+$$
+
+
+{{< katex >}}
+\begin{alignat*}{2}
+\text{CH}(s(t), r(t), ex(t), co(t), ci(t)) &= t                     &\quad 
+\text{SH}(s(t), r(t), ex(t), co(t)) &= t                            \\
+\text{exp}(\text{exp}(x, y), z) &= \text{exp}(\text{exp}(x, z), y)  &\quad 
+                                                                    \\
+\text{sdec}(\text{senc}(x, y), y)&=x                                &\quad
+\text{adec}(\text{aenc}(x, pk(y)), y)&=x                            \\
+xor(x, xor(y, z))&=xor(xor(x, y), z)                                &\quad
+xor(x, y)&=xor(y, x)                                                \\
+xor(x, x)&=0                                                        &\quad
+xor(x, 0)&=x                                                        \\
+\end{alignat*}
+{{< /katex >}}
+
 ### Trace
 
 A trace is defined as follows:
@@ -152,3 +181,7 @@ $$
 {{< resourceFigure "graph.drawio.svg" >}}
 
  {{< /resourceFigure >}}
+
+
+
+[^1]: [Formal Models and Techniques for Analyzing SecurityProtocols: A Tutorial](https://hal.inria.fr/hal-01090874/document)
