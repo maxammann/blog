@@ -26,20 +26,24 @@ categories: [research-blog]
 * A rewriting system is usually not enough when the protocol contains terms like $g^{ab}$ as there is no way to know that it is equal to $g^{ba}$. As this kind of computation is important in DH, the attack should be able to reason about it.
 -->
 
-### Rewriting Systems
+### Equational and Rewriting Systems
 
-In this post we try to model what an attacker can compute. Everything which an attacker can deduce from its knowledge should be the input space of the fuzzer. That way we can be sure that all attacks which are possible are indeed fuzzed. Classically, this is also called an inference system. A rule in a inference system looks like this:
+In this post we try to model what an attacker can compute. Everything which an attacker can deduce from its knowledge should be the input space of the fuzzer. That way we can be sure that all attacks which are possible are indeed fuzzed. Classically, this is also called an inference system. A rule in an inference system looks like this:
 
 $$
 {\text{senc}(x,y) \quad y \over x}
 $$
 
-This means if an attacker has the cipher text and $y$ then he is able to deduce $x$. This is sufficient to model symmetric and asymmetric encryption. An inference system is not able to model modular expansion [^1].
+This means if an attacker has the cipher text and $y$ then he is able to deduce $x$. This is sufficient to model symmetric and asymmetric encryption. An inference system is not able to easily model functions like modular exponentiation[^1].
+
+The usage of an equational system is not strictly required in our use case, but it allows us to easily generate a lot of inference rules? 
 
 $$
 {\text{exp}(\text{exp}(x, y), z) \over \text{exp}(\text{exp}(x, z), y)}
 $$
 
+
+* If $R$ is a finite convergent TRS, $=_E$ is decidable: $s=_Et \Leftrightarrow s\downarrow=_Et\downarrow$ [^2]
 
 {{< katex >}}
 \begin{alignat*}{2}
@@ -185,3 +189,4 @@ $$
 
 
 [^1]: [Formal Models and Techniques for Analyzing SecurityProtocols: A Tutorial](https://hal.inria.fr/hal-01090874/document)
+[^2]: Franz Baader, Tobias Nipkow - Term rewriting and all that-Cambridge University Press (1998)
