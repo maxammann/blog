@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="{{ .Site.Params.Author }}" />
 
+    {{ if .IsPage }}
+    <meta name="dc.identifier" content="blog-article/{{ substr (sha256 .Slug) 0 8 }}">
+    <meta name="dc.relation.ispartof" content="{{ .Site.Params.dublinCoreMetadataPartOf }}">
+    {{ end }}
+   
     <title>
         {{- block "title" . -}}
         {{ .Title}}{{ if ne .Title .Site.Title }} | {{ .Site.Title }}{{ end }}
