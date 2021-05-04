@@ -9,7 +9,15 @@
     <meta name="dc.identifier" content="blog-article/{{ substr (sha256 .Slug) 0 8 }}">
     <meta name="dc.relation.ispartof" content="{{ .Site.Params.dublinCoreMetadataPartOf }}">
     {{ end }}
-   
+
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' 'unsafe-inline' https://hypothes.is https://cdn.hypothes.is;
+        script-src 'self' 'unsafe-inline' https://hypothes.is https://cdn.hypothes.is; 
+        style-src 'self' 'unsafe-inline' https://hypothes.is https://cdn.hypothes.is;
+        img-src 'self' data: blob: 'unsafe-inline';
+        object-src 'none';
+    ">
+    
     <title>
         {{- block "title" . -}}
         {{ .Title}}{{ if ne .Title .Site.Title }} | {{ .Site.Title }}{{ end }}
