@@ -186,10 +186,6 @@ The goal of the driver/test harness is now to call the correct entry functions d
 Now this is very specific and just some guessing very specific to this example. ProVerif already provides queries to detect security properties. Like for example secrecy of a message `query attacker(message)` or authentication: `query x:key,y:pkey; event(termClient(x,y))==>event(acceptsServer(x,y))`. These queries define connections between events. Events can be triggered and recorded in the security context. After adding an event the security context can be checked by the bug oracle. The oracle then decides whether the context contains violations. For example for a given symmetric key `x` and public key `y`, if `termClient(x,y)` happens but `acceptsServer(x,y)` hasn't been recorded yet then we have an authentication violation.
 
 Therefore, the bug oracle is a function of: `Violations[] ask_oracle(securityCtx: SecurityContext)`. You provide it a security context and the oracle decides which violations are contained.
-## Next Steps
-
-* Take a look on the OpenSSL/rustls/Go entry functions
-* Take a look at the TLS ProVerif model
 
 
 [^1]: [Fuzzing Terminology]({{< ref "2021-03-21-fuzzing-terminology" >}}#the-term-fuzzing)
