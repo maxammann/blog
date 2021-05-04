@@ -85,13 +85,6 @@ An extended trace is a pair $A = (T, st, \Phi)$
 ## Semantics
 
 {{< katex >}}
-\begin{align}
-(0.T, st, \Phi) 
-\xrightarrow{\epsilon} 
-(T, st, \Phi)
-\tag{NULL}
-\end{align}
-
 
 \begin{align}
 (\bar{u}(ax_n).T, st, \Phi) 
@@ -153,8 +146,8 @@ $$
 State=\{s_1, s_2, s_3\}
 $$
 $$
-F_c=\{CH\backslash5\}\\
-F_d=\{s\backslash1, r\backslash1, ex\backslash1, co\backslash1, ci\backslash1\}\\
+F_c=\{CH/5\}\\
+F_d=\{s/1, r/1, ex/1, co/1, ci/1\}\\
 F=F_c \cup F_d
 $$
 {{< /katex >}}
