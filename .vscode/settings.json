@@ -5,7 +5,6 @@
   "latex-workshop.view.pdf.viewer": "tab",
   "workbench.colorTheme": "Default Light+",
   "editor.wordWrap": "wordWrapColumn",
-  "editor.wordWrapColumn": 60,
   "editor.wrappingIndent": "indent",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[markdown]": {
@@ -13,5 +12,6 @@
     "editor.wordWrapColumn": 80
   },
   "markdown.preview.openMarkdownLinks": "inEditor",
-  "explorer.sortOrder": "mixed"
+  "explorer.sortOrder": "mixed",
+  "editor.minimap.enabled": false
 }

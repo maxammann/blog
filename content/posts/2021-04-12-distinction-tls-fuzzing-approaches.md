@@ -33,19 +33,22 @@ Now let's take a look at related approaches which use a model to fuzz TLS.
 |[tlsfuzzer](https://tlsfuzzer.readthedocs.io/en/latest/testimonials.html)|Allows one to create test-cases which send and expect TLS packets. *tlsfuzzer* can be run against a server to check for vulnerabilities like DROWN or ROBOT.|
 |["Symbolic-Model-Aware Fuzzing of Cryptographic Protocols"](https://members.loria.fr/LHirschi/#teaching)|Uses [IJON](https://github.com/RUB-SysSec/ijon) to guide the fuzzer. The input for the PUT is a binary file which represents an abstract execution trace. This trace is mutated by standard AFL methods. The execution is guided by IJON, which uses a scoring. |
 |[flexTLS (abandoned)](https://mitls.org/pages/flextls) and [miTLS fstar (TLS 1.3)](https://github.com/project-everest/mitls-fstar)|Similar to *tlsfuzzer* and *TLS-Attacker* as flexTLS also describes testcases for TLS communications.|
+|[SecFuzz](https://ethz.ch/content/dam/ethz/special-interest/infk/inst-infsec/information-security-group-dam/research/publications/pub2012/secfuzz.pdf)|Uses a concrete implementation of a security protocol to generate valid inputs, and mutate the inputs using a set of fuzz operators|
   
 
-*frankencerts*, *CertificateFuzzer* focuse only on the certificates and therefore it not really interesting when fuzzing a protocol as a whole. It could serve as a building block though to increase coverage.
+*frankencerts*, *CertificateFuzzer* focus only on the certificates and therefore it not really interesting when fuzzing a protocol as a whole. It could serve as a building block though to increase coverage.
 
 *tlsfuzzer* and *TLS-Attacker* are quite similar in the sense that they offer a programmatic way to specify and execute traces. They don't focus on automated fuzzing though[^2]. They are more tools to define explicit test cases. They are not automatically creating interesting traces based on feedback of the PUT.
 As they are implemented in Python and Java respectively it is also doubtful whether the code is usable in fuzzing because of performance reasons. Fuzzing usually requires a lot of runs to reach good edge or path coverage.
+
 *TLS-Attacker* and *tlsfuzzer* offer a solid base to create test cases on which a fuzzer could be built. Unfortunately fuzzers traditionally are written in C/C++ and nowadays in Rust. Therefore, this could be an area in which preparation could be necessary.
 
 *flexTLS* follows a similar approach. One difference is that *flexTLS* uses a verified core. But this also comes with the downside that the used languages F# and F* are rather obscure and not used in practical fuzzing. There are three major applications:
-
 * implementing exploits for protocol and implementation bugs;
 * automated fuzzing of various implementations of the TLS
 * rapid prototyping of the TLS drafts.
+
+*SecFuzz* goes into the direction of our fuzzing approach but still fuzzes on the binary level and not the logical level. <!-- TODO Take a deeper look -->
 
 The fuzzing is only basic though. For example the SmackTLS tool, which is based on flexTLS checks that deviant traces finish with an alert message and terminate properly [^4]. This is indeed very similar to *tlsfuzzer*: "While [tlsfuzzer] uses fuzzing techniques for testing (randomisation of passed in inputs), the scripts are generally written in a way that verifies correct error handling: unlike typical fuzzers it doesn't check only that the system under test didn't crash, it checks that it returned correct error messages."
 
