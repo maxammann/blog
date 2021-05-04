@@ -18,26 +18,56 @@ Before we can define what an attacker can deduce from received messages we need 
 
 ## Term Algebra
 
-We will model the messages of the TLS protocol as terms. This is a common practice when modeling security protocols. Cryptographic operations are modeled by *functions* of fixed arity $F=\\{f\/n,g\/m,...\\}$. The arity of a function $f$ is defined as $|f|=k$.
-$F$ contains both *constructors* $F_c$ and *destructors* $F_d$. Examples for constructors are encryption, signatures and hashes. Destructors can fail based on the data structure they operate on. A destructor can for example extract known fields out of a known TLS message. Function symbols with an arity of $0$ are called *constants*.
+We will model the messages of the TLS protocol as terms. This is a common practice when modeling security protocols. Cryptographic operations are modeled by *functions* of fixed arity $\mathcal{F}=\\{f\/n,g\/m,...\\}$. The arity $k$ of a function $f$ is defined as $\text{arity}(f)=k$.
+The set of all functions contains both *constructors* $\mathcal{F}_c$ and *destructors* $\mathcal{F}_d$. Examples for constructors are encryption, signatures and hashes. Destructors can fail based on the data structure they operate on. A destructor can for example extract known fields out of a known TLS message. Function symbols with an arity of $0$ are called *constants*.
 
-What we are missing is atomic data to which the functions can be applied to. When modeling security protocols, you typically use the concept of *names* $\mathcal{N} = \\{n, r, s, ...\\}$. Names can be nonces, random data, session identifiers or keys. There are different subsets of names through, which both have infinitely many names to model the possibility of attackers to choose random values. $\mathcal{N}\_{pub}$ contains names which are public and available to the attacker e.g. a session identifier like an IP address. $\mathcal{N}\_{prv}$ includes private keys of protocol participants. These are usually hidden within the implementations of participants.
+{{< katex >}}
+\begin{align*}
+\mathcal{F}_c &= \{\text{senc}/2, \text{aenc}/2, pk/1, \text{h}/1, 0/0, \text{TLS\_AES\_256\_GCM\_SHA384}/0\} \\
+\mathcal{F}_d &= \{\text{sdec}/2, \text{adec}/2 \}
+\end{align*}
+{{< /katex >}}
 
-The set of all terms $\mathcal{T}(F,N)$ over the function $F$ and atoms $N$ is defined as: 
+The above finite set of function symbols is also called a *signature*. This *signature* contains functions to encrypt and decrypt terms and also contains the constants $0$ and $\text{TLS\\_AES\\_256\\_GCM\\_SHA384}$ which is a cipher of TLS 1.3.
+
+What we are missing is atomic data to which the functions can be applied to. When modeling security protocols, you typically use the concept of *names* $\mathcal{N} = \\{n, r, s, ...\\}$. Names can be nonces, random data, session identifiers or keys. There are different subsets of names through, which both have infinitely many names to model the possibility of attackers to choose random values. $\mathcal{N}\_{pub}$ contains names which are public and available to the attacker e.g. a session identifier like an IP address. $\mathcal{N}\_{prv}$ includes private keys of protocol participants. These are usually hidden within the implementations of participants. The separation between public and private names is necassary as like in reality data can be private or publicly known in the network. Private names can become known to the attacker by observing it on the network. This gain of knowledge is modeled through a frame, which is introduced later on.
+
+The set of all terms $\mathcal{T}(F,N)$ over the set of functions $F$ and atoms $N$ is defined as: 
 
 {{< katex >}}
 \begin{alignat*}{3}
-t,t_1,... :=    \quad& n            \qquad  &\,n \in N \\
-                & f(t_1,...,t_k)     \qquad &\,f \in F, |f| = k
+t,t_1,... :=    \quad& n            \qquad &\,n \in N \\
+                & f(t_1,...,t_k)    \qquad &\,f \in F, \text{arity}(f) = k
 \end{alignat*}
 {{< /katex >}}
 
 If we limit the allowed atoms and functions to $\mathcal{F}$ and $\mathcal{N}$ respectively, then we get the set of all closed terms $\mathcal{T}(\mathcal{F}, \mathcal{N})$. We also call these terms grounded terms.
 
-TODO: subsitution, 
+In order to manipulate terms and transform them we need to introduce the concept of substitution. For that reason we introduce the set of axioms $\mathcal{AX} = \\{ax_1, ax_2, ax_3, ...\\}$. Axioms are in fact just variables. They are holes in terms which can be filled by other terms. Therefore, a substitution $\sigma$ maps terms to terms by filling the variables (or holes). Usually one writes postfix $t\sigma$ instead of $\sigma(t)$ to apply the substitution $\sigma = \\{ax_1 \mapsto t_1, ax_2 \mapsto t_2, ..., ax_n\\}$. If $t \in dom(\sigma) = \\{ax_1, ax_2, ..., ax_n\\} \subseteq \mathcal{AX}$ then we use the prefix notation like in the following definition:
 
-TODO TRS
-* The rewriting system $R$ defines the spaces of terms which the attacker can compute. For example if the attacker knows the term $aenc(m, pk(k))$ and $k$, she can use the recipe $\Xi=adec(ax_1, ax_2)$ to compute $m$, where $ax_1$ and $ax_2$ are handles to the messages already received.
+{{< katex >}}
+\begin{alignat*}{3}
+f(t_1,...,f_n)\sigma = f(t_1\sigma),...,t_n\sigma))&\quad\text{if $t$ is a function}\\
+t\sigma = \sigma(t) &\quad\text{if } t \in dom(\sigma) \\
+t\sigma = t &\quad\text{if }
+\end{alignat*}
+{{< /katex >}}
+
+This means, if we encounter a term which is a function, then we apply the substitution on all arguments. If the term is in $dom(\sigma)$, then we can replace it with the corresponding term in the substitution. If the term is not a function and is not in the domain of $\sigma$, then we do nothing. 
+
+
+Our goal is to define an input space for the fuzzer. The fuzzer will be able to use the available function symbols of $\mathcal{F}$, but how do they behave? This is an important question as the fuzzer should know as soon as it has witnessed a private name from $\mathcal{N_prv}$. In order to give the fuzzer this ability it needs to know what an encryption, calculation a hash means.
+
+A term rewriting system $R \subseteq \mathcal{T}(\mathcal{F}, \mathcal{AX})$ is a finite relation on terms. A rewrite rule is a pair $(l, r) \in R$ and can be written as $l \rightarrow r$. There are two restrictions on these rules[^3]:
+* the left side $l$ is not a variable
+* $r \in \mathcal{T}(\mathcal{F}, vars(l))$, which means that each variable which appears on the right-hand side also appears on the left-hand side.
+
+TODO: subterm, destructor,
+
+Furthermore, one may note, that the rewriting system $R$ defines the spaces of terms which the attacker can compute, which is infinite. For example if the attacker knows the term $\text{aenc}(m, pk(k))$ and $k$, she can use the recipe $\xi=\text{adec}(ax_1, ax_2)$ to compute the term $m$, where $ax_1$ and $ax_2$ are handles to the messages already received.
+
+
+
 TODO Convergent Term Rewriting Systems
 
 * A convergent theory is an equational theory induced by a convergent rewriting
@@ -246,4 +276,5 @@ $$
 
 
 [^1]: [Formal Models and Techniques for Analyzing SecurityProtocols: A Tutorial](https://hal.inria.fr/hal-01090874/document)
-[^2]: Franz Baader, Tobias Nipkow - Term rewriting and all that-Cambridge University Press (1998)
+[^2]: Franz Baader, Tobias Nipkow. Term rewriting and all that.Cambridge University Press (1998)
+[^3]: Terese. Term Rewriting Systems-Cambridge University Press (2003)

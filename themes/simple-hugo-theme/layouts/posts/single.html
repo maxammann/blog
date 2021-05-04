@@ -6,6 +6,10 @@
 {{ "> ⚠️ 🧪 This post is work-in-progress. Changes are expected as this post is part of my research series." | markdownify }}
 {{ end }}
 
+{{ if  .Params.hypothesis }}
+{{ "> ✏️ This post allows you to create annotations using [hypothes.is](https://hypothes.is/). Open the sidebar on the right." | markdownify }}
+{{ end }}
+
 {{ partial "single" . }}
 
 <div class="article-contact">
