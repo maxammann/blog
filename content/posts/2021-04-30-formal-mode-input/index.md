@@ -30,7 +30,11 @@ The set of all functions contains both *constructors* $\mathcal{F}_c$ and *destr
 
 The above finite set of function symbols is also called a *signature*. This *signature* contains functions to encrypt and decrypt terms and also contains the constants $0$ and $\text{TLS\\_AES\\_256\\_GCM\\_SHA384}$ which is a cipher of TLS 1.3.
 
-What we are missing is atomic data to which the functions can be applied to. When modeling security protocols, you typically use the concept of *names* $\mathcal{N} = \\{n, r, s, ...\\}$. Names can be nonces, random data, session identifiers or keys. There are different subsets of names through, which both have infinitely many names to model the possibility of attackers to choose random values. $\mathcal{N}\_{pub}$ contains names which are public and available to the attacker e.g. a session identifier like an IP address. $\mathcal{N}\_{prv}$ includes private keys of protocol participants. These are usually hidden within the implementations of participants. The separation between public and private names is necassary as like in reality data can be private or publicly known in the network. Private names can become known to the attacker by observing it on the network. This gain of knowledge is modeled through a frame, which is introduced later on.
+What we are missing is atomic data to which the functions can be applied to. When modeling security protocols, you typically use the concept of *names* $\mathcal{N} = \\{n, r, s, ...\\}$. Names can be nonces, random data, session identifiers or keys. There are different subsets of names through, which both have infinitely many names to model the possibility of attackers to choose random values.
+$\mathcal{N}\_{pub}$ contains names which are public and available to the attacker e.g. a session identifier like an IP address. 
+$\mathcal{N}\_{prv}$ includes private keys of protocol participants. These are usually hidden within the implementations of participants. 
+
+The separation between public and private names is necassary as like in reality data can be private or publicly known in the network. Private names can become known to the attacker by observing it on the network. This gain of knowledge is modeled through a frame, which is introduced later on.
 
 The set of all terms $\mathcal{T}(F,N)$ over the set of functions $F$ and atoms $N$ is defined as: 
 
@@ -43,36 +47,61 @@ t,t_1,... :=    \quad& n            \qquad &\,n \in N \\
 
 If we limit the allowed atoms and functions to $\mathcal{F}$ and $\mathcal{N}$ respectively, then we get the set of all closed terms $\mathcal{T}(\mathcal{F}, \mathcal{N})$. We also call these terms grounded terms.
 
-In order to manipulate terms and transform them we need to introduce the concept of substitution. For that reason we introduce the set of axioms $\mathcal{AX} = \\{ax_1, ax_2, ax_3, ...\\}$. Axioms are in fact just variables. They are holes in terms which can be filled by other terms. Therefore, a substitution $\sigma$ maps terms to terms by filling the variables (or holes). Usually one writes postfix $t\sigma$ instead of $\sigma(t)$ to apply the substitution $\sigma = \\{ax_1 \mapsto t_1, ax_2 \mapsto t_2, ..., ax_n\\}$. If $t \in dom(\sigma) = \\{ax_1, ax_2, ..., ax_n\\} \subseteq \mathcal{AX}$ then we use the prefix notation like in the following definition:
+
+There are a few helper functions where are defined on terms.
+$vars(t)$ describes the set of variables used in the term $t$ and is defined as:
 
 {{< katex >}}
 \begin{alignat*}{3}
-f(t_1,...,f_n)\sigma = f(t_1\sigma),...,t_n\sigma))&\quad\text{if $t$ is a function}\\
-t\sigma = \sigma(t) &\quad\text{if } t \in dom(\sigma) \\
-t\sigma = t &\quad\text{if }
+&vars(t) = vars(f(t_1,...,f_n)) = \bigcup_{i=1}^{n} vars(t_i) &\quad\text{if $t$ is a function}\\
+&vars(t) = \{t\} &\quad\text{if } t \in \mathcal{X}\\
+&vars(t) = \emptyset
 \end{alignat*}
 {{< /katex >}}
 
-This means, if we encounter a term which is a function, then we apply the substitution on all arguments. If the term is in $dom(\sigma)$, then we can replace it with the corresponding term in the substitution. If the term is not a function and is not in the domain of $\sigma$, then we do nothing. 
+
+$st(t)$ describes the set of all sub-terms of the term $t$. An example:
+
+{{< katex >}}
+\begin{equation*}
+st(\text{sdec}(\text{senc}(\text{h}(x), y), y)) = \{y, x, \text{h}(x), \text{senc}(\text{h}(x), y), \text{sdec}(\text{senc}(\text{h}(x), y), y)\}
+\end{equation*}
+{{< /katex >}}
+### Substitution
+
+In order to manipulate terms and transform them we need to introduce the concept of substitution. For that reason we introduce the set of variables $\mathcal{X} = \\{a, b, c, ...\\}$. Variables are holes in terms which can be filled by other terms. Therefore, a substitution $\sigma$ maps recipe terms $t \in \mathcal{T}(\mathcal{F}, \mathcal{N}_{pub} \cup dom(\sigma))$ to grounded terms $\tilde{t} \in \mathcal{T}(\mathcal{F}, \mathcal{N}$ by filling the variables (or holes). Usually one writes postfix $t\sigma$ instead of $\sigma(t)$ to apply the substitution $\sigma = \\{a \mapsto b, c \mapsto t_2, ...\\}$. We define the domain of the substitution as $dom(\sigma) = \\{a, b, c, ...\\} \subseteq \mathcal{X}$. Formally substitution is defined as follows:
+
+{{< katex >}}
+\begin{alignat*}{3}
+&t\sigma = f(t_1,...,f_n)\sigma = f(t_1\sigma),...,t_n\sigma))&\quad\text{if $t$ is a function}\\
+&t\sigma = t\sigma &\quad\text{if } t \in dom(\sigma)\\
+&t\sigma = t
+\end{alignat*}
+{{< /katex >}}
+
+This means, if we encounter a term which is a function, then we apply the substitution on all arguments. If the term is in $dom(\sigma)$, then we can replace it with the corresponding term in the substitution. If the term is not a function and is not in the domain of $\sigma$, then we do nothing and omit $\sigma$.
+## Fuzzing Input Space
+
+The fuzzer will be able to use the available function symbols $\mathcal{F}$, names $\mathcal{N}$ and learned knowledge to construct arbitrary terms. Indeed, this is the input space of the fuzzer. The semantics of the functions and public names is given by concrete implementations in the fuzzer.
+
+Even though, the fuzzer does not need formal definitions for the semantics of symbols, we still want to provide them here. One might ask why this overhead is beneficial? As already mentioned previously the fuzzer users a bug oracle to decide whether a specific execution of a trace violates a security policy. 
+
+One way to implement a security policy is to look at the obtained knowledge of the attacker during the execution. If the attacker knows $k$ and also witnessed $\text{senc}(x, k)$, then he also knows $x$ even though he never directly observed $x$. If $x \in \mathcal{N}_{prv}$ then we maybe found a security violation. This problem is also known as the *deduction problem*. The problem can be solved by providing a decision procedure which can decide $S \vdash x$, which means whether the term $x$ is deducible from the set $S=\\{\text{senc}(x, k), k\\}$. Note that this problem is in general Turing-complete, but one can restrict the underlying formal model to achieve decidability [^1]. This allows the bug oracle to decide over secrecy. **In practice this is difficult to implement, because we need to know the term structure which is output by the implementations.**
+
+Another way to implement a security policy is to record events over the execution of the trace. These events are also known as claims. For example if we can make the server believe that a client is authenticated, and the client did not claim that it is already authenticated, then we would have an authentication violation. A real-world example for this kind of vulnerability in TLS is the SKIP bug. In a nutshell this vulnerability allows a client attacker with a certificate, but without the private key, to impersonate other clients. The attacker can make the TLS server believe that it has the private key by skipping a message in the TLS protocol.
 
 
-Our goal is to define an input space for the fuzzer. The fuzzer will be able to use the available function symbols of $\mathcal{F}$, but how do they behave? This is an important question as the fuzzer should know as soon as it has witnessed a private name from $\mathcal{N_prv}$. In order to give the fuzzer this ability it needs to know what an encryption, calculation a hash means.
+In conclusion, the fuzzer could have two different ways of expressing semantics for function symbols:
+* Semantics via a concrete implementations
+* Semantics via a formal model to decide deducibility
 
-A term rewriting system $R \subseteq \mathcal{T}(\mathcal{F}, \mathcal{AX})$ is a finite relation on terms. A rewrite rule is a pair $(l, r) \in R$ and can be written as $l \rightarrow r$. There are two restrictions on these rules[^3]:
-* the left side $l$ is not a variable
-* $r \in \mathcal{T}(\mathcal{F}, vars(l))$, which means that each variable which appears on the right-hand side also appears on the left-hand side.
+The first way can be achieved by defining a term rewriting system which provides a formal way of transforming terms. 
+## Term Rewriting System
 
-TODO: subterm, destructor,
-
-Furthermore, one may note, that the rewriting system $R$ defines the spaces of terms which the attacker can compute, which is infinite. For example if the attacker knows the term $\text{aenc}(m, pk(k))$ and $k$, she can use the recipe $\xi=\text{adec}(ax_1, ax_2)$ to compute the term $m$, where $ax_1$ and $ax_2$ are handles to the messages already received.
-
-
-
-TODO Convergent Term Rewriting Systems
-
-* A convergent theory is an equational theory induced by a convergent rewriting
-system. The theory is sub-term convergent if there is a corresponding (convergent) rewriting system such that any rewrite rule $\mathcal{l} \rightarrow \mathcal{r}$ is such that $\mathcal{r}$ is a subterm of $\mathcal{l}$[^1].
-* If $R$ is a finite convergent TRS, $=_E$ is decidable: $s=_Et \Leftrightarrow s\downarrow=_Et\downarrow$ [^2]
+A term rewriting system $R$ is a finite relation on terms. A rewrite rule is a pair $(\ell, r) \in R$ and can be written as $\ell \rightarrow r$, where $\ell \in \mathcal{T}(\mathcal{F}, \mathcal{X})$ and $r \in \mathcal{T}(\mathcal{F_c}, vars(\mathcal{\ell}))$. Classically, there are two restrictions on rewrite rules as already defined[^3]:
+* the left side $l$ is not a variable and contains at least one function symbol.
+* $r \in \mathcal{T}(\mathcal{F}, vars(\ell))$, which means that each variable which appears on the right-hand side also appears on the left-hand side.
+* Function symbols on the right-hand side are constructors instead of destructors. Usually we do not want as a rewrite rule like $\text{pair}(x, y) \rightarrow \text{proj}_2(pair(x, y))$ would make the rewrite system infinite.
 
 ## Inference Systems
 
@@ -131,8 +160,6 @@ TODO Def. of EQ-T
 
 {{< katex >}}
 \begin{alignat*}{2}
-\text{CH}(\text{s}(t), \text{r}(t), \text{ex}(t), \text{co}(t), \text{ci}(t)) &= t &\quad
-\text{SH}(\text{s}(t), \text{r}(t), \text{ex}(t), \text{co}(t)) &= t \\
 \text{exp}(\text{exp}(x, y), z) &= \text{exp}(\text{exp}(x, z), y)  &\quad
 \\
 \text{sdec}(\text{senc}(x, y), y)&=x &\quad
@@ -146,50 +173,55 @@ TODO Def. of EQ-T
 {{< /katex >}}
 ## Traces
 
+Firstly, we want to extend our notion of variables to handles $\mathcal{X} = \mathcal{H} \cup \mathcal{X}$. Handles are just like regular variables but are used as references to actual terms which the attacker learned. The knowledge is also known the frame $\Phi$, which will be introduced in the next section about extended traces.
+
+Traces model interactions between multiple network participants in the presence of an attacker. Participants need to have a name. We model these names through session identifiers $\mathcal{S} \subseteq \mathcal{N}_{pub}$. The infinite set $\mathcal{S}$ contains all session identifiers. This participants just exist and can be referenced. They do not need to be spawned beforehand.
+
 A trace is defined as follows:
 
 {{< katex >}}
 \begin{align*}
 T, R := && 0                \qquad&&\text{null} \\
-        && \bar{u}(ax_n).T  \qquad&& \text{send} \\
+        && \bar{u}(h_n).T   \qquad&&\text{send} \\
         && u(t).T           \qquad&&\text{receive}
 \end{align*}
 {{< /katex >}}
 
-, where the handle $ax_n \in \mathcal{AX}$, the handle index $n \in \mathbb{N}$, $t\ \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{AX})$ is a term and $u \in N_{pub}$. Actions can be concatenated using a $.$ to create a trace which does several things e.g. $\bar{c}(ax_1).\text{s}(t_1).\bar{s}(ax_2)$.
+where the handle $h_n \in \mathcal{H}$, the handle index $n \in \mathbb{N}$, $t\ \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{H})$ is a term and $u \in \mathcal{S}$. Actions can be concatenated using a $.$ to create a trace which does several things e.g. $\bar{c}(h_1).\text{s}(t_1).\bar{s}(h_2)$.
 
 ### Extended Traces
 
-An extended trace is a pair $A = (T, st, \Phi)$
+The set of opaque and abstract states of internal implementation is called $State$. Each $st \in State$ contains the internal states of all network participants. For example at some point in time the state $st \in State$ contains the shared key between a client $c \in \mathcal{S}$ and a server $s \in \mathcal{S}$.
+
+We already mentioned the attacker knowledge already. The attacker knowledge is modeled through a substitution $\Phi$ and is also known as a frame. We gradually extend this frame during the execution of a trace.
+
+TODO: def Msg
+
+Based on this we define the triple $A = (T, st, \Phi)$ as an extended trace:
 
 * $T$ is a closed plain trace
 * $st \in State$ is an opaque state which resembles the internal states of all sessions
-* $\Phi = \\{ ax_1 \mapsto t_1, ..., ax_n \mapsto t_n \\}$, called the frame is a substitution from axioms to ground constructor terms
-
-TODO Def frame
-
-TODO Def State
-* The set of opaque states $State$. Each state contains the internal states of all agents. For example at some point in time the state $st \in State$ contains the shared key between a client $c \in N_{pub}$ and a server $s  \in N_{pub}$.
-
-TODO Def axioms
-* The set of all axioms which represent handles to messages $\mathcal{AX} = \\{ax_n | n \in \mathbb{N} \\}$. Not all message handles are used.
+* $\Phi = \\{ h_1 \mapsto t_1, ..., h_n \mapsto t_n \\}$, called the frame is a substitution from handles to ground constructor terms
 
 
+TODO: Events: Crash Events
+
+TODO: Rule, Session ids, identity differenciation
 
 ### Semantics of Extended Traces
 
 {{< katex >}}
 
 \begin{align}
-(\bar{u}(ax_n).T, st, \Phi) 
-\xrightarrow{\bar {\xi}(ax_n)} 
+(\bar{u}(h_n).T, st, \Phi) 
+\xrightarrow{\bar {\xi}(h_n)} 
 (
     T, 
     \tilde{st},
-    \Phi \cup \{ax_n \mapsto out(\tilde{st}, \xi), \}
+    \Phi \cup \{h_n \mapsto out(\tilde{st}, \xi), \}
 ) \\
 \text{where $\tilde{st} = next(st, \xi, \sigma)$} \\
-\text{if $\xi \in N_{pub}$ and $Msg(out(\tilde{st}, \xi))$}
+\text{if $\xi \in \mathcal{S}$ and $Msg(out(\tilde{st}, \xi))$}
 \tag{SEND}
 \end{align}
 
@@ -199,10 +231,10 @@ TODO Def axioms
 \xrightarrow{\xi(\zeta)} 
 (
     T, 
-    next(st, \xi, t\Phi),
+    next(st, \xi, t\Phi\downarrow),
     \Phi
 ) \\
-\text{if $\xi \in N_{pub}$, the recipe $t \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{AX})$ and $Msg(t\Phi)$}
+\text{if $\xi \in \mathcal{S}$, the recipe $t \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{H})$ and $Msg(t\Phi)$}
 \tag{REC}
 \end{align}
 
@@ -222,7 +254,7 @@ The other function gets a single term from a session referenced by a session nam
 
 {{< katex >}}
 \begin{equation*}
-out: State \times N_{pub} \rightarrow \mathcal{T}(\mathcal{F}, N_{pub} \cup dom(\Phi))
+out: State \times N_{pub} \rightarrow \mathcal{T}(\mathcal{F}, \mathcal{N})
 \end{equation*}
 {{< /katex >}}
 
@@ -231,7 +263,7 @@ out: State \times N_{pub} \rightarrow \mathcal{T}(\mathcal{F}, N_{pub} \cup dom(
 
 {{< katex >}}
 $$
-T:=\bar{c}(ax_1).\text{s}(t_1).\bar{s}(ax_2)
+T:=\bar{c}(h_1).\text{s}(t_1).\bar{s}(h_2)
 $$
 $$
 \{c,s\} \subseteq N_{pub}
@@ -250,8 +282,6 @@ Rewriting System $R$:
 
 {{< katex >}}
 $$
-\text{CH}(\text{s}(t), \text{r}(t), \text{ex}(t), \text{co}(t), \text{ci}(t)) = t \\
-
 \text{s}(\text{CH}(x, y, z, d, e)) = x\\
 \text{r}(\text{CH}(x, y, z, d, e)) = y\\
 \text{ex}(\text{CH}(x, y, z, d, e)) = z\\
@@ -265,12 +295,16 @@ Attacker recipe:
 
 {{< katex >}}
 $$
-\omega := \text{CH}(\text{s}(ax_1), \text{r}(ax_1), \emptyset, \text{co}(ax_1), \text{ci}(ax_1))
+\omega := \text{CH}(\text{s}(h_1), \text{r}(h_1), \emptyset, \text{co}(h_1), \text{ci}(h_1))
 $$
 {{< /katex >}}
 
-{{< resourceFigure "graph.drawio.svg" >}}
+{{< resourceFigure "syntax.drawio.svg" >}}
+Definition of the syntax in the example below. Each state $st \in State$ is visualized by the rounded square. The first line shows the trace until which step it is executed. The second line references the current state, and the last one includes the knowledge of the attacker denoted by the frame $\Phi$.
+ {{< /resourceFigure >}}
 
+{{< resourceFigure "example.drawio.svg" >}}
+Example execution of a trace.
  {{< /resourceFigure >}}
 
 
