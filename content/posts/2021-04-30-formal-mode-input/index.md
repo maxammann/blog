@@ -12,9 +12,9 @@ keywords: []
 categories: [research-blog]
 ---
 
-In this post we try to model what an attacker can compute. Everything which an attacker can deduce from its knowledge should be the input space of the fuzzer. That way we can be sure that all attacks which are possible are indeed fuzzed.
+In this post we try to model what an attacker can compute and therefore which attacks tlspuffin should be able to detect and report. Everything message, which an attacker can deduce from its knowledge should be the input space of the fuzzer.
 
-Before we can define what an attacker can deduce from received messages we need to define some concepts.
+Before we can define the capabilities of the attacker more closely, we need to define some concepts.
 
 ## Term Algebra
 
@@ -95,17 +95,14 @@ In conclusion, the fuzzer could have two different ways of expressing semantics 
 * Semantics via a concrete implementations
 * Semantics via a formal model to decide deducibility
 
-The first way can be achieved by defining a term rewriting system which provides a formal way of transforming terms. 
-## Term Rewriting System
+The first way can be achieved by defining a term rewriting system which provides a formal way of transforming terms.
 
-A term rewriting system $R$ is a finite relation on terms. A rewrite rule is a pair $(\ell, r) \in R$ and can be written as $\ell \rightarrow r$, where $\ell \in \mathcal{T}(\mathcal{F}, \mathcal{X})$ and $r \in \mathcal{T}(\mathcal{F_c}, vars(\mathcal{\ell}))$. Classically, there are two restrictions on rewrite rules as already defined[^3]:
-* the left side $l$ is not a variable and contains at least one function symbol.
-* $r \in \mathcal{T}(\mathcal{F}, vars(\ell))$, which means that each variable which appears on the right-hand side also appears on the left-hand side.
-* Function symbols on the right-hand side are constructors instead of destructors. Usually we do not want as a rewrite rule like $\text{pair}(x, y) \rightarrow \text{proj}_2(pair(x, y))$ would make the rewrite system infinite.
-
+Before we take a look at term rewrite systems as a formal model for deducibility we quickly take a look at inference systems which model what an attacker needs to do to reduce a message from an operational point of view.
 ## Inference Systems
 
-TODO Def. of EQ-T
+TODO: Def
+
+Inference systems
 
 A simple example for an inference system $I_{ENC}$ looks like this:
 
@@ -120,9 +117,11 @@ A simple example for an inference system $I_{ENC}$ looks like this:
 
 This models (a)symmetric encryption and decryption. If an attacker has the symmetrically encrypted plain text and $y$, then he is able to deduce $x$. 
 
-## Deduction
+# Deduction in Inference Systems
 
-## Why are Inference Systems not Enough?
+TODO
+
+### Why are Inference Systems not enough?
 
 An inference system is not able easily model all cryptographic primitives like modular exponentiation or exclusive or[^1].
 
@@ -154,6 +153,15 @@ After applying the first rule, we see that we will never be able to move the $a$
 
 A solution for this problem are **equational theories**.
 
+
+## Term Rewriting System
+
+A term rewriting system $R$ is a finite relation on terms. A rewrite rule is a pair $(\ell, r) \in R$ and can be written as $\ell \rightarrow r$, where $\ell \in \mathcal{T}(\mathcal{F}, \mathcal{X})$ and $r \in \mathcal{T}(\mathcal{F_c}, vars(\mathcal{\ell}))$. Classically, there are two restrictions on rewrite rules as already defined[^3]:
+* the left side $l$ is not a variable and contains at least one function symbol.
+* $r \in \mathcal{T}(\mathcal{F}, vars(\ell))$, which means that each variable which appears on the right-hand side also appears on the left-hand side.
+* Function symbols on the right-hand side are constructors instead of destructors. Usually we do not want as a rewrite rule like $\text{pair}(x, y) \rightarrow \text{proj}_2(pair(x, y))$ would make the rewrite system infinite.
+
+
 ## Equational Theories
 
 TODO Def. of EQ-T
@@ -171,6 +179,38 @@ TODO Def. of EQ-T
 \text{xor}(x, 0)&=x                                                        \\
 \end{alignat*}
 {{< /katex >}}
+
+## Deducibility for EQ and TRS
+
+TODO
+## Modeling the Attacker
+
+In our case a single attacker which has full control over the network is enough to model every possible attack for a TLS client and server setup. This is easy to see as a single attacker can act as multiple attackers. Therefore, the capabilities of a single attacker and multiple attackers coincide.
+
+Every message which is sent by and network participant is witnessed the attacker. The attacker can forward the message to the intended recipient, modify it or just drop and ignore it. Cheval et. al conclude conclude that in such a case the attacker has the following capabilities:
+* eavesdropping messages and gain knowledge,
+* deduct further terms from messages, like gaining access to a secret if the attacker eavesdropped on the cipher-text and the corresponding key to decrypt it, and
+* control messages as the attacker can CRUD messages them and forward them to specific network participants.
+
+Abadi and Fournet describe the notion of processes to model security protocols using the applied pi calculus [^4]. Process specifications of protocols allows making statements about security properties like secrecy or authentication. We want to use the ideas of processes and define a notion of more concrete executions of the protocols. A process defines all possible executions of a protocol, which is important to prove certain properties.
+
+In our case we do not want to prove that a specification fulfills certain properties, but want fuzz-test implementations. We try to bridge the gab between formal verification and manual testing with fuzzing. Protocols, as defined in the applied pi calculus, do not have the concept of black-box implementations. The process definitions more or less describes the implementation of a higher level and does not use concrete implementations but more abstract semantics for functions. Therefore, we are not looking for a way to define processes, but more concrete and specific executions of a protocol which we call a *trace*. To make this difference more clear see the following example of ProVerif syntax which describes a TLS 1.3 client process:
+
+
+```kotlin
+new cr:random;
+let (x:bitstring,gx:element) = dh_keygen() in
+let (early_secret:bitstring,kb:mac_key) = kdf_es(psk) in
+let offer = ...
+out(io, CH(cr,offer));
+```
+
+As you can see the process models the internal behavior of the TLS 1.3. While this is essential to prove authentication or secrecy, we do not want to formally define how TLS work. We expect that the implementation follows it and want to execute it to determine whether security violations happened or not. 
+
+
+The following definition of traces captures the essence of the interaction between network participants which use black-box implementations.
+
+
 ## Traces
 
 Firstly, we want to extend our notion of variables to handles $\mathcal{X} = \mathcal{H} \cup \mathcal{X}$. Handles are just like regular variables but are used as references to actual terms which the attacker learned. The knowledge is also known the frame $\Phi$, which will be introduced in the next section about extended traces.
@@ -204,7 +244,7 @@ Based on this we define the triple $A = (T, st, \Phi)$ as an extended trace:
 * $\Phi = \\{ h_1 \mapsto t_1, ..., h_n \mapsto t_n \\}$, called the frame is a substitution from handles to ground constructor terms
 
 
-TODO: Events: Crash Events
+TODO: Events: Crash Events Include events/claims in model
 
 TODO: Rule, Session ids, identity differenciation
 
@@ -309,6 +349,7 @@ Example execution of a trace.
 
 
 
-[^1]: [Formal Models and Techniques for Analyzing SecurityProtocols: A Tutorial](https://hal.inria.fr/hal-01090874/document)
-[^2]: Franz Baader, Tobias Nipkow. Term rewriting and all that.Cambridge University Press (1998)
-[^3]: Terese. Term Rewriting Systems-Cambridge University Press (2003)
+[^1]: Blanchet, Bruno, Ben Smyth, Vincent Cheval, and Marc Sylvestre. 2020. ProVerif 2.02pl1: Automatic Cryptographic Protocol Verifier, User Manual and Tutorial.
+[^2]: Baader, Franz, and Tobias Nipkow. 1998. Term Rewriting and All That. 1st ed. Cambridge University Press. https://doi.org/10.1017/CBO9781139172752.
+[^3]: Bezem, M., J. W. Klop, Roel de Vrijer, and Terese (Group), eds. 2003. Term Rewriting Systems. Cambridge Tracts in Theoretical Computer Science, v. 55. Cambridge, UK ; New York: Cambridge University Press.
+[^4]: Abadi, Martı́n, and Cédric Fournet. 2001. “Mobile Values, New Names, and Secure Communication.” In Proceedings of the 28th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages - POPL 01. ACM Press. https://doi.org/10.1145/360204.360213.
