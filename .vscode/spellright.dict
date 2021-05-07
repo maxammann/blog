@@ -50,3 +50,5 @@ TCP
 mutator
 arity
 deducibility
+equational
+destructors
