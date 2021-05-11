@@ -12,6 +12,8 @@ keywords: []
 categories: [research-blog]
 ---
 
+My symbolic-model guided fuzzer for OpenSSL has now a name. It is called `tlspuffin` and stands for **T**LS **P**rotocols **U**nder **F**uzz**IN**g.
+
 In this post we try to model what an attacker can compute and therefore which attacks tlspuffin should be able to detect and report. Everything message, which an attacker can deduce from its knowledge should be the input space of the fuzzer.
 
 Before we can define the capabilities of the attacker more closely, we need to define some concepts.
