@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "tlspuffin: Formal Model of Input Space"
+title: "tlspuffin: Formal Model"
 date: 2021-04-24
 slug: tlspuffin-formal-model
 draft: false
@@ -240,14 +240,9 @@ In the case of security protocol analysis, we suppose that protocols only send v
 We define $\text{Msg}(t)$ to hold if for any sub-term $u \in st(t)$: $u\downarrow\in \mathcal{T}({\cal F}_c, \mathcal{N} \cup \mathcal{X})$. This means that after normalization, only constructor terms are left. If the normalized term still contains a destructor, then we say that the destructor fails. Suppose, we are left with the normalized term $\text{sdec}(\text{h}(x), k)$. In this case, the decryption would fail, as we modeled decrypt in such a way, that we can only decrypt cipher-text and not random data. This corresponds to authenticated encryption (AEAD).
 ## Computation Relation
 
-TODO Computation Relation
-https://via.hypothes.is/https://arxiv.org/pdf/1710.02049.pdf
+A computation relation is a relation of $\mathcal{T}(\mathcal{F}, \mathcal{N}) \times \mathcal{T}(\mathcal{F}_c, \mathcal{N})$, denoted by $\Downarrow$. $t\Downarrow t'$ iif the term $t'$ is computable from the term $t$. Hirischi et. al build this relation using a TRS and an equational system on page 5 [^9]. Refer to that paper for a description on how to build the computational relation given a TRS.
 
-Hirschi, Lucca, David Baelde, and Stéphanie Delaune. 2017. “A Method for Unbounded Verification of Privacy-Type Properties,” October. https://via.hypothes.is/https://arxiv.org/pdf/1710.02049.pdf.
-
-## Towards an Equational Theory for TLS Traces
-
-TODO: convergent subterm: Abadi2004
+## Towards an Equational Theory for Traces
 
 We already defined term rewrite systems without restrictions. We restrict the rules now, such that it becomes convergent. Each rule of the TRS must have the following structure:
 
@@ -265,7 +260,7 @@ Therefore, We can lift $=_E$ to arbitrary terms and define $t_1 =_E t_2$ to hold
 All operations in this check are decidable.
 
 
-TODO: How does this interact now with recipies?
+If an attacker can find a recipe term $t$ such that $t\Phi =_{EQ} t'$, then the attacker can deduce the term $t'$. 
 
 ## Modeling the Attacker
 
@@ -311,7 +306,7 @@ T, R := && 0                \qquad&&\text{null} \\
 \end{align*}
 {{< /katex >}}
 
-where the handle $h_n \in \mathcal{H}$, the handle index $n \in \mathbb{N}$, $t\ \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{H})$ is a term and $u \in \mathcal{S}$. Actions can be concatenated using a $.$ to create a trace which does several things e.g. $\bar{c}(h_1).\text{s}(t_1).\bar{s}(h_2)$.
+where the handle $h_n \in \mathcal{H}$, the handle index $n \in \mathbb{N}$, $t\ \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{H})$ is a term and $u \in \mathcal{S}$. Actions can be concatenated using a $.$ to create a trace which does several things e.g. $\bar{c}(h_1).\text{s}(t_1).\bar{s}(h_2)$. Note that each session identifier $s \in \mathcal{S}$ uniquely identifies a specific agent in the network. We suppose that each agent, referenced by a session identifier, already exists before the execution. That means we do not need to explicitly create agents in the formal model, they just exist as soon as they are referenced. 
 
 ### Extended Traces
 
@@ -325,10 +320,9 @@ Based on this we define the triple $A = (T, st, \Phi)$ as an extended trace:
 * $st \in State$ is an opaque state which resembles the internal states of all sessions
 * $\Phi = \\{ h_1 \mapsto t_1,\dots, h_n \mapsto t_n \\}$, called the frame is a substitution from handles to ground constructor terms
 
+The extended traces, together with their semantics which will follow in the next section, describe what happens when traces are executed. Each execution step can yield information about the inner workings of the implementation under test. We will not formalize this yet, but each step could yield events of claims about what happened. This is comparable to the events of ProVerif. A claim could include for example that a client has authenticated. 
 
-TODO: Events: Crash Events Include events/claims in model
-
-TODO: Rule, Session ids, identity differenciation
+Furthermore, the implementation under test could have crashed. We will also leave this open for now.
 
 ### Semantics of Extended Traces
 
@@ -367,7 +361,7 @@ We use two black-box functions in our semantics. The first one maps an opaque st
 
 {{< katex >}}
 \begin{equation*}
-next: State \times N_{pub} \times \mathcal{T}(\mathcal{F}, N_{pub} \cup dom(\Phi) \cup \{\sigma\}) \rightarrow State
+next: State \times \mathcal{S} \times \mathcal{T}(\mathcal{F}, N_{pub} \cup dom(\Phi) \cup \{\sigma\}) \rightarrow State
 \end{equation*}
 {{< /katex >}}
 
@@ -375,31 +369,25 @@ The other function gets a single term from a session referenced by a session nam
 
 {{< katex >}}
 \begin{equation*}
-out: State \times N_{pub} \rightarrow \mathcal{T}(\mathcal{F}, \mathcal{N})
+out: State \times \mathcal{S} \rightarrow \mathcal{T}(\mathcal{F}, \mathcal{N})
 \end{equation*}
 {{< /katex >}}
 
-
-## Example
+In this theoretical model the output $out(st, s)$ in a given state $st$ of a session $s$ yields a term. In practice the output of a black-box does not have a term-like structure. This makes it difficult to prove certain properties like secrecy, which require a deeper understanding of the output in each trace step. As this is a practical issue, we will not address it here.
+## Example Trace Execution
 
 {{< katex >}}
-$$
-T:=\bar{c}(h_1).\text{s}(t_1).\bar{s}(h_2)
-$$
-$$
-\{c,s\} \subseteq N_{pub}
-$$
-$$
-State=\{s_1, s_2, s_3\}
-$$
-$$
-\mathcal{F}_c=\{CH/5\}\\
-\mathcal{F}_d=\{s/1, r/1, ex/1, co/1, ci/1\}\\
-\mathcal{F}=\mathcal{F}_c \cup \mathcal{F}_d
-$$
+\begin{align*}
+T&:=\bar{c}(h_1).\text{s}(t_1).\bar{s}(h_2)\quad&\mathcal{F}_c:=\{\text{CH}/5, \text{senc}/2,\text{sdec}/2,\text{exp}/2\}\\
+
+\mathcal{S}&:=\{c,s\} \subseteq N_{pub} \quad &\mathcal{F}_d:=\{\text{s}/1, \text{r}/1, \text{ex}/1, \text{co}/1, \text{ci}/1, \text{sdec}/2, \text{adec}/2\}\\
+State&:=\{s_1, s_2, s_3\} \quad &\mathcal{F}:=\mathcal{F}_c \cup \mathcal{F}_d
+\end{align*}
+
+
 {{< /katex >}}
 
-Rewriting System $R$:
+We use the equational theory $E_{DH}$ together with the following TRS $R$ for the destructors $F_d$:
 
 {{< katex >}}
 $$
@@ -411,8 +399,7 @@ $$
 $$
 {{< /katex >}}
 
-
-Attacker recipe:
+That way we have defined the semantics of all function symbols. The following attacker recipe is an example of what the final fuzzer could do. In this case the fuzzer manipulates the client hello TLS message while it travels form the client $c$ to the server $s$ by setting the examples to an empty set.
 
 {{< katex >}}
 $$
@@ -420,12 +407,9 @@ $$
 $$
 {{< /katex >}}
 
-{{< resourceFigure "syntax.drawio.svg" >}}
-Definition of the syntax in the example below. Each state $st \in State$ is visualized by the rounded square. The first line shows the trace until which step it is executed. The second line references the current state, and the last one includes the knowledge of the attacker denoted by the frame $\Phi$.
- {{< /resourceFigure >}}
-
 {{< resourceFigure "example.drawio.svg" >}}
-Example execution of a trace.
+The dotted rectangle on the lower right shows the syntax of each block. Each state $st \in State$ is visualized by the rounded square. The first line shows the trace until which step it is executed. The second line references the current state, and the last one includes the knowledge of the attacker denoted by the frame $\Phi$.
+The rest of the diagram shows an execution of the trace.
  {{< /resourceFigure >}}
 
 
@@ -438,3 +422,4 @@ Example execution of a trace.
 [^6]: Plaisted, David A. 1993. “Equational Reasoning and Term Rewriting Systems.” In Handbook of Logic in Artificial Intelligence and Logic Programming (Vol. 1), 274–364. USA: Oxford University Press, Inc.
 [^7]: Diffie, W., and M. Hellman. 1976. “New Directions in Cryptography.” IEEE Transactions on Information Theory 22 (6): 644–54. https://doi.org/10.1109/tit.1976.1055638.
 [^8]: Cortier, Véronique, Stéphanie Delaune, and Pascal Lafourcade. 2006. “A Survey of Algebraic Properties Used in Cryptographic Protocols.” Journal of Computer Security 14: 1–43. https://doi.org/10.3233/JCS-2006-14101.
+[^9]: Hirschi, Lucca, David Baelde, and Stéphanie Delaune. 2017. “A Method for Unbounded Verification of Privacy-Type Properties,” October. https://via.hypothes.is/https://arxiv.org/pdf/1710.02049.pdf.
