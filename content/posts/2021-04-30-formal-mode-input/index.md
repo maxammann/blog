@@ -423,6 +423,31 @@ The rest of the diagram shows an execution of the trace.
  {{< /resourceFigure >}}
 
 
+## Next Steps
+
+We finished the definition of the ground theory now. Therefore, we continue with the design and implementation phase.
+
+Design Phase:
+
+* Create a glossary
+* Design the implementation of tlspuffin
+  * Trace, Steps, IO
+  * Signature and Terms with Variables, Frames, Attacker Knowledge
+* Define the requirements on the Fuzzer in natural language
+
+
+Implementation Phase:
+
+* Implement the term model and the semantics of the function signature
+* Define and execute the trace in Rust
+* Generate traces
+* Get Feedback from a trace execution
+* Integrate into LibAFL
+
+Evaluation Phase:
+
+* Test security violations
+* Check coverage
 
 [^1]: Cortier, Véronique, and Steve Kremer. 2014. “Formal Models and Techniques for Analyzing Security Protocols: A Tutorial.” Foundations and Trends® in Programming Languages 1 (3): 151–67. https://doi.org/10.1561/2500000001.
 [^2]: Baader, Franz, and Tobias Nipkow. 1998. Term Rewriting and All That. 1st ed. Cambridge University Press. https://doi.org/10.1017/CBO9781139172752.
