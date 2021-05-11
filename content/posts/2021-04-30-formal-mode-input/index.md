@@ -268,10 +268,18 @@ If an attacker can find a recipe term $t$ such that $t\Phi =_{EQ} t'$, then the 
 
 In our case a single attacker which has full control over the network is enough to model every possible attack for a TLS client and server setup. This is easy to see as a single attacker can act as multiple attackers. Therefore, the capabilities of a single attacker and multiple attackers coincide.
 
-Every message which is sent by and network participant is witnessed the attacker. The attacker can forward the message to the intended recipient, modify it or just drop and ignore it. Cheval et. al conclude conclude that in such a case the attacker has the following capabilities:
+Every message which is sent by and network participant is witnessed the attacker. The attacker can forward the message to the intended recipient, modify it or just drop and ignore it. Cheval et. al conclude that in such a case the attacker has the following capabilities:
 * eavesdropping messages and gain knowledge,
 * deduct further terms from messages, like gaining access to a secret if the attacker eavesdropped on the cipher-text and the corresponding key to decrypt it, and
 * control messages as the attacker can CRUD messages them and forward them to specific network participants.
+
+Note that we abstract the network topology away. We do not restrict the attacker in any way. The mental model of the attacker corresponds to the  Man-in-the-Middle scenario. In practice the attacker could control an IP router for example.
+
+{{< resourceFigure "ring.drawio.svg" >}}
+The red symbol denotes an attacker. The attacker can see and control all traffic in the network.
+ {{< /resourceFigure >}}
+
+
 
 Abadi and Fournet describe the notion of processes to model security protocols using the applied pi calculus [^4]. Process specifications of protocols allows making statements about security properties like secrecy or authentication. We want to use the ideas of processes and define a notion of more concrete executions of the protocols. A process defines all possible executions of a protocol, which is important to prove certain properties.
 
