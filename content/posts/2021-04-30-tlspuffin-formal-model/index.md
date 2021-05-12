@@ -180,7 +180,7 @@ A solution for this problem are equational theories which will be introduced in 
 
 ## Equational Theories
 
-Plaisted puts it quite simple: “An equational system is a set of equations.” [^6]. More or less that is also the essence of it. Formally, an equational theory $E$ is defined by a set of pairs $(t_1, t_2)$, where $t_1, t_2 \in \mathcal{T}(\mathcal{F}, \mathcal{X})$. This induces a relation $=_E$ on terms, defined by the smallest equivalence relation $=_E$ that contains all $(t_1, t_2) \in E$, closed under substitution of variables, and under application of function symbols.
+Plaisted puts it quite simple: "An equational system is a set of equations.” [^6]. More or less that is also the essence of it. Formally, an equational theory $E$ is defined by a set of pairs $(t_1, t_2)$, where $t_1, t_2 \in \mathcal{T}(\mathcal{F}, \mathcal{X})$. This induces a relation $=_E$ on terms, defined by the smallest equivalence relation $=_E$ that contains all $(t_1, t_2) \in E$, closed under substitution of variables, and under application of function symbols.
 
 A core property of TLS 1.3 and its Diffie Hellman key exchange is that the following equation is true [^7] [^8]:
 
@@ -449,12 +449,12 @@ Evaluation Phase:
 * Test security violations
 * Check coverage
 
-[^1]: Cortier, Véronique, and Steve Kremer. 2014. “Formal Models and Techniques for Analyzing Security Protocols: A Tutorial.” Foundations and Trends® in Programming Languages 1 (3): 151–67. https://doi.org/10.1561/2500000001.
+[^1]: Cortier, Véronique, and Steve Kremer. 2014. "Formal Models and Techniques for Analyzing Security Protocols: A Tutorial.” Foundations and Trends® in Programming Languages 1 (3): 151–67. https://doi.org/10.1561/2500000001.
 [^2]: Baader, Franz, and Tobias Nipkow. 1998. Term Rewriting and All That. 1st ed. Cambridge University Press. https://doi.org/10.1017/CBO9781139172752.
 [^3]: Bezem, M., J. W. Klop, Roel de Vrijer, and Terese (Group), eds. 2003. Term Rewriting Systems. Cambridge Tracts in Theoretical Computer Science, v. 55. Cambridge, UK ; New York: Cambridge University Press.
-[^4]: Abadi, Martı́n, and Cédric Fournet. 2001. “Mobile Values, New Names, and Secure Communication.” In Proceedings of the 28th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages - POPL 01. ACM Press. https://doi.org/10.1145/360204.360213.
-[^5]: Dolev, D., and A. Yao. 1983. “On the Security of Public Key Protocols.” IEEE Transactions on Information Theory 29 (2): 198–208. https://doi.org/10.1109/tit.1983.1056650.
-[^6]: Plaisted, David A. 1993. “Equational Reasoning and Term Rewriting Systems.” In Handbook of Logic in Artificial Intelligence and Logic Programming (Vol. 1), 274–364. USA: Oxford University Press, Inc.
-[^7]: Diffie, W., and M. Hellman. 1976. “New Directions in Cryptography.” IEEE Transactions on Information Theory 22 (6): 644–54. https://doi.org/10.1109/tit.1976.1055638.
-[^8]: Cortier, Véronique, Stéphanie Delaune, and Pascal Lafourcade. 2006. “A Survey of Algebraic Properties Used in Cryptographic Protocols.” Journal of Computer Security 14: 1–43. https://doi.org/10.3233/JCS-2006-14101.
-[^9]: Hirschi, Lucca, David Baelde, and Stéphanie Delaune. 2017. “A Method for Unbounded Verification of Privacy-Type Properties,” October. https://via.hypothes.is/https://arxiv.org/pdf/1710.02049.pdf.
+[^4]: Abadi, Martı́n, and Cédric Fournet. 2001. "Mobile Values, New Names, and Secure Communication.” In Proceedings of the 28th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages - POPL 01. ACM Press. https://doi.org/10.1145/360204.360213.
+[^5]: Dolev, D., and A. Yao. 1983. "On the Security of Public Key Protocols.” IEEE Transactions on Information Theory 29 (2): 198–208. https://doi.org/10.1109/tit.1983.1056650.
+[^6]: Plaisted, David A. 1993. "Equational Reasoning and Term Rewriting Systems.” In Handbook of Logic in Artificial Intelligence and Logic Programming (Vol. 1), 274–364. USA: Oxford University Press, Inc.
+[^7]: Diffie, W., and M. Hellman. 1976. "New Directions in Cryptography.” IEEE Transactions on Information Theory 22 (6): 644–54. https://doi.org/10.1109/tit.1976.1055638.
+[^8]: Cortier, Véronique, Stéphanie Delaune, and Pascal Lafourcade. 2006. "A Survey of Algebraic Properties Used in Cryptographic Protocols.” Journal of Computer Security 14: 1–43. https://doi.org/10.3233/JCS-2006-14101.
+[^9]: Hirschi, Lucca, David Baelde, and Stéphanie Delaune. 2017. "A Method for Unbounded Verification of Privacy-Type Properties,” October. https://via.hypothes.is/https://arxiv.org/pdf/1710.02049.pdf.

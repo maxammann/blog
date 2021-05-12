@@ -93,9 +93,9 @@ There are multiple components of the fuzzer like already shown in the [big pictu
 
 The components which are missing as of now are:
 
-- “Symbolic Traces Seed Pool“ and “Mutate Symbolic Traces“
-- “Execution Feedback“
-- “Security Context“ and “Bug Oracle“
+- "Symbolic Traces Seed Pool" and "Mutate Symbolic Traces"
+- "Execution Feedback"
+- "Security Context" and "Bug Oracle"
 
 Each of the components has specific requirements which we need to keep in mind. In this section we discuss whether which functional requirements each component has.
 
@@ -184,9 +184,7 @@ Apart from triggering the bug we also want to be able to detect it. Therefore, h
 
 ---
 
-**R15:** The fuzzer should not only observe crashes, but also violations of security properties like authentication.
-
-TODO: Very similar to **R14**
+**R15:** Based on the captured feedback in **R14**, the fuzzer should be able whether security violations have happened, like violation of authentication or a denial of service (crash).
 
 ---
 
