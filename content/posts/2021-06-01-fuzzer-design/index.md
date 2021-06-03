@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "tlspuffin: Design"
-date: 2021-06-03
+date: 2021-06-01
 slug: fuzzer-design
 draft: false
 
