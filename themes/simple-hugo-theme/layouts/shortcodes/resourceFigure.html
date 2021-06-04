@@ -9,6 +9,5 @@
   {{else }}
     <img src="{{ $img.RelPermalink }}" alt="{{ .Get 1 }}" />
   {{ end }}
-
-  <figcaption>{{ .Inner | markdownify }}</figcaption>
+  <figcaption>{{ .Inner | .Page.RenderString (dict "display" "inline") }}</figcaption>
 </figure>

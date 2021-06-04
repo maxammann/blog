@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "OpenSSL: Building with Determinisic Randomness"
+title: "OpenSSL: Inspect Secure Renegotiation"
 date: 2021-06-02
-slug: openssl-no-random
+slug: openssl-renegotiate
 draft: true
 
 keywords: [openssl]

@@ -12,33 +12,121 @@ keywords: []
 categories: [research-blog]
 ---
 
-## Practical Fuzzer Design
-
-TODO describe design
-
-This is a very theoretical idea which I want to concretize now in order to implement it using Rust. The following diagram shows the terms which will be explained in the following.
+The theoretical model as discussed in a [previous]({{< ref "2021-04-30-tlspuffin-formal-model" >}}) post. Based on this formal model the following implementation was designed. Firstly, we will give a broad overview in a diagram which shows the relations between the used concept
 
 {{< resourceFigure "class_diagram.drawio.svg" >}}
-A diagram which shows the used concepts and how they are linked with each other. No methods or functions are shown, only data.
+tlspuffin consists of several modules: the root, *term*, *fuzzer* and *tls* module.
+
+The root module contains *Traces* consisting of several *Steps*, of which each has either an *OutputAction* or *InputAction*. This is a declarative way of modeling communication between *Agents*. The *TraceContext* holds data, also known as *VariableData*, which is created by *Agents* during the concrete execution of the Trace. It also holds the *Agents* with the references to concrete PUT
+
+The *term* module defines typed terms of the form `fn_add(x: u8, fn_square(y: u16)) → u16`. Each function like `fn_add` or `fn_square` has a shape. The variables `x` and `y` each have a type. These types allow type checks during the runtime of the fuzzer. These checks restrict how terms can be mutated in the *fuzzer* module.
+
+The *fuzzer* module setups the fuzzing loop. It also is responsible for gathering feedback from runs and restarting processes if they crash.
+
+The *tls* module provides concrete implementations for the functions used in the term The module offers a variety of *DynamicFunctions* which can be used in the fuzzing.
  {{< /resourceFigure >}}
 
-A *Trace* consists of several *Steps*. Each has either a *Send-* or an *Expect-Action*. Each *Step* references an *Agents* by name. 
-In case of a *Send* *Action* the *Agent* denotes: From which *Agent* a message is sent.
-In case of an *Expect* *Action* the *Agent* denotes: Which *Agent* is expecting a message.
+A *Trace* consists of several *Steps*. Each has either a *OutputAction* or an *InputAction*. Each *Step* references an *Agent* by name. Furthermore, a trace also has a list of *AgentDescritptors* which act like a blueprint to spawn *Agents* with a corresponding server or client role and a specific TLs version. Essentially they are an *Agent* without a stream. 
 
-*Agents* represent communication participants like Alice, Bob or Eve. 
-Each *Agent* has an *inbound* and an *outbound channel*. These are currently implemented by using an in-memory buffer.
+*Agents* represent communication participants like Alice, Bob or Eve. Attackers are usually not represented by these *Agents*. Attackers are represented through a recipe term (see *InputAction*).
 
-One might ask why we want two channels. There two very practical reasons for this. Note that these are advantages for the implementation and are not strictly required from a theoretical point of view.
+Each *Agent* has an *inbound* and an *outbound channel*. These are currently implemented by using an in-memory buffer. One might ask why we want two channel There two very practical reasons for thi Note that these are advantages for the implementation and are not strictly required from a theoretical point of view.
 * Having two buffers resembles how networking works in reality: Each computer has an input and an output buffer. In case of TCP the input buffer can become full and therefore the transmission is throttled. 
-* It is beneficial to model each agent with two buffers according to the Single-responsibility principle. When sending or receiving data each agent only has to look at its own two buffers. If each agent had only one buffer, then you would need to read from another agent which has the data you want. Or if you design it the other way around you would need to write to the buffer of the agent to which you want to send data.
-* By having two buffers it is possible to define a message passing semantic. The routine which is executing a trace can decide which message should be sent to which agents.
+* It is beneficial to model each agent with two buffers according to the Single-responsibility principle. When sending or receiving data each agent only has to look at its own two buffer If each agent had only one buffer, then you would need to read from another agent which has the data you want. Or if you design it the other way around you would need to write to the buffer of the agent to which you want to send data.
 
-The *Agent* Alice can add data to the *inbound channel* of Bob. Bob can then read the data from his *inbound channel* and put data in his *outbound channel*. If Bob is an OpenSSL *Agent* then OpenSSL handles this.
-Not the message passing semantics make sure that messages are fetched from agents and delivered to others.
+The *Agent* Alice can add data to the *inbound channel* of Bob. Bob can then read the data from his *inbound channel* and put data in his *outbound channel*. If Bob is an *Agent*, which has an underlying *OpenSSLStream* then OpenSSL may write into the *outbound channel* of Bob.
 
-An *Expect Action* can then verify whether the *inbound channel* contains the expected message and extract *VariableData* from it.
+An open question is how the two action types *OutputAction* and *InputAction* differ.
+Both actions drive the internal state machine of an *Agent* forward by calling `next_state()`. The *OutputAction* first forwards the state machine and then extracts knowledge from the TLS messages produced by the underlying stream by calling  `take_message_from_outbound(...)`. The *InputAction* evaluates the recipe term and injects the newly produced message into the *inbound channel* of the *Agent* referenced through the corresponding *Step* by calling `add_to_inbound(...)` and then drives the state machine forward.
+Therefore, the difference is that one step *increases* the knowledge of the attacker, whereas the other action *uses* the available knowledge.
 
-There are OpenSSL agents, which use OpenSSL to craft messages and respond to messages.
 
-The *TraceContext* contains a list of *VariableData*, of which each has a *type* and an *owner*. *Send Actions* consume *VariableData*, whereas *Expect Actions* produce *VariableData*. *VariableData* can also be produced by initiating a *TraceContext* with predefined *VariableData*. *VariableData* can contain data of various types. For example client and server extensions, cipher suits, session IDs etc.
+The *TraceContext* contains a list of *VariableData*, which is known as the knowledge of the attacker. *VariableData* can contain data of various types like for example client and server extensions, cipher suits or session ID It also holds the concrete references to the *Agents* and the underlying stream
+
+## Traces
+
+After discussing the core concepts, we want to take a look on how to declare a trace. A trace is a declarative way of defining the information flow between agent The simplest example just forwards messages between a client and a server. The following example describes a client and a server agent and a series of step The first step makes the client output a `ClientHello` message. After that we send a `ClientHello` to the server agent and let the server output messages. The next step then sends a `ServerHello` to the client. To forward the messages we construct `ClientHello` and `ServerHello` messages from the knowledge gathered during the output steps. A variable like `new_var::<ProtocolVersion>((0, 0))` references a `ProtocolVersion` learned in the first message of the first step. A variable like `new_var::<CipherSuite>((1, 0))` references a `CipherSuite` learned in the first message of the second step. We also call the tuple an `ObservedId`. This is necessary as referencing learned knowledge only by a type is often ambiguous. By using the observed IDs we can limit this problem.
+
+```rust
+
+let client: AgentName = ...;
+let server: AgentName = ...;
+
+Trace {
+        descriptors: vec![
+            AgentDescriptor {
+                name: client,
+                tls_version: TLSVersion::V1_3,
+                server: false,
+            },
+            AgentDescriptor {
+                name: server,
+                tls_version: TLSVersion::V1_3,
+                server: true,
+            },
+        ],
+        steps: vec![
+            Step { agent: client, action: Action::Output(OutputAction { id: 0 })},
+            // Client: Hello Client -> Server
+            Step {
+                agent: server,
+                action: Action::Input(InputAction {
+                    recipe: Term::Application(
+                        new_function(&fn_client_hello),
+                        vec![
+                            Term::Variable(new_var::<ProtocolVersion>((0, 0))),
+                            Term::Variable(new_var::<Random>((0, 0))),
+                            Term::Variable(new_var::<SessionID>((0, 0))),
+                            Term::Variable(new_var::<Vec<CipherSuite>>((0, 0))),
+                            Term::Variable(new_var::<Vec<Compression>>((0, 0))),
+                            Term::Variable(new_var::<Vec<ClientExtension>>((0, 0))),
+                        ],
+                    ),
+                }),
+            },
+            Step { agent: server, action: Action::Output(OutputAction { id: 1 })},
+            // Server: Hello Server -> Client
+            Step {
+                agent: client,
+                action: Action::Input(InputAction {
+                    recipe: Term::Application(
+                        new_function(&fn_server_hello),
+                        vec![
+                            Term::Variable(new_var::<ProtocolVersion>((1, 0))),
+                            Term::Variable(new_var::<Random>((1, 0))),
+                            Term::Variable(new_var::<SessionID>((1, 0))),
+                            Term::Variable(new_var::<CipherSuite>((1, 0))),
+                            Term::Variable(new_var::<Compression>((1, 0))),
+                            Term::Variable(new_var::<Vec<ServerExtension>>((1, 0))),
+                        ],
+                    ),
+                }),
+            },
+            ...
+        ]
+}
+```
+
+As this syntax is very verbose, we use Rust macros to simplify writing traces. After declaring a trace we can execute it by creating a context, spawning the agents and then calling `execute()`.
+
+```rust
+let trace = ...;
+let mut ctx = TraceContext::new();
+trace.spawn_agents(&mut ctx)?;
+trace.execute(&mut ctx)?;
+```
+
+Note that `spawn_agents` and `execute` can fail. This does not necessarily indicate a crash of the PUT, but can also mean that encryption or decryption of authenticated data failed in a step.
+
+
+### Serializability
+
+Each trace is serializable to JSON or even binary data. This helps at reproducing discovered security vulnerabilities during fuzzing. If a trace triggers a security vulnerability we can store it on disk and replay it when investigating the case.
+
+
+TODO
+
+* harness
+* example of a DynamicFunction
+* feedback, sancov
+* removed randomness
