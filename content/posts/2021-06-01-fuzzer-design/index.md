@@ -107,7 +107,44 @@ Trace {
 }
 ```
 
-As this syntax is very verbose, we use Rust macros to simplify writing traces. After declaring a trace we can execute it by creating a context, spawning the agents and then calling `execute()`.
+As this syntax is very verbose, we can use Rust to create a DSL[^1]. 
+
+```rust
+OutputAction::new_step(client, 0),
+// Client Hello, Client -> Server
+InputAction::new_step(
+    server,
+    term! {
+        fn_client_hello(
+            ((0, 0)/ProtocolVersion),
+            ((0, 0)/Random),
+            ((0, 0)/SessionID),
+            ((0, 0)/Vec<CipherSuite>),
+            ((0, 0)/Vec<Compression>),
+            ((0, 0)/Vec<ClientExtension>)
+        )
+    },
+),
+OutputAction::new_step(server, 1),
+// Server Hello, Server -> Client
+InputAction::new_step(
+    server,
+    term! {
+        fn_server_hello(
+            ((1, 0)/ProtocolVersion),
+            ((1, 0)/Random),
+            ((1, 0)/SessionID),
+            ((1, 0)/CipherSuite),
+            ((1, 0)/Compression),
+            ((1, 0)/Vec<ServerExtension>)
+        )
+    },
+),
+...
+```
+
+
+After declaring a trace we can execute it by creating a context, spawning the agents and then calling `execute()`.
 
 ```rust
 let trace = ...;
@@ -118,15 +155,48 @@ trace.execute(&mut ctx)?;
 
 Note that `spawn_agents` and `execute` can fail. This does not necessarily indicate a crash of the PUT, but can also mean that encryption or decryption of authenticated data failed in a step.
 
+The above snippet is actually our fuzzing harness. In each fuzzing loop we spawn agents and execute the trace. After each execution, we have the possibility to gather feedback from the run as well as to mutate the trace. The harness is implemented in the file `src/fuzzer/harness.rs`.
 
 ### Serializability
 
 Each trace is serializable to JSON or even binary data. This helps at reproducing discovered security vulnerabilities during fuzzing. If a trace triggers a security vulnerability we can store it on disk and replay it when investigating the case.
 
+## Concrete implementations
 
-TODO
+Rust is a statically typed language. That means the compiler would be able to statically verify that a term evaluates without any type errors.
 
-* harness
-* example of a DynamicFunction
+While this is generally an advance, in the case of our fuzzer this is not very helpful. The fuzzer should be able to mutate the term trees arbitrarily. Of course, we also have to check for the types during runtime. If types are not compatible then, the evaluation of the term will fail. But this is not something that can be done during compile time. Therefore, we introduced a trait for dynamically typed functions on top of statically typed Rust functions.
+
+Each function which implements the following trait can be made into a dynamic function:
+
+```rust
+Fn(A1, A2, A3) -> Result<R, FnError>)
+```
+
+where `A1`, `A2`, `A3` are argument types and `R` is the return type. From these statically typed function we can generate dynamically types ones which implement the following trait:
+
+```
+pub trait DynamicFunction: Fn(&Vec<Box<dyn Any>>) -> Result<Box<dyn Any>, FnError> {
+}
+```
+
+Note, that both functions return a `Result` and therefore can gracefully fail.
+
+`DynamicFunctions` can be called with an array of any type. The result type is also arbitrary. Rust offers a unique ID for each type. Using this type we can check during runtime whether types are available. The types of each variable, constant and function are preserved and stored alongside the `DynamicFunction`.
+
+The following function is a simple example for a constant:
+
+```rust
+pub fn fn_cipher_suites() -> Result<Vec<CipherSuite>, FnError> {
+    Ok(vec![CipherSuite::TLS13_AES_128_GCM_SHA256])
+}
+```
+
+
+TODO:
+
 * feedback, sancov
-* removed randomness
+
+
+
+[^1]: [A DSL embedded in Rust](https://dl.acm.org/doi/10.1145/3310232.3310241)
