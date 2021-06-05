@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "tlspuffin: Design"
+title: "tlspuffin: Design and Implementation"
 date: 2021-06-01
 slug: fuzzer-design
 draft: false
@@ -43,9 +43,9 @@ Therefore, the difference is that one step *increases* the knowledge of the atta
 
 The *TraceContext* contains a list of *VariableData*, which is known as the knowledge of the attacker. *VariableData* can contain data of various types like for example client and server extensions, cipher suits or session ID It also holds the concrete references to the *Agents* and the underlying stream
 
-## Traces
+## Implementation of Traces
 
-After discussing the core concepts, we want to take a look on how to declare a trace. A trace is a declarative way of defining the information flow between agent The simplest example just forwards messages between a client and a server. The following example describes a client and a server agent and a series of step The first step makes the client output a `ClientHello` message. After that we send a `ClientHello` to the server agent and let the server output messages. The next step then sends a `ServerHello` to the client. To forward the messages we construct `ClientHello` and `ServerHello` messages from the knowledge gathered during the output steps. A variable like `new_var::<ProtocolVersion>((0, 0))` references a `ProtocolVersion` learned in the first message of the first step. A variable like `new_var::<CipherSuite>((1, 0))` references a `CipherSuite` learned in the first message of the second step. We also call the tuple an `ObservedId`. This is necessary as referencing learned knowledge only by a type is often ambiguous. By using the observed IDs we can limit this problem.
+After discussing the core concepts, we want to take a look on how to declare a trace. A trace is a declarative way of defining the information flow between agent The simplest example just forwards messages between a client and a server. The following example describes a client and a server agent and a series of step The first step makes the client output a `ClientHello` message. After that we send a `ClientHello` to the server agent and let the server output messages. The next step then sends a `ServerHello` to the client. To forward the messages we construct `ClientHello` and `ServerHello` messages from the knowledge gathered during the output steps. A variable like `new_var::<ProtocolVersion>((0, 0))` references a `ProtocolVersion` learned in the first message of the first step. We also call the tuples like `(0, 0)` an `ObservedId`. This is necessary as referencing learned knowledge only by a type is often ambiguous. By using the observed IDs we can limit this problem.
 
 ```rust
 
@@ -54,16 +54,8 @@ let server: AgentName = ...;
 
 Trace {
         descriptors: vec![
-            AgentDescriptor {
-                name: client,
-                tls_version: TLSVersion::V1_3,
-                server: false,
-            },
-            AgentDescriptor {
-                name: server,
-                tls_version: TLSVersion::V1_3,
-                server: true,
-            },
+            AgentDescriptor { name: client, tls_version: TLSVersion::V1_3, server: false },
+            AgentDescriptor { name: server, tls_version: TLSVersion::V1_3, server: true },
         ],
         steps: vec![
             Step { agent: client, action: Action::Output(OutputAction { id: 0 })},
@@ -74,30 +66,12 @@ Trace {
                     recipe: Term::Application(
                         new_function(&fn_client_hello),
                         vec![
-                            Term::Variable(new_var::<ProtocolVersion>((0, 0))),
-                            Term::Variable(new_var::<Random>((0, 0))),
-                            Term::Variable(new_var::<SessionID>((0, 0))),
-                            Term::Variable(new_var::<Vec<CipherSuite>>((0, 0))),
-                            Term::Variable(new_var::<Vec<Compression>>((0, 0))),
-                            Term::Variable(new_var::<Vec<ClientExtension>>((0, 0))),
-                        ],
-                    ),
-                }),
-            },
-            Step { agent: server, action: Action::Output(OutputAction { id: 1 })},
-            // Server: Hello Server -> Client
-            Step {
-                agent: client,
-                action: Action::Input(InputAction {
-                    recipe: Term::Application(
-                        new_function(&fn_server_hello),
-                        vec![
-                            Term::Variable(new_var::<ProtocolVersion>((1, 0))),
-                            Term::Variable(new_var::<Random>((1, 0))),
-                            Term::Variable(new_var::<SessionID>((1, 0))),
-                            Term::Variable(new_var::<CipherSuite>((1, 0))),
-                            Term::Variable(new_var::<Compression>((1, 0))),
-                            Term::Variable(new_var::<Vec<ServerExtension>>((1, 0))),
+                            Term::Variable(Signature::new_var::<ProtocolVersion>((0, 0))),
+                            Term::Variable(Signature::new_var::<Random>((0, 0))),
+                            Term::Variable(Signature::new_var::<SessionID>((0, 0))),
+                            Term::Variable(Signature::new_var::<Vec<CipherSuite>>((0, 0))),
+                            Term::Variable(Signature::new_var::<Vec<Compression>>((0, 0))),
+                            Term::Variable(Signature::new_var::<Vec<ClientExtension>>((0, 0))),
                         ],
                     ),
                 }),
@@ -107,7 +81,7 @@ Trace {
 }
 ```
 
-As this syntax is very verbose, we can use Rust to create a DSL[^1]. 
+As this syntax is very verbose, we can use Rust to create a DSL[^1]. The following declaration includes a `ClientHello` and a `ClientServer`.
 
 ```rust
 OutputAction::new_step(client, 0),
@@ -157,11 +131,12 @@ Note that `spawn_agents` and `execute` can fail. This does not necessarily indic
 
 The above snippet is actually our fuzzing harness. In each fuzzing loop we spawn agents and execute the trace. After each execution, we have the possibility to gather feedback from the run as well as to mutate the trace. The harness is implemented in the file `src/fuzzer/harness.rs`.
 
-### Serializability
+### Serializability of Traces
 
 Each trace is serializable to JSON or even binary data. This helps at reproducing discovered security vulnerabilities during fuzzing. If a trace triggers a security vulnerability we can store it on disk and replay it when investigating the case.
+As traces depend on concrete implementations as discussed in the next section we need to link serialized data like strings or numerical IDs to functions implemented in Rust.
 
-## Concrete implementations
+## Concrete Implementations of Functions
 
 Rust is a statically typed language. That means the compiler would be able to statically verify that a term evaluates without any type errors.
 
@@ -175,7 +150,7 @@ Fn(A1, A2, A3) -> Result<R, FnError>)
 
 where `A1`, `A2`, `A3` are argument types and `R` is the return type. From these statically typed function we can generate dynamically types ones which implement the following trait:
 
-```
+```rust
 pub trait DynamicFunction: Fn(&Vec<Box<dyn Any>>) -> Result<Box<dyn Any>, FnError> {
 }
 ```
@@ -192,11 +167,14 @@ pub fn fn_cipher_suites() -> Result<Vec<CipherSuite>, FnError> {
 }
 ```
 
+It returns one possibility for the cipher suites which could be sent during a `ClientHello`.
 
-TODO:
+### Used protocol and cryptographic libraries
 
-* feedback, sancov
+In order to easily implement concrete functions, we use several libraries which provide us with predefined encoders for TLS packets, cryptographic primitives, as well as higher level cryptographic operations specific for TLS.
 
+We forked the [rustls](https://github.com/ctz/rustls) library for cryptographic operations like deriving secrets. We also use it to encode and decode TLS messages.
 
+The cryptographic library [ring](https://github.com/briansmith/ring) allows us to use the derived secrets to encrypt and decrypt TLS messages.
 
 [^1]: [A DSL embedded in Rust](https://dl.acm.org/doi/10.1145/3310232.3310241)
