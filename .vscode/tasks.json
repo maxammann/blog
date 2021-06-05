@@ -12,6 +12,13 @@
       "runOptions": {
         "runOn": "folderOpen"
       }
+    },
+    {
+      "label": "deploy",
+      "type": "shell",
+      "command": "./deploy.sh",
+      "args": [],
+      "problemMatcher": []
     }
   ]
 }
