@@ -11,9 +11,6 @@ hypothesis: true
 keywords: []
 categories: [research-blog]
 ---
-
-Motivation: openvpn formal verification -> still bugs found using fuzzing as there is a difference between a spec and impl
-
 ##
 
 * Authentification Violations

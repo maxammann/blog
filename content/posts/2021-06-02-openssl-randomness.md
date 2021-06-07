@@ -96,3 +96,6 @@ pub fn make_deterministic() {
 ```
 
 I integrated this functionality into `openssl-src-rs`, which builds OpenSSL using the build system of Rust. If you are interested you can take a look [here](https://github.com/maxammann/openssl-src-rs/blob/fuzz/src/lib.rs#L177).
+
+
+There is also the C compilation flag: `FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION` which is used for fuzzing. A quick [search](https://github.com/openssl/openssl/search?q=FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION) through the OpenSSL code reveals though that the goal of this flag is not to make random number generation deterministic, but change the behavior of OpenSSL for fuzzing. It mostly skips error messages like in [cmp_msg.c](https://github.com/openssl/openssl/blob/3d9d1ce52904660757dadeb629926932abe25158/crypto/cmp/cmp_msg.c#L295). Sadly, there is no official documentation which does into detail what the benefits of using the flag are.
