@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "tlspuffin: Method for Exploring the State Space"
+title: "tlspuffin: Methods for Exploring the State Space"
 date: 2021-06-03
 slug: tlspuffin-method-explore
 draft: false
@@ -21,13 +21,13 @@ After the last post we have now a framework to implement TLS traces and run them
 
 Note that 100% coverage according to the classical node coverage does not necessarily that we reached 100% protocol coverage. If the protocol specification describes a feature executes a specific action when the server receives a `ClientHello` or `Finished`, then we reached node coverage only by sending a `ClientHello`, but not yet protocol coverage as we did not send the `Finished` message. This is comparable to the fact that complete path coverage is not reached if node coverage is 100%. 
 
-**Symbolic Term** todo
+A **Symbolic Trace** describes an execution of a protocol (handshake) in a declarative way. Each step in the execution can either be an output or input step. If it is an output step, then information is added to the knowledge of the attacker. If it is an input step, then the attacker can decide which recipe term is passed to the PUT. Variables in the term are symbolic values and reference learned knowledge. Functions are defined by concrete implementations. Therefore, the recipe term is also called a **Symbolic Term**.
 
 ## Achieving High Protocol Coverage
 
 Fuzzers test implementations by executing them repeatedly with different inputs. As tlspuffin works on a symbolical level and not on bit arrays the fuzzer has to be able to construct and evaluate symbolic terms. Evaluating these terms requires concrete implementations of function symbols. For example the function symbol `fn_client_hello` creates a TLS message which can be serialized to a binary data, which is ready to be sent to the TLS implementation. Below is an example for a term which builds a `ClientHello` message for TLS 1.2.
 
-{{< resourceFigure "seed_client_attacker12_1.svg" >}}
+{{< resourceFigure "seed_client_attacker12_0.svg" >}}
 Term which evalutes to a `ClientHello` TLS message.
 {{< />}}
 
@@ -40,7 +40,7 @@ To summarize, we should take a look at specified enumerations in RFC specs as we
 
 Some enumerations might not be of interest like the `SignatureScheme` enumeration in the RFC specification of TLS 1.3, as one could argue that TLS implementations probably execute the same code for each schema just with slightly different arguments. Nonetheless, the enumeration could be considered in during fuzzing, just with less priority.
 
-## Applying Available Function Symbols
+## Mutations
 
 By implementing functions symbols for all features of the protocol specification is the first step. The next step is to mutate predefined seed traces to trigger security violations.
 
@@ -70,21 +70,23 @@ The following mutators mutate recipe terms which are part of input steps and the
 |REPLACE-REUSE/SWAP|Replaces a sub-term with a different sub-term (such that types match).|
 
 While swapping learned variables is already covered by the REPLACE-REUSE/SWAP mutation, variables an additional field which can be mutated: the observed ID.
-The observed ID is the handle or reference to already learned knowledge. If knowledge is unused in a seed trace, then it first needs to be discovered by the fuzzer. Therefore, mutations need to exist, such that other observed IDs can be covered.
+The observed ID is the handle or reference to already learned knowledge. If knowledge is unused in a seed trace, then it first needs to be discovered by the fuzzer. Therefore, mutations need to exist, such that other observed IDs can be covered. The domain of the randomly generated IDs should be restricted as there are not infinitely many steps to reference.
 
 |Mutation|Description|
+|---|---|
 |SWAP HANDLE|Changes the observed ID tuples to a randomly chosen one|
+
+
 
 ## Practical Problems to Overcome
 
-TODO
+There are several practical problems which make it difficult to implement concrete implementations in order to reach high protocol coverage.
 
-Problems:
+Firstly, all messages and fields within messages need to be parsed and interpreted. Note, that in some cases we can leave a byte array uninterpreted. In this case the fuzzer will not mutate its internal structure, but will handle it is opaque data. A case in which this is required is encrypted data. Unlike plaintext, this data has no internal structure, before decrypting it.
 
-* rusttls has some sanity checks in parsing
-  * like no empty extensions (should not be part of parsing)
-* rusttls does not implement every extension 
+To overcome this challenge of writing a parser for each and every message type we utilize [rustls](https://github.com/ctz/rustls) by forking it. This TLS library allows us to reuse parsing code. Unfortunately, some logical checks are included in the parsing. One example is that empty extension lists are rejected. The type system of Rust allows us to easily discover these checks which let the parsing fail and remove them.
 
+Another issue with this TLS implementation is that it is not complete. Even though, it supports TLS 1.2 it does not support renegotiation. Furthermore, it does not yet support pre-shared keys in TLS 1.3. Therefore, careful review of the supported features is necessary, such that we can be sure that everything that should be parsable according to our protocol specification, is in fact parsable.
 
 <!--
 https://github.com/ctz/rustls/blob/main/README.md
@@ -146,7 +148,7 @@ Interesting:
 
 
 
-
+<!--
 ## Detecting Violations
 
 TODO
@@ -157,6 +159,6 @@ TODO
 * Detecting Authentication Violations between OpenSSL server (Bob) and client trace (Alice):
   * Expose a server public certificate
   * If we can make Alice think she is authenticated, then there is a vulnerability
-
+-->
 
 [^1]: [Messy State of the Union](https://www.ieee-security.org/TC/SP2015/papers-archived/6949a535.pdf)
