@@ -47,17 +47,33 @@ By implementing functions symbols for all features of the protocol specification
 To do this we introduce the concept of mutators. A mutator is a function which maps a trace to another mutated trace. By looking at previous security issues of TLS implementations and implementing symbolic traces which lead to violations we can get an idea which mutations are necessary.
 Furthermore, by implementing these traces manually we have a sanity check whether our fuzzer would have been able to represent the issue.
 
-Based on previous work [^2], we implement the following mutations.
-
-### Add an InputStep
-### Remove an InputStep
+Beurdouche et al. introduced the three mutations **Skip**, **Hop** and **Repeat** [^1]. The first mutation skips a message. This could lead to authentication violations if for example a `CertificateVerify` message is skipped. The **Hop** combines two traces by taking a prefix from the first one and continuing with the second trace if it starts with the same prefix. **Repeat** injects messages into a trace by repeating previously sent ones.
+Note that all these mutations work on a message level and do not mutate fields or extensions of messages.
 
 
-### Remove a Node in the Recipe of an InputStep
-### Add a Node in the Recipe of an InputStep
-### Replace a Node in the Recipe of an InputStep
+Based on these ideas, we implement the following mutations, which mutate steps. We call these step mutators.
 
+|Mutation|Description|
+|---|---|
+|SKIP|Removes an input step|
+|REPEAT|Repeats an input which is already part of the trace|
+|INJECT|Injects an input which is not part of the trace|
 
+The following mutators mutate recipe terms which are part of input steps and therefore are called recipe mutators. The following mutators respect the type annotations within terms and are only performed if types of functions and variables match. 
+
+|Mutation|Description|
+|---|---|
+|REMOVE AND LIFT|Removes a sub-term from a term and attaches orphaned children to the parent. This only works if there is only a single child.|
+|~~REMOVE AND DROP~~ because holes need to be filled|Removes a sub-term from a term and then drops the orphaned children.|
+|REPLACE|Replace a function symbol (such that types match) and reuses other sub-terms as arguments if there are missing ones.|
+|REPLACE-MATCH|Replaces a function symbol with a different one (such that types match).|
+|REPLACE-REUSE/SWAP|Replaces a sub-term with a different sub-term (such that types match).|
+
+While swapping learned variables is already covered by the REPLACE-REUSE/SWAP mutation, variables an additional field which can be mutated: the observed ID.
+The observed ID is the handle or reference to already learned knowledge. If knowledge is unused in a seed trace, then it first needs to be discovered by the fuzzer. Therefore, mutations need to exist, such that other observed IDs can be covered.
+
+|Mutation|Description|
+|SWAP HANDLE|Changes the observed ID tuples to a randomly chosen one|
 
 ## Practical Problems to Overcome
 
@@ -141,3 +157,6 @@ TODO
 * Detecting Authentication Violations between OpenSSL server (Bob) and client trace (Alice):
   * Expose a server public certificate
   * If we can make Alice think she is authenticated, then there is a vulnerability
+
+
+[^1]: [Messy State of the Union](https://www.ieee-security.org/TC/SP2015/papers-archived/6949a535.pdf)

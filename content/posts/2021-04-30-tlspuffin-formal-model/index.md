@@ -346,7 +346,7 @@ Furthermore, the implementation under test could have crashed. We will also leav
     \Phi \cup \{h_n \mapsto out(\tilde{st}, \xi), \}
 ) \\
 \text{where $\tilde{st} = next(st, \xi, \sigma)$} \\
-\text{if $\xi \in \mathcal{S}$ and $Msg(out(\tilde{st}, \xi))$}
+\text{if $\xi \in \mathcal{S}$ and $\text{Msg}(out(\tilde{st}, \xi))$}
 \tag{SEND}
 \end{align}
 
@@ -359,7 +359,7 @@ Furthermore, the implementation under test could have crashed. We will also leav
     next(st, \xi, t\Phi\downarrow),
     \Phi
 ) \\
-\text{if $\xi \in \mathcal{S}$, the recipe $t \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{H})$ and $Msg(t\Phi)$}
+\text{if $\xi \in \mathcal{S}$, the recipe $t \in \mathcal{T}(\mathcal{F}, N_{pub} \cup \mathcal{H})$ and $\text{Msg}(t\Phi)$}
 \tag{REC}
 \end{align}
 

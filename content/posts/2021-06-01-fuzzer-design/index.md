@@ -84,7 +84,7 @@ Trace {
 As this syntax is very verbose, we can use Rust to create a DSL[^1]. The following declaration includes a `ClientHello` and a `ClientServer`.
 
 ```rust
-OutputAction::new_step(client, 0),
+OutputAction::new_step(client, 0), // Learn from ClientHello
 // Client Hello, Client -> Server
 InputAction::new_step(
     server,
@@ -99,10 +99,10 @@ InputAction::new_step(
         )
     },
 ),
-OutputAction::new_step(server, 1),
+OutputAction::new_step(server, 1), // Learn from ServerHello
 // Server Hello, Server -> Client
 InputAction::new_step(
-    server,
+    client,
     term! {
         fn_server_hello(
             ((1, 0)/ProtocolVersion),
