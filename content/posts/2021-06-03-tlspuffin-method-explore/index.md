@@ -14,7 +14,8 @@ categories: [research-blog]
 
 After the last post we have now a framework to implement TLS traces and run them against OpenSSL or any other TLS implementation. There are now two main challenges which I want to cover in this post. But first let's define some terms.
 
-**Protocol Specification** describes which features of the TLS specification and relevant extensions to the specification should be in scope of fuzzing. For TLS 1.3 the specification is [RFC 8446](https://datatracker.ietf.org/doc/html/rfc8446). In the case of TLS 1.2 the [RFC 5246](https://datatracker.ietf.org/doc/html/rfc5246) as well as several other RFCs for its extensions are part of the protocol specification. We maybe decide to exclude some features of TLS as they are not used anymore in practice or are not worth fuzzing from a subjective perspective. An example for such a specification is [RFC 5081](https://datatracker.ietf.org/doc/html/rfc5081) which implements the possibility to use OpenPGP keys for authentication within the TLS protocol.
+**Protocol Specification** describes which features of the TLS specification and relevant extensions to the specification should be in scope of fuzzing. For TLS 1.3 the specification is [RFC 8446](https://datatracker.ietf.org/doc/html/rfc8446). In the case of TLS 1.2 the [RFC 5246](https://datatracker.ietf.org/doc/html/rfc5246) as well as several other RFCs for its extensions are part of the protocol specification. We maybe decide to exclude some features of TLS as they are not used at all in practice or are not worth fuzzing from a subjective perspective. An example for such a specification is [RFC 5081](https://datatracker.ietf.org/doc/html/rfc5081) which implements the possibility to use OpenPGP keys for authentication within the TLS protocol.
+Secure renegotiation or `RSA_EXPORT` export ciphers may still be interesting to include, as servers might still support them, even through most clients won't request the features.
 
 
 **Protocol Coverage** describes how much of the protocol specification, which has been set as a goal, is indeed covered by the fuzzer. The goal of tlspuffin is to reach complete protocol coverage. 
@@ -38,7 +39,8 @@ Next there are the extensions. IANA provides a [list](https://www.iana.org/assig
 
 To summarize, we should take a look at specified enumerations in RFC specs as well as external enumerations like the one of IANA for extensions. By implementing these function symbols, we can be sure confident that we can represent traces which trigger a security vulnerability.
 
-Some enumerations might not be of interest like the `SignatureScheme` enumeration in the RFC specification of TLS 1.3, as one could argue that TLS implementations probably execute the same code for each schema just with slightly different arguments. Nonetheless, the enumeration could be considered in during fuzzing, just with less priority.
+Some enumerations might not be of interest like the `SignatureScheme` enumeration in the RFC specification of TLS 1.3, as one could argue that TLS implementations probably execute the same code for each schema just with slightly different arguments. In a nutshell we want to prioritize fuzzing the protocol logic implementation over fuzzing the underlying cryptographic library.
+Nonetheless, the enumeration could be considered during fuzzing, just with less priority.
 
 ## Mutations
 
@@ -59,15 +61,17 @@ Based on these ideas, we implement the following mutations, which mutate steps. 
 |REPEAT|Repeats an input which is already part of the trace|
 |INJECT|Injects an input which is not part of the trace|
 
-The following mutators mutate recipe terms which are part of input steps and therefore are called recipe mutators. The following mutators respect the type annotations within terms and are only performed if types of functions and variables match. 
+The following mutators mutate recipe terms which are part of input steps and therefore are called recipe mutators. The following mutators respect the type annotations within terms and are only performed if types of functions and variables match. These mutators extend the set of mutators which are currently state-of-the-art. By adding these mutators we are able to change fields within TLS message in contrast of just skipping and injecting whole messages.
+
+Note that some mutators might are redundant. Replacing a sub-term could also be represented by a removal and addition of it. The rationale behind this is that certain mutations could be beneficial to happen after each other. Therefore, they are combined.
 
 |Mutation|Description|
 |---|---|
 |REMOVE AND LIFT|Removes a sub-term from a term and attaches orphaned children to the parent. This only works if there is only a single child.|
-|~~REMOVE AND DROP~~ because holes need to be filled|Removes a sub-term from a term and then drops the orphaned children.|
 |REPLACE|Replace a function symbol (such that types match) and reuses other sub-terms as arguments if there are missing ones.|
-|REPLACE-MATCH|Replaces a function symbol with a different one (such that types match).|
-|REPLACE-REUSE/SWAP|Replaces a sub-term with a different sub-term (such that types match).|
+|REPLACE-MATCH|Replaces a function symbol with a different one (such that types match). An example would be to replace a constant with another constant or the binary function `fn_add` with `fn_sub`.|
+|REPLACE-REUSE|Replaces a sub-term with a different sub-term which is part of the trace (such that types match). The new sub-term could come from another step which has a different recipe term.|
+|SWAP|Swaps a sub-term with a different sub-term which is part of the trace (such that types match).|
 
 While swapping learned variables is already covered by the REPLACE-REUSE/SWAP mutation, variables an additional field which can be mutated: the observed ID.
 The observed ID is the handle or reference to already learned knowledge. If knowledge is unused in a seed trace, then it first needs to be discovered by the fuzzer. Therefore, mutations need to exist, such that other observed IDs can be covered. The domain of the randomly generated IDs should be restricted as there are not infinitely many steps to reference.
@@ -84,7 +88,7 @@ There are several practical problems which make it difficult to implement concre
 
 Firstly, all messages and fields within messages need to be parsed and interpreted. Note, that in some cases we can leave a byte array uninterpreted. In this case the fuzzer will not mutate its internal structure, but will handle it is opaque data. A case in which this is required is encrypted data. Unlike plaintext, this data has no internal structure, before decrypting it.
 
-To overcome this challenge of writing a parser for each and every message type we utilize [rustls](https://github.com/ctz/rustls) by forking it. This TLS library allows us to reuse parsing code. Unfortunately, some logical checks are included in the parsing. One example is that empty extension lists are rejected. The type system of Rust allows us to easily discover these checks which let the parsing fail and remove them.
+To overcome this challenge of writing a parser for each and every message type we utilize [rustls](https://github.com/ctz/rustls) by forking it. This TLS library allows us to reuse parsing code. Unfortunately, some logical checks are included in the parsing. One example is that empty extension lists are rejected. The type system of Rust allows us to easily discover checks which return parsing errors and remove them.
 
 Another issue with this TLS implementation is that it is not complete. Even though, it supports TLS 1.2 it does not support renegotiation. Furthermore, it does not yet support pre-shared keys in TLS 1.3. Therefore, careful review of the supported features is necessary, such that we can be sure that everything that should be parsable according to our protocol specification, is in fact parsable.
 
