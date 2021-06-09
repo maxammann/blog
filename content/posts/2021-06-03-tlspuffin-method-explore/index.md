@@ -42,6 +42,17 @@ To summarize, we should take a look at specified enumerations in RFC specs as we
 Some enumerations might not be of interest like the `SignatureScheme` enumeration in the RFC specification of TLS 1.3, as one could argue that TLS implementations probably execute the same code for each schema just with slightly different arguments. In a nutshell we want to prioritize fuzzing the protocol logic implementation over fuzzing the underlying cryptographic library.
 Nonetheless, the enumeration could be considered during fuzzing, just with less priority.
 
+## Generation-based vs Mutation-based
+
+The goal of the fuzzer is to discover traces which trigger security violations. We discovered two distinct methods to achieve this goal.
+
+The mutation-based method starts by picking a manually crafted seed trace. This could be the happy protocol flow in TLS 1.2 or 1.3. Based on this the fuzzer mutates the trace such that violations are triggered.
+The major disadvantage with this approach is that local mutations in a recipe could affect other parts of the trace. For example by sending an empty extensions list in the `ClientHello`, the server will respond with an `Alert` instead of a `ServerHello`. This means local mutations can invalidate parts or even the whole trace. Another example would be to send multiple `ChangeCipherSpec` messages during the handshake. By doing so the observed IDs become wrong, because the references to learned knowledge become invalid.
+The advantage is that not every mutation makes other parts of the trace invalid. For example appending a message does not invalidate the specified observed IDs.
+
+The generation-based approach starts with an empty trace and then adds steps one by one. The major disadvantage is that the space of possible combinations of steps or terms in input steps is very large. To counteract this state-space explosion we could use happy protocol executions to guide the generation. The generator could create traces which are similar, but change the structure here and there. Furthermore, the generation could be bounded. Trace length, as well as term depths could be limited.
+
+Both approaches are worth exploring. While the mutation-based one is simple, it may not uncover complex bugs. The generation-based approach is difficult to implement because of the large state-space and possible long fuzzing durations, but it could be more efficient at finding complex vulnerabilities.
 ## Mutations
 
 By implementing functions symbols for all features of the protocol specification is the first step. The next step is to mutate predefined seed traces to trigger security violations.
