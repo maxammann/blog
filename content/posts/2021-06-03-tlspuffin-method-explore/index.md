@@ -101,66 +101,7 @@ Firstly, all messages and fields within messages need to be parsed and interpret
 
 To overcome this challenge of writing a parser for each and every message type we utilize [rustls](https://github.com/ctz/rustls) by forking it. This TLS library allows us to reuse parsing code. Unfortunately, some logical checks are included in the parsing. One example is that empty extension lists are rejected. The type system of Rust allows us to easily discover checks which return parsing errors and remove them.
 
-Another issue with this TLS implementation is that it is not complete. Even though, it supports TLS 1.2 it does not support renegotiation. Furthermore, it does not yet support pre-shared keys in TLS 1.3. Therefore, careful review of the supported features is necessary, such that we can be sure that everything that should be parsable according to our protocol specification, is in fact parsable.
-
-<!--
-https://github.com/ctz/rustls/blob/main/README.md
-
-In Scope (rustls):
-
-* TLS1.2 and TLS1.3.
-* ECDSA, Ed25519 or RSA server authentication by clients.
-* ECDSA, Ed25519 or RSA server authentication by servers.
-* Forward secrecy using ECDHE; with curve25519, nistp256 or nistp384 curves.
-* AES128-GCM and AES256-GCM bulk encryption, with safe nonces.
-* ChaCha20-Poly1305 bulk encryption ([RFC7905](https://tools.ietf.org/html/rfc7905)).
-* ALPN support.
-* SNI support.
-* Tunable fragment size to make TLS messages match size of underlying transport.
-* Optional use of vectored IO to minimise system calls.
-* TLS1.2 session resumption.
-* TLS1.2 resumption via tickets ([RFC5077](https://tools.ietf.org/html/rfc5077)).
-* TLS1.3 resumption via tickets or session storage.
-* TLS1.3 0-RTT data for clients.
-* Client authentication by clients.
-* Client authentication by servers.
-* Extended master secret support ([RFC7627](https://tools.ietf.org/html/rfc7627)).
-* Exporters ([RFC5705](https://tools.ietf.org/html/rfc5705)).
-* OCSP stapling by servers.
-* SCT stapling by servers.
-* SCT verification by clients.
-
-
-Not in Scope (rustls):
-
-* PSK support.
-* OCSP verification by clients.
-* Certificate pinning.
-
-None Features (rustls):
-
-* SSL1, SSL2, SSL3, TLS1 or TLS1.1.
-* RC4.
-* DES or triple DES.
-* EXPORT ciphersuites.
-* MAC-then-encrypt ciphersuites.
-* Ciphersuites without forward secrecy.
-* ~~Renegotiation.~~
-* Kerberos.
-* Compression.
-* Discrete-log Diffie-Hellman.
-* Automatic protocol version downgrade.
-* AES-GCM with unsafe nonces.
-
-Interesting:
-
-* TLS1.2 session resumption.
-* TLS1.2 resumption via tickets (RFC5077).
-* TLS1.3 resumption via tickets or session storage.
-* Fuzzing of OpenSSL Options
--->
-
-
+Another issue with this TLS implementation is that it is not complete. Even though, it supports TLS 1.2 it does not support renegotiation. Furthermore, it does not yet support pre-shared keys in TLS 1.3. Therefore, careful review of the supported features is necessary, such that we can cbe sure that everything that should be parsable according to our protocol specification, is in fact parsable.
 
 
 <!--
