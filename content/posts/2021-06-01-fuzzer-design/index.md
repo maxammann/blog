@@ -41,7 +41,7 @@ Both actions drive the internal state machine of an *Agent* forward by calling `
 Therefore, the difference is that one step *increases* the knowledge of the attacker, whereas the other action *uses* the available knowledge.
 
 
-The *TraceContext* contains a list of *VariableData*, which is known as the knowledge of the attacker. *VariableData* can contain data of various types like for example client and server extensions, cipher suits or session ID It also holds the concrete references to the *Agents* and the underlying stream
+The *TraceContext* contains a list of *VariableData*, which is known as the knowledge of the attacker. *VariableData* can contain data of various types like for example client and server extensions, cipher suits or session ID It also holds the concrete references to the *Agents* and the underlying streams, which contain the messages which have need exchanged and are not yet processed by an output step.
 
 ## Implementation of Traces
 
