@@ -2,7 +2,7 @@
 
 <figure>
   {{ if (.Get 2) }}
-  {{ $resize := (printf "%dx" (.Get 2)) }}
+  {{ $resize := (printf "%dx webp" (.Get 2)) }}
   {{ $width := (printf "%dpx" (.Get 2)) }}
   {{ $resized := ($img.Resize $resize ) }}
     <img src="{{ $resized.RelPermalink }}" alt="{{ .Get 1 }}" width={{ $width }} />

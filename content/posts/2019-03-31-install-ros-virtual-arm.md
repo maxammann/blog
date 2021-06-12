@@ -5,7 +5,7 @@ date: 2019-03-31
 slug: install-ros-virtual-arm
 ---
 
-**This post represents a slow way to compile ROS. In a [new post]({{< ref "2019-04-13-crosscompiling-ros-raspbian" >}}) I show how to crosscompile ROS."
+**This post represents a slow way to compile ROS. In a [new post]({{< ref "2019-04-13-crosscompiling-ros-raspbian" >}}) I show how to crosscompile ROS.**
 
 This post should guide you through the process of compiling ROS on a virtualized Raspberry PI Zero.
 

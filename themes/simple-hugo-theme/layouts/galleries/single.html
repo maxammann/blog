@@ -17,8 +17,8 @@
       <div class="element">
         <img
           src="{{ $full.RelPermalink }}"
-          srcset="{{ ($full.Resize "480x").RelPermalink }} 480w, 
-                  {{ ($full.Resize "960x").RelPermalink }} 960w"
+          srcset="{{ ($full.Resize "480x webp").RelPermalink }} 480w, 
+                  {{ ($full.Resize "960x webp").RelPermalink }} 960w"
           sizes="((max-width: 960px)) 480px, ((max-width: 1920px)) 960px"
           alt="{{ $full.Title }}"
         />
