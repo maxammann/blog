@@ -20,5 +20,5 @@ The initial papers which I read are:
 
 I want to highlight some interesting aspects of these paper in the next blog post.
 
-To get into the topic of fuzzing, I tried to implement a Fuzzer based on the upcoming and not yet officially released library "LibAFL" by AFLplusplus. I picked an easy target for the start. I tried to fuzz [libcue](https://github.com/lipnitsk/libcue). It worked and I actually found the first bug in it withing seconds (a buffer underflow because of negative input). After that I did not find quickly crashes. I suppose this is because libcue uses Yacc and a grammar to parse Cue files. Actually libcue is quite simple. Maybe too simple to have serious vulnerabilities like buffer overflows.
+To get into the topic of fuzzing, I tried to implement a Fuzzer based on the upcoming and not yet officially released library "LibAFL" by AFLplusplus. I picked an easy target for the start. I tried to fuzz [libcue](https://github.com/lipnitsk/libcue). It worked, and I actually found the first bug in it withing seconds (a buffer underflow because of negative input). After that, I did not find quickly crashes. I suppose this is because libcue uses Yacc and a grammar to parse Cue files. Actually libcue is quite simple. Maybe too simple to have serious vulnerabilities like buffer overflows.
 

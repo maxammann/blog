@@ -14,7 +14,7 @@ The React Native documentation gives a good hint how to achieve this in the [Fla
 
 Actually the idea is very simple. First you flip the `ScrollView`. Then you also flip the content of the `ScrollView`. That way the `ScrollView` is flipped and goes now in the opposite direction. The content is flipped twice and therefore looks like it is not flipped at all.
 
-Here is how to achieve this using a `ScrollView` instead of a `FlatList`. For a horizonal `ScrollView`:
+Here is how to achieve this using a `ScrollView` instead of a `FlatList`. For a horizontal `ScrollView`:
 
 
 ```jsx

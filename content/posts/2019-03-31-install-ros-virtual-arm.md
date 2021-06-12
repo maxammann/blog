@@ -70,7 +70,7 @@ Mem:           247M        218M         21M          0B        7.7M        1.3M
 Swap:           99M         99M          0B
 ```
 
-You can active the ROS environment with `source ~/ros_catkin_ws/install_isolated/setup.bash`. You
+You can activate the ROS environment with `source ~/ros_catkin_ws/install_isolated/setup.bash`. You
 can also add this to your `.bashrc` if you like.
 
 The next task for me is to get the data from the qemu image to copy it to the real hardware.
