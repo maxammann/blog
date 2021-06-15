@@ -24,7 +24,26 @@ Note that 100% coverage according to the classical node coverage does not necess
 
 A **Symbolic Trace** describes an execution of a protocol (handshake) in a declarative way. Each step in the execution can either be an output or input step. If it is an output step, then information is added to the knowledge of the attacker. If it is an input step, then the attacker can decide which recipe term is passed to the PUT. Variables in the term are symbolic values and reference learned knowledge. Functions are defined by concrete implementations. Therefore, the recipe term is also called a **Symbolic Term**.
 
+
+## Generation-based vs Mutation-based
+
+The goal of the fuzzer is to discover traces which trigger security violations. We discovered two distinct methods to achieve this goal.
+
+The mutation-based method starts by picking a manually crafted seed trace. This could be the happy protocol flow in TLS 1.2 or 1.3. Based on this the fuzzer mutates the trace such that violations are triggered.
+The major disadvantage with this approach is that local mutations in a recipe could affect other parts of the trace. For example by sending an empty extensions list in the `ClientHello`, the server will respond with an `Alert` instead of a `ServerHello`. This means local mutations can invalidate parts or even the whole trace. Another example would be to send multiple `ChangeCipherSpec` messages during the handshake. By doing so the observed IDs become wrong, because the references to learned knowledge become invalid.
+The advantage is that not every mutation makes other parts of the trace invalid. For example appending a message does not invalidate the specified observed IDs.
+
+The generation-based approach starts with an empty trace and then adds steps one by one. The major disadvantage is that the space of possible combinations of steps or terms in input steps is very large. To counteract this state-space explosion we could use happy protocol executions to guide the generation. The generator could create traces which are similar, but change the structure here and there. Furthermore, the generation could be bounded. Trace length, as well as term depths could be limited.
+
+Both approaches are worth exploring. While the mutation-based one is simple, it may not uncover complex bugs. The generation-based approach is difficult to implement because of the large state-space and possible long fuzzing durations, but it could be more efficient at finding complex vulnerabilities.
+
 ## Achieving High Protocol Coverage
+
+tlspuffin has two main areas which need to be tweaked in order to achieve high coverage. On the one side the fuzzer needs to have concrete capabilities which are realized through implementations in Rust. For example if we want to be able to send a `ClientHello`, then tlspuffin needs to have a concrete implementation to create a binary array which represents it.
+
+On the other side the fuzzer needs to have a proper way of applying these capabilities. Concrete implementation need to be applied it order to increase the fuzzing space. This can happen through mutation of generation like discussed in the last section.
+
+### Fuzzer Capabilities
 
 Fuzzers test implementations by executing them repeatedly with different inputs. As tlspuffin works on a symbolical level and not on bit arrays the fuzzer has to be able to construct and evaluate symbolic terms. Evaluating these terms requires concrete implementations of function symbols. For example the function symbol `fn_client_hello` creates a TLS message which can be serialized to a binary data, which is ready to be sent to the TLS implementation. Below is an example for a term which builds a `ClientHello` message for TLS 1.2.
 
@@ -42,18 +61,7 @@ To summarize, we should take a look at specified enumerations in RFC specs as we
 Some enumerations might not be of interest like the `SignatureScheme` enumeration in the RFC specification of TLS 1.3, as one could argue that TLS implementations probably execute the same code for each schema just with slightly different arguments. In a nutshell we want to prioritize fuzzing the protocol logic implementation over fuzzing the underlying cryptographic library.
 Nonetheless, the enumeration could be considered during fuzzing, just with less priority.
 
-## Generation-based vs Mutation-based
-
-The goal of the fuzzer is to discover traces which trigger security violations. We discovered two distinct methods to achieve this goal.
-
-The mutation-based method starts by picking a manually crafted seed trace. This could be the happy protocol flow in TLS 1.2 or 1.3. Based on this the fuzzer mutates the trace such that violations are triggered.
-The major disadvantage with this approach is that local mutations in a recipe could affect other parts of the trace. For example by sending an empty extensions list in the `ClientHello`, the server will respond with an `Alert` instead of a `ServerHello`. This means local mutations can invalidate parts or even the whole trace. Another example would be to send multiple `ChangeCipherSpec` messages during the handshake. By doing so the observed IDs become wrong, because the references to learned knowledge become invalid.
-The advantage is that not every mutation makes other parts of the trace invalid. For example appending a message does not invalidate the specified observed IDs.
-
-The generation-based approach starts with an empty trace and then adds steps one by one. The major disadvantage is that the space of possible combinations of steps or terms in input steps is very large. To counteract this state-space explosion we could use happy protocol executions to guide the generation. The generator could create traces which are similar, but change the structure here and there. Furthermore, the generation could be bounded. Trace length, as well as term depths could be limited.
-
-Both approaches are worth exploring. While the mutation-based one is simple, it may not uncover complex bugs. The generation-based approach is difficult to implement because of the large state-space and possible long fuzzing durations, but it could be more efficient at finding complex vulnerabilities.
-## Mutations
+### Fuzzer Behavior through Mutations
 
 By implementing functions symbols for all features of the protocol specification is the first step. The next step is to mutate predefined seed traces to trigger security violations.
 
@@ -100,8 +108,18 @@ Firstly, all messages and fields within messages need to be parsed and interpret
 
 To overcome this challenge of writing a parser for each and every message type we utilize [rustls](https://github.com/ctz/rustls) by forking it. This TLS library allows us to reuse parsing code. Unfortunately, some logical checks are included in the parsing. One example is that empty extension lists are rejected. The type system of Rust allows us to easily discover checks which return parsing errors and remove them.
 
+There is actually a project which focuses only on the parsing which is called [tls-parser](https://github.com/rusticata/tls-parser). A practical difficult with this library is that the Rust types which represent for example a TLS message or TLS extension are not `'static`. This could increase performance because more borrows instead of copies are possibles. At the same time it also increases the complexity as the programmer has to care about Rust lifetimes. Also, it is not possible to get [TypeIds](https://doc.rust-lang.org/std/any/struct.TypeId.html) from non-`'static` types.
+Even though it looks promising to have more features, in fact it is not complete, too.
+
 Another issue with this TLS implementation is that it is not complete. Even though, it supports TLS 1.2 it does not support renegotiation. Furthermore, it does not yet support pre-shared keys in TLS 1.3. Therefore, careful review of the supported features is necessary, such that we can cbe sure that everything that should be parsable according to our protocol specification, is in fact parsable.
 
+
+## Next Challenges:
+
+* Rediscover CVE-2021-3449 through mutations
+* Make sure that we have a sane amount of concrete implementations
+* ? Add some old-style mutations for binary data
+* ? Rediscover Hearthbleed
 
 <!--
 ## Detecting Violations
