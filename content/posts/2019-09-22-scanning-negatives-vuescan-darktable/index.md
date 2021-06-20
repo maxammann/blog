@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Scanning Black and White Negatives: Vuescan and Post-processing"
+title: "Scanning Black and White Negatives: VueScan and Post-processing"
 date: 2019-09-22
 slug: scanning-negatives-vuescan-darktable
 
@@ -21,7 +21,7 @@ The setup of the scanner and its drivers is described [here]({{< ref "2020-03-28
 
 # Settings in VueScan
 
-The goal of this guide it to get the data as raw as possible from the over 20 year old scanner. The scan quality is acceptable with 2700dpi and 12bit ADC resolution. The VueScan software has two stages: [**Scanning** & **Processing**] (https://www.hamrick.com/vuescan/html/vuesc20.htm#topic14).
+The goal of this guide it to get the data as raw as possible from the over 20 year old scanner. The scan quality is acceptable with 2700dpi and 12bit ADC resolution. The VueScan software has two stages: **[Scanning & Processing] (https://www.hamrick.com/vuescan/html/vuesc20.htm#topic14)**.
 We are interrested in the result of the **Scanning** stage as it does not include the filtering and color corrections we will later to on our own.
 The following table shows the settings which should be set in the **Input** tab of Vuescan:
 

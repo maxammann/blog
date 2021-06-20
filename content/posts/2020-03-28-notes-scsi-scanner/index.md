@@ -36,3 +36,8 @@ You can find the [specs](https://imaging.nikon.com/lineup/scanner/scoolscan_2000
 
 
 I hope I was able to get a brief overview of running an old scanner on a modern software stack.
+
+
+# Scanning Black and White Negatives
+
+You can read my detailed guide [VueScan and Post-processing]({{< ref "2019-09-22-scanning-negatives-vuescan-darktable" >}}) to learn more about using this LS-2000 setup.
