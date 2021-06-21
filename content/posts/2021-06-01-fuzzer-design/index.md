@@ -26,7 +26,7 @@ The *fuzzer* module setups the fuzzing loop. It also is responsible for gatherin
 The *tls* module provides concrete implementations for the functions used in the term The module offers a variety of *DynamicFunctions* which can be used in the fuzzing.
  {{< /resourceFigure >}}
 
-A *Trace* consists of several *Steps*. Each has either a *OutputAction* or an *InputAction*. Each *Step* references an *Agent* by name. Furthermore, a trace also has a list of *AgentDescritptors* which act like a blueprint to spawn *Agents* with a corresponding server or client role and a specific TLs version. Essentially they are an *Agent* without a stream. 
+A *Trace* consists of several *Steps*. Each has either a *OutputAction* or an *InputAction*. Each *Step* references an *Agent* by name. Furthermore, a trace also has a list of *AgentDescriptors* which act like a blueprint to spawn *Agents* with a corresponding server or client role and a specific TLs version. Essentially they are an *Agent* without a stream. 
 
 *Agents* represent communication participants like Alice, Bob or Eve. Attackers are usually not represented by these *Agents*. Attackers are represented through a recipe term (see *InputAction*).
 
