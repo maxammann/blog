@@ -16,7 +16,7 @@ ${exec xprop -id $(xprop -root | awk '/_NET_ACTIVE_WINDOW\(WINDOW\)/{print $NF}'
 
 Build into a complete conky script it will look like this:
 
-```conf
+```json
 out_to_x no
 own_window no
 out_to_console yes
