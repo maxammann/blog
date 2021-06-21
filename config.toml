@@ -85,3 +85,8 @@ enableGitInfo = "true"
   genre = "Engineering"
   githubProjectUrl = "https://github.com/maxammann/blog"
   dublinCoreMetadataPartOf = "maxammann.org"
+
+  [markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
