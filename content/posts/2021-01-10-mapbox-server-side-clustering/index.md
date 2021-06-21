@@ -28,7 +28,7 @@ This offers a lot of benefits for users, like dynamic styling of the geometries,
 From the technical side an advantage is that Google or Apple does not have to render and update PNG files for every map style. They only have to provide the geographic information and the client renders it in real-time.
 
 {{< resourceFigure "vector-tile-example.png" "Visualisation of a Vector Tile. " 500 >}}
- Visualization of a Vector Tile. [Mapzen CC-BY-4.0](https://github.com/tilezen/vector-datasource/blob/master/docs/LICENSE-DOCS.md)
+Visualization of a Vector Tile. [Mapzen CC-BY-4.0](https://github.com/tilezen/vector-datasource/blob/master/docs/LICENSE-DOCS.md)
 {{< /resourceFigure >}}
 
 This gives clients and users a lot of freedom in styling and rendering their map! Also they feel very smooth as it is easy to interpolate information when using vector graphics.

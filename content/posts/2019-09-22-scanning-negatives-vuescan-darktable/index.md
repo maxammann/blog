@@ -71,15 +71,15 @@ The following example should demonstrate this. The negative is an overexposed ex
 The first image was post-processed without converting the color space. This means the image data was interpreted by Darktable as non-linear sRGB:
 
 {{< resourceFigure "wrong-colorspace-example/raw0021.webp" "Example without gamma correction" >}}
-    {{< resourceHref "wrong-colorspace-example/raw0021.tif" >}}RAW TIFF{{< /resourceHref >}} and
-    {{< resourceHref "wrong-colorspace-example/raw0021.tif.xmp" >}}XMP{{< /resourceHref >}}
+{{< resourceHref "wrong-colorspace-example/raw0021.tif" >}}RAW TIFF{{< /resourceHref >}} and
+{{< resourceHref "wrong-colorspace-example/raw0021.tif.xmp" >}}XMP{{< /resourceHref >}}
 {{< /resourceFigure >}}
 
 As you can see I was not able to make the clouds as visible as in the second example:
 
 {{< resourceFigure "wrong-colorspace-example/raw0025-srgb.webp" "Example with gamma correction" >}}
-    {{< resourceHref "wrong-colorspace-example/raw0025-srgb.tif" >}}RAW TIFF{{< /resourceHref >}} and
-    {{< resourceHref "wrong-colorspace-example/raw0025-srgb.tif.xmp" >}}XMP{{< /resourceHref >}}
+{{< resourceHref "wrong-colorspace-example/raw0025-srgb.tif" >}}RAW TIFF{{< /resourceHref >}} and
+{{< resourceHref "wrong-colorspace-example/raw0025-srgb.tif.xmp" >}}XMP{{< /resourceHref >}}
 {{< /resourceFigure >}}
 
 Maybe there is a hacky way around this. The proper way is to convert color spaces though. The image is not a good shot but should demonstrate the importance of the interpretation of the raw data.
