@@ -2,7 +2,7 @@
 layout: post
 title: "tlspuffin: Fuzzer Architecture"
 date: 2021-07-01
-slug: tlspuffin-heartbleed
+slug: tlspuffin-fuzzer-architecture
 draft: false
 
 katex: false
