@@ -74,6 +74,14 @@ Note that all these mutations work on a message level and do not mutate fields o
 
 Based on these ideas, we implement the following mutations, which mutate steps. We call these step mutators.
 
+|Capability|Name|Description|
+|---|---|---|
+|📈|Increase Term Size|-|
+|📉|Deduce Term Size|-|
+|⚖️|Keeps Same Term Size|-|
+|🔥|Destructive|Mutation is potentially not reversible by the same mutator|
+|🧑‍🔬|Generative|Mutation generates previously unseen terms|
+
 |Mutation|Description|
 |---|---|
 |SKIP|Removes an input step|
@@ -84,12 +92,12 @@ The following mutators mutate recipe terms which are part of input steps and the
 
 Note that some mutators might are redundant. Replacing a sub-term could also be represented by a removal and addition of it. The rationale behind this is that certain mutations could be beneficial to happen after each other. Therefore, they are combined.
 
-|Mutation|Description|
-|---|---|
-|REMOVE AND LIFT|Removes a sub-term from a term and attaches orphaned children to the parent (such that types match). This only works if there is only a single child.|
-|REPLACE-MATCH|Replaces a function symbol with a different one (such that types match). An example would be to replace a constant with another constant or the binary function `fn_add` with `fn_sub`.|
-|REPLACE-REUSE|Replaces a sub-term with a different sub-term which is part of the trace (such that types match). The new sub-term could come from another step which has a different recipe term.|
-|SWAP|Swaps a sub-term with a different sub-term which is part of the trace (such that types match).|
+|Mutation|Description|Capablities|
+|---|---|---|
+|REMOVE AND LIFT|Removes a sub-term from a term and attaches orphaned children to the parent (such that types match). This only works if there is only a single child.|📉, 🔥|
+|REPLACE-MATCH|Replaces a function symbol with a different one (such that types match). An example would be to replace a constant with another constant or the binary function `fn_add` with `fn_sub`.|⚖️|
+|REPLACE-REUSE|Replaces a sub-term with a different sub-term which is part of the trace (such that types match). The new sub-term could come from another step which has a different recipe term.|📈, 📉, 🔥|
+|SWAP|Swaps a sub-term with a different sub-term which is part of the trace (such that types match).|⚖️|
 
 While swapping learned variables is already covered by the REPLACE-REUSE/SWAP mutation, variables an additional field which can be mutated: the observed ID.
 The observed ID is the handle or reference to already learned knowledge. If knowledge is unused in a seed trace, then it first needs to be discovered by the fuzzer. Therefore, mutations need to exist, such that other observed IDs can be covered. The domain of the randomly generated IDs should be restricted as there are not infinitely many steps to reference.
