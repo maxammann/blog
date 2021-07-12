@@ -5,7 +5,7 @@ date: 2021-07-07
 slug: tlspuffin-violation-detection
 draft: false
 
-katex: false
+katex: true
 hypothesis: true
 
 keywords: []
@@ -20,36 +20,7 @@ These kinds of logical attacks do not crash the implementation. A crash is also 
 
 Usually fuzzers try to find crashes of implementations. These are easily detectable because the process which executes the library crashes. A security violation is more difficult to check as we need to introduce invariants which hold during the execution of a handshake. In the following we try to give some ideas over which variables such variants could be defined.
 
-## Channel Binding
-
-* the server's key share MUST be in the same group as one of the client's shares (https://hypothes.is/a/1jdqEMHcEeuQN-vVtD7B9A)
-
-## Downgrade
-
-TLS 1.2:
-
-1. `used_public_rsa_key` (ClientKeyExchange) < `ssl_cipher_st.cipher.strength_bits`
-
-TLS 1.3:
-
-1. Protocol Version on Client and Server
-1. Secrets match between client and server:
-    * `early_secret`
-    * `handshake_secret`
-    * `master_secret`
-    * `resumption_master_secret`
-    * `client_finished_secret`
-    * `server_finished_secret`
-    * `server_finished_hash`
-    * `handshake_traffic_hash`
-    * `client_app_traffic_secret`
-    * `server_app_traffic_secret`
-    * `exporter_master_secret`
-    * `early_exporter_master_secret`
-1. Verify `cert_verify_hash` between client and server -> not neccassarily a successful attack
-
-
-## Authentication Violations
+## Queries and Traces of Claims
 
 To check for security violations we introduce the concept of claims, which are also known as events. A claim has a name, an executing agent, as well as data attached to it. For example during the execution of a successful TLS 1.3 handshake the claim `Finished(client, master_secret)` is recorded. That means that the honest agent `client` has reached the protocol state in which the finished the handshake. The additional data `master_secret` can be used in security queries.
 
@@ -69,10 +40,59 @@ ProVerif proves that for all traces of the protocol the above query is true. In 
 
 Let's suppose that the execution of a TLS 1.3 handshake in tlspuffin yields the following trace:
 
-`ClientHello(client, ...)`, `ServerHelloUntilFinished(server, ...)`, `CCSUntilClientFinished(client, ...)`
+`ClientHello(client, ...)`, `Finished(server, ...)`, `Finished(client, ...)`
 
-We are using here a bit-step execution of the protocol. We are only creating events after a flight of messages, not after each individual message.
+We are using here a big-step execution of the protocol. We are only creating events after a flight of messages, not after each individual message. THe above corresponds to a 1-RTT handshake. This means the client can start sending application data after the first round-trip.
+## Ideas for Queries
 
+|Vulnerability|TLS Version|Type|Detection Method|
+|---|---|---|---|
+|SKIP EXCHANGE|1.2|MITM Impersonation|??|
+|SKIP VERIFY|1.2|Client Attacker|Check whether it is possible to authenticate without private key|
+|SKIP EPHEMERAL|1.2|MITM Downgrade|Check whether best option was chosen|
+|FREAK|1.2|MITM Downgrade|Check whether best option was chosen|
+|Selfie|1.3|??|??|
+### Authentication
+
+```rust
+(* 1-RTT handshake authentication query: every disjunct is required; commenting any of them results in "false" *)
+
+query cr:random, sr:random, cr':random, sr':random,
+      psk:preSharedKey,p:pubkey, e:element,
+      o:params, m:params,  
+      ck:ae_key,sk:ae_key,ms:bitstring,cb:bitstring;
+      inj-event(ClientFinished(TLS13,cr,sr,psk,p,o,m,ck,sk,cb,ms)) ==>
+      inj-event(PreServerFinished(TLS13,cr,sr,psk,p,o,m,ck,sk,cb)) ||
+      (event(WeakOrCompromisedKey(p)) &&  (psk = NoPSK || event(CompromisedPreSharedKey(psk)))) ||  
+      event(ServerChoosesKEX(cr,sr,p,TLS13,DHE_13(WeakDH,e))) ||    
+      event(ServerChoosesKEX(cr',sr',p,TLS12,RSA(WeakRSADecryption)))  ||  
+      event(ServerChoosesHash(cr',sr',p,TLS13,WeakHash)). 
+```
+### Channel Binding
+
+* the server's key share MUST be in the same group as one of the client's shares (https://hypothes.is/a/1jdqEMHcEeuQN-vVtD7B9A)
+
+### Detecting Weak Keys AKA Donwngrade (FREAK)
+
+When (public)-keys are used for encrypting secrets we can check whether the cipher suite is weak. A used cipher suite is weak if it is not the best option between two peers. A client offers a set of ciphers $L_c$ and the server also has a set of supported ciphers $L_s$. The best option which satisfies both peers is to use the best cipher of the partially ordered set $L_c \cap L_s$. 
+
+In our fuzzer we always have access to the ciphers which clients or server will support. We also have a partial order over all ciphers. This means whenever a key is generated which is weaker than the best option, then we have a security violation, which corresponds to a downgrade attack.
+
+By doing this we can easily detect FREAK for example. In FREAK the client does not have to support an export cipher. A man-in-the-middle can trick the client in using one though. Even if the client would support export ciphers, then an export cipher is not the best option, which is also a security violation.
+
+This check can also be implemented using a security query. By looking at a trace we can compute the best cipher, which both peers support. The trace should also issue a claim when a key is generated or used. If the used or generated key is weaker than the best option then we have a security violation.
+
+"V-C SKIP EPHEMERAL: FORWARD SECRECY ROLLBACK" is also a downgrade attach from an ephemeral key exchange to a static one. This could also be checked here.
+
+### SKIP
+
+The client authenticates with the server. The client skips the CertificateVerify message and still is authenticated. This could be checked by not providing the client with the client with the private key, but just the public key for an authentication certificate.
+
+The setup could be:
+1. two honest agents which do client authentication, then SKIP one message and not use the private key, requires detecting non-usage
+1. one attacker client and one honest server, then provide the client attacker with a wrong private key. Providing the client or server with a key could happen through initial knowledge.
+    * If we suppose that the client is not authenticated, because he is an attacker, and the server claims that the client is authenticated, then we have a security violation.
+    * Practically we simply fuzz the client attacker and setup the server such that it requires authentication.
 
 ## Messy state of the union
 
