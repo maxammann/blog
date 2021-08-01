@@ -7,6 +7,8 @@ slug: armbian-encrypt-root
 keywords: [ armbian, encryption ]
 ---
 
+**This guide is tested on Armbian 20.8**
+
 The default Armbian images do not offer an encrypted root partition. Unfortunately it is requied to build the image yourself inorder to use LUKS on your root partition.
 
 
@@ -21,7 +23,7 @@ A quick overview of the process is the following:
 * `git clone --depth 1 https://github.com/armbian/build`
 * `cd build`
 
-We will first use a dummy-password for the luks container as you probably do not want to expose your password to the `compile.sh` script. Note that it is technically possible that the Armbian script gets a copy of the **unencrypted master key** of your LUKS container. This is all about trust like any installation tool you run for encrypting your system.
+We will first use a dummy-password for the luks container as you probably do not want to expose your password to the `compile.sh` script. Note that it is technically possible that the Armbian script gets a copy of the **unencrypted master key** of your LUKS container. You can regenerate this key later though with `cryptsetup reencrypt`. This is all about trust like any installation tool you run for encrypting your system.
 So you need to compile using the following flags which can be found in the [Build Options](https://docs.armbian.com/Developer-Guide_Build-Options/) documentation:
 
 * `./compile.sh CRYPTROOT_ENABLE=yes CRYPTROOT_PASSPHRASE=123456 CRYPTROOT_SSH_UNLOCK=yes CRYPTROOT_SSH_UNLOCK_PORT=2222`
@@ -37,6 +39,7 @@ After generating the image and copying it to your trustworthy host system you ca
 * `kpartx -v -a Armbian_*.img`
 * `cryptsetup luksAddKey /dev/mapper/loop0p2`
 * `cryptsetup luksRemoveKey /dev/mapper/loop0p2`
+* `cryptsetup reencrypt /dev/mapper/loop0p2 # Optional setup to change the master encryption key`
 * `cryptsetup luksDump /dev/mapper/loop0p2`
 * `kpartx -d Armbian_*.img`
 
