@@ -36,7 +36,7 @@ What we are missing is atomic data to which the functions can be applied to. Whe
 $\mathcal{N}\_{pub}$ contains names which are public and available to the attacker e.g. a session identifier like an IP address. 
 $\mathcal{N}\_{prv}$ includes private keys of protocol participants. These are usually hidden within the implementations of participants. 
 
-The separation between public and private names is necassary as like in reality data can be private or publicly known in the network. Private names can become known to the attacker by observing it on the network. This gain of knowledge is modeled through a frame, which is introduced later on.
+The separation between public and private names is necessary as like in reality data can be private or publicly known in the network. Private names can become known to the attacker by observing it on the network. This gain of knowledge is modeled through a frame, which is introduced later on.
 
 The set of all terms $\mathcal{T}(F,N)$ over the set of functions $F$ and atoms $N$ is defined as: 
 
@@ -211,7 +211,7 @@ E_{DH} = \begin{cases}
 
 Using this equation system we see that 
 {{< katex >}}$\{\text{exp}(\text{exp}(G, x), y)\,\text{mod}\,p\} \vdash_{E_{DH}} \text{exp}(\text{exp}(G, y), x)\,\text{mod}\,p${{< /katex >}}
-should be true. An in fact Cortier et al. provide a simple inference system which allows us to reuse the definition of deduction trees [^1]:
+should be true. And in fact Cortier et al. provide a simple inference system which allows us to reuse the definition of deduction trees [^1]:
 
 {{< katex >}}
 \begin{align*}
@@ -220,7 +220,7 @@ should be true. An in fact Cortier et al. provide a simple inference system whic
 \end{align*}
 {{< /katex >}}
 
-These meta-rules allow us to use the above equational system together with the previous definition of deduction. In general it is undecidable whether two equations are equal given an arbitrary equational system. Therefore, we want to apply restriction on how we want to use the equational system. This is the motivation for term rewriting systems.
+These meta-rules allow us to use the above equational system together with the previous definition of deduction. In general, it is undecidable whether two equations are equal given an arbitrary equational system. Therefore, we want to apply restriction on how we want to use the equational system. This is the motivation for term rewriting systems.
 
 ## Term Rewriting Systems (TRS)
 
