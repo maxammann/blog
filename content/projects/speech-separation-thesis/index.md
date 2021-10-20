@@ -5,7 +5,7 @@ resources:
   name: logo-light
 technologies: [ TensorFlow, Python, LaTex ]
 slug: speech-separation
-year: 2020
+year: 2019
 active: false
 project_type: "Thesis"
 github:

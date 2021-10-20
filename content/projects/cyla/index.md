@@ -1,7 +1,7 @@
 ---
 title: "Cyla"
 resources:
-- src: '**-light.png'
+- src: 'logo.png'
   name: logo-light
 technologies: [ Go, React Native]
 slug: cyla
