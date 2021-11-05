@@ -6,7 +6,6 @@ slug: libafl-fuzzer-architecture
 draft: true
 
 katex: false
-hypothesis: true
 
 keywords: []
 categories: [research-blog]
