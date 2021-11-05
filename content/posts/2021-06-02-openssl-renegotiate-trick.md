@@ -4,6 +4,7 @@ title: "OpenSSL: Inspect Secure Renegotiation"
 date: 2021-06-07
 slug: openssl-renegotiate
 draft: false
+wip: true
 
 keywords: [openssl]
 categories: []

@@ -4,6 +4,7 @@ title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 slug: {{ .Name }}
 draft: true
+wip: false
 
 resources:
 - src: "*.png"

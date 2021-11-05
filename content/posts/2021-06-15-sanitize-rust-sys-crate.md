@@ -4,9 +4,10 @@ title: "Rust: Enable AddressSanitizer in Rust *-sys crate"
 date: 2021-06-15
 slug: sanitize-rust-sys-crate
 draft: false
+wip: true
 
-keywords: [openssl,research-blog]
-categories: []
+keywords: [openssl]
+categories: [rust]
 ---
 
 For our tlspuffin fuzzer we use Rust to implement the testing harness. The harness is statically linked to OpenSSL via the [openssl-sys](https://github.com/sfackler/rust-openssl/) and 

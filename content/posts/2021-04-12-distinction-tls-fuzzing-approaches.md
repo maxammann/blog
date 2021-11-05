@@ -4,9 +4,10 @@ title: "Distinction between Fuzzing Approaches for TLS"
 date: 2021-04-12
 slug: distinction-tls-fuzzing-approaches
 draft: false
+wip: true
 
 keywords: [ ]
-categories: [ research-blog ]
+categories: [ fuzzing, rust ]
 ---
 
 Traditionally, fuzzing mutates bits and bytes. That means that the semantics of the protocol are not directly used to mutate the fuzzing input. Symbolic-model Guided Fuzzers fuzz on a more abstract level. It uses a symbolic model to create inputs. Therefore, there are two main approaches *bit-level fuzzing* and *model-guided fuzzing* (also called generation-based fuzzing) [^1]. This is also called [structure-aware fuzzing](https://github.com/google/fuzzing/blob/master/docs/structure-aware-fuzzing.md) by Google.

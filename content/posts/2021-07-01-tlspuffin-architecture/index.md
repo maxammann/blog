@@ -4,11 +4,11 @@ title: "LibAFL: Fuzzer Architecture"
 date: 2021-07-01
 slug: libafl-fuzzer-architecture
 draft: true
-
+wip: true
 katex: false
 
 keywords: []
-categories: [research-blog]
+categories: [fuzzing]
 ---
 
 TODO: This needs to be update

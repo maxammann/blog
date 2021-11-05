@@ -11,7 +11,7 @@ resources:
 - openssl_messages.*
 
 keywords: [ ]
-categories: [ research-blog ]
+categories: [ security ]
 ---
 
 TLS is a beast of a protocol with at least [50 extensions](https://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml) and over 20 years of history. This indicates that implementing can be challenging and that it is important to take a close look at its security.

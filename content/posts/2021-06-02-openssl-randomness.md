@@ -4,9 +4,10 @@ title: "OpenSSL: Building with Determinisic Randomness"
 date: 2021-06-02
 slug: openssl-no-random
 draft: false
+wip: true
 
 keywords: [openssl]
-categories: []
+categories: [ security ]
 ---
 
 TLS, like most cryptographic protocols, depend on random numbers to generate keying material. These numbers should come from a trusted and truly random source.

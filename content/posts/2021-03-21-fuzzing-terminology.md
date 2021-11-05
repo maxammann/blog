@@ -4,9 +4,10 @@ title: "Fuzzing Terminology"
 date: 2021-03-21T14:00:33+01:00
 slug: fuzzing-terminology
 draft: false
+wip: true
 
 keywords: [ ]
-categories: [ research-blog ]
+categories: [ fuzzing ]
 ---
 
 

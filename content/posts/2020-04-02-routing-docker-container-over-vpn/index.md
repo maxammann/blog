@@ -8,6 +8,7 @@ resources:
 - src: "*.jpg"
 
 keywords: [ vpn, docker, routing]
+categories: [ security ]
 ---
 
 A docker setup can be very helpful when trying to separate services if they are not packaged otherwise.
