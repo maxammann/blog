@@ -26,8 +26,8 @@ Using the tool is quite simple:
 ```txt
 $ ./ndove.sh max@example.com 8080 8080 123.123.123.123 ::1
 Sucessfully forwarded local port
-Binding 8123 to ip6:2a01:4f8:c2c:2fff::c1
-Binding 8123 to ip4:78.47.200.189
+Binding 8123 to ip6:2a01:1:2:3:4:5
+Binding 8123 to ip4:1.2.3.4
 ```
 
 There is a quite overview of the parameters:
