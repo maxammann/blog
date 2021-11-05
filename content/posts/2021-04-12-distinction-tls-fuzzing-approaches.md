@@ -9,7 +9,7 @@ keywords: [ ]
 categories: [ research-blog ]
 ---
 
-This research blog focuses on novel ways to fuzz the TLS cryptographic protocol. Traditionally, fuzzing mutates bits and bytes. That means that the semantics of the protocol are not directly used to mutate the fuzzing input. [Symbolic-model Guided Fuzzing]({{< ref "2021-04-06-symbolic-model-guided" >}}) fuzzes on a more abstract level. It uses a symbolic model to create inputs. Therefore, there are two main approaches *bit-level fuzzing* and *model-guided fuzzing* (also called generation-based fuzzing) [^1]. This is also called [structure-aware fuzzing](https://github.com/google/fuzzing/blob/master/docs/structure-aware-fuzzing.md) by Google.
+Traditionally, fuzzing mutates bits and bytes. That means that the semantics of the protocol are not directly used to mutate the fuzzing input. Symbolic-model Guided Fuzzers fuzz on a more abstract level. It uses a symbolic model to create inputs. Therefore, there are two main approaches *bit-level fuzzing* and *model-guided fuzzing* (also called generation-based fuzzing) [^1]. This is also called [structure-aware fuzzing](https://github.com/google/fuzzing/blob/master/docs/structure-aware-fuzzing.md) by Google.
 
 The classical example for a model which creates fuzz inputs is a grammar. A grammar of a programming language can directly generate syntactically correct programs encoded as text. Furthermore, such a grammar can generate abstract syntax trees (AST), which is just an encoding of the program which is easier to mutate. After mutating an abstract syntax tree it is possible to  serialize it to a text-file before passing it to the PUT. 
 
