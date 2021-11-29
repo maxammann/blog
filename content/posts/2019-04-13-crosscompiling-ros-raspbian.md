@@ -34,7 +34,7 @@ docker pull debian:stretch
 
 I prepared a folder structure for the cross-compiling. You can check it out using git:
 ```bash
-git clone --recurse-submodules https://gitlab.com/searchwing/development/searchwing-pi-ros build_ros
+git clone --recurse-submodules https://github.com/maxammann/pi-crosscompile-ros build_ros
 ```
 
 Mount the working directory which I named `build_ros` and run the container interactively:
@@ -304,7 +304,7 @@ make install DESTDIR=/build_ros/cross-compile/sysroot-release
 
 We successfully compiled ROS (MAVROS and raspicam_node) in this guide. There is lot of back-and-forth by installing dependencies in docker and the Raspbian `sysroot`. Maybe sometimes this is not needed and can be skipped. This depends whether the compilation process needs binaries like `sip` which is required by MAVROS.
 
-My original cross-compilation notes notes can be found [here](https://gitlab.com/searchwing/development/searchwing-pi-ros/blob/master/original-install-notes.md).
+My original cross-compilation notes notes can be found [here](https://github.com/maxammann/pi-crosscompile-ros/blob/master/original-install-notes.md).
 
 
 # Possible Problems
