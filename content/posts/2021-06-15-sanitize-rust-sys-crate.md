@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Rust: Enable AddressSanitizer in Rust *-sys crate"
+title: "Enable AddressSanitizer in Rust *-sys crate"
 date: 2021-06-15
 slug: sanitize-rust-sys-crate
 draft: false

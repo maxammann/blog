@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "OpenSSL: Inspect Secure Renegotiation"
+title: "Inspect Secure Renegotiation using OpenSSL"
 date: 2021-06-07
 slug: openssl-renegotiate
 draft: false
