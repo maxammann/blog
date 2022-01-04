@@ -11,7 +11,7 @@ resources:
 - src: "*.jpg"
 
 keywords: [ ]
-categories: [ ]
+categories: [ mapr ]
 ---
 
 Stencil testing refers to a technique in computer graphics programming which allows conditional processing of fragments. Stencil testing is closely related to depth testing which is used to determine which fragment precedence based on its depth within the scene.
