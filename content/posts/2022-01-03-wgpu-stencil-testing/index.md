@@ -36,7 +36,7 @@ From an abstract perspective the stencil test can be seen as the following funct
 type StencilValue = u8;
 fn stencil_test(x: u32, y: u32, 
                 stencil_state: &StencilFaceState,
-                stencil_buffer: &mut [[StencilValue;HEIGHT];WIDTH],  
+                stencil_buffer: &mut [[StencilValue;SCREEN_HEIGHT];SCREEN_WIDTH],  
                 reference_value: StencilValue,
                 write_mask: StencilValue, read_mask: StencilValue) -> bool;
 ```
@@ -93,9 +93,12 @@ wgpu::RenderPipelineDescriptor {
 During the rendering loop you have the possibility to set a reference stencil value `reference_value` like shown here:
 
 ```rust
+let mut pass: wgpu::RenderPass = ...;
+let mut pipeline: &wgpu::RenderPipeline = ...;
+let mut vertex_buffer: wgpu::BufferSlice = ...;
 pass.set_pipeline(&pipeline);
 pass.set_vertex_buffer(0, vertex_buffer);
-pass.set_stencil_reference(reference_value);
+pass.set_stencil_reference(some_reference_value);
 // Draw something
 pass.draw(0..3, 0..1);
 ```
@@ -112,7 +115,7 @@ The following imaginary implementation of the `stencil_test` function should ser
 fn stencil_test(x: u32, y: u32, 
                 // This state is either the `front` or `back` state supplied by the `wgpu::StencilState` config.
                 stencil_state: &StencilFaceState,
-                stencil_buffer: &mut [[StencilValue;HEIGHT];WIDTH],
+                stencil_buffer: &mut [[StencilValue;SCREEN_HEIGHT];SCREEN_WIDTH]
                 // stencil value with value provided in most recent call to RenderPass::set_stencil_reference.
                 reference_value: StencilValue,
                 // These two masks come from the `wgpu::StencilState` config
@@ -145,7 +148,7 @@ fn stencil_test(x: u32, y: u32,
 fn update_stencil_buffer(x: u32, y: u32,
                          reference_value: StencilValue,
                          operation: &StencilOperation, 
-                         stencil_buffer: &mut [[StencilValue;HEIGHT];WIDTH]) {
+                         stencil_buffer: &mut [[StencilValue;SCREEN_HEIGHT];SCREEN_WIDTH]) {
     match operation {
         Keep => { }
         /// Set stencil value to zero.
@@ -170,15 +173,17 @@ A minor simplification is that I excluded the `depth_fail_op` of `wgpu::StencilF
 
 ## Clipping Objects using Stencil Testing
 
-One usage for stencil testing is clipping of 2D geometries. Let's image for example we currently render a complex 2D shape. We now notice that the 2D shape is too big, and we want to clip it with another geometry.
+One usage for stencil testing is clipping of geometries. Let's image for example we currently render a complex shape. We now notice that the complex shape is too big, and we want to clip it with another geometry.
 
 This can be achieved by creating two separate pipelines in WebGPU. One pipeline draws a mask against which we want to clip the geometry. The other pipeline draws the actual complex shape.
 We draw now a mask in the stencil buffer by using the following draw calls:
 
 ```rust
+let mut pass: wgpu::RenderPass = ...;
+let mut mask_pipeline: &wgpu::RenderPipeline = ...;
+let mut vertex_buffer: wgpu::BufferSlice = ...;
 pass.set_pipeline(&mask_pipeline);
 pass.set_vertex_buffer(0, vertex_buffer);
-pass.set_stencil_reference(reference_value);
 // Draw the mask
 pass.draw(0..3, 0..1);
 ```
@@ -191,13 +196,16 @@ let stencil_state = wgpu::StencilFaceState {
     depth_fail_op: wgpu::StencilOperation::Keep,
     pass_op: wgpu::StencilOperation::IncrementClamp,
 };
-``
+```
 
 Because the stencil buffer is initialized with zeroes, the draw above will increment the stencil values which are covered by the mask to 1. The are incremented because the pass operation `IncrementClamp` is used.
 
 Now let's draw the complex shape:
 
 ```rust
+let mut pass: wgpu::RenderPass = ...;
+let mut pipeline: &wgpu::RenderPipeline = ...;
+let mut vertex_buffer: wgpu::BufferSlice = ...;
 pass.set_pipeline(&pipeline);
 pass.set_vertex_buffer(0, vertex_buffer);
 pass.set_stencil_reference(1);
