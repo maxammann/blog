@@ -223,7 +223,7 @@ let stencil_state = wgpu::StencilFaceState {
 };
 ```
 
-This state never changes the stencil buffer, but only draws pixels which have a 1 in the stencil buffer. The reason for this is that we set the stencil reference value to 1 with `pass.set_stencil_reference(1)`.
+This state never changes the stencil buffer, but only draws pixels which have a 1 in the stencil buffer. The reason for this is that we set the stencil reference value to 1 with `pass.set_stencil_reference(1)`, and we went with the `Equal` compare function.
 
 This technique can be used in vector map rendering, where quadratic tiles of geographic data are drawn. The tiles contain vector graphics which can extend beyond the boundaries of a tile. By using squares as a mask it is possible to clip the tiles. An example project which uses clipping is [mapr](https://github.com/maxammann/mapr/).
 
