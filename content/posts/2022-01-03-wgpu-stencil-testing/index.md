@@ -146,7 +146,7 @@ fn stencil_test(x: u32, y: u32,
 /// Gets an updated stencil value according to `reference_value`
 fn new_stencil_value(current_value: StencilValue,
                      reference_value: StencilValue,
-                     operation: &StencilOperation) {
+                     operation: &StencilOperation) -> StencilValue {
     match operation {
         Keep => current_value,
         /// Set stencil value to zero.
