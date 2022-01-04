@@ -91,4 +91,4 @@ enableGitInfo = "true"
     lineNumbersInTable = false
     noClasses = true
     tabWidth = 4
-    style = 'tango'
+    style = 'friendly'

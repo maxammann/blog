@@ -128,12 +128,16 @@ article {
   overflow-wrap: break-word;
 }
 
-code {
+
+code:not([class^="language-"]) {
   background-color: #f8f8f8;
   border-radius: 3px;
   padding: 1px;
-  font-family: "Roboto Mono", monospace;
+}
+
+code {
   font-size: 14px;
+  font-family: "Roboto Mono", monospace;
 }
 
 table {
@@ -231,7 +235,7 @@ ul.content-list {
 
 /* Custom chroma settings */ 
 .highlight {
-  .chroma,>pre {
+  .chroma, > pre {
     border-radius: 3px;
     overflow: auto;
   
