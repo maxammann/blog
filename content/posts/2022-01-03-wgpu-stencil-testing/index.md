@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Clipping Objects using Stencil Testing in WebGPU and wgpu"
+title: "Stencil Testing in WebGPU and wgpu"
 date: 2022-01-04T13:30:22+01:00
 slug: wgpu-stencil-testing
 draft: false
