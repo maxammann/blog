@@ -135,35 +135,34 @@ fn stencil_test(x: u32, y: u32,
     }
 
     if does_pass {
-        update_stencil_buffer(stencil_state.pass_op, stencil_buffer);
+        stencil_buffer[x][y] = write_mask & update_stencil_buffer(current_value, reference_value, stencil_state.pass_op);
         return true;
     } else {
-        update_stencil_buffer(stencil_state.fail_op, stencil_buffer);
+        stencil_buffer[x][y] = write_mask & new_stencil_value(current_value, reference_value, stencil_state.fail_op);
         return false;
     }
 }
 
-/// Updates the stencil buffer according to `reference_value`
-fn update_stencil_buffer(x: u32, y: u32,
-                         reference_value: StencilValue,
-                         operation: &StencilOperation, 
-                         stencil_buffer: &mut [[StencilValue;SCREEN_HEIGHT];SCREEN_WIDTH]) {
+/// Gets an updated stencil value according to `reference_value`
+fn new_stencil_value(current_value: StencilValue,
+                     reference_value: StencilValue,
+                     operation: &StencilOperation) {
     match operation {
-        Keep => { }
+        Keep => current_value,
         /// Set stencil value to zero.
-        Zero => { stencil_buffer[x][y] = 0; }
+        Zero => 0,
         /// Replace stencil value with value provided in most recent call to set_stencil_reference.
-        Replace => { stencil_buffer[x][y] = reference_value; }
+        Replace => reference_value,
         /// Bitwise inverts stencil value.
-        Invert => { stencil_buffer[x][y] = !stencil_buffer[x][y]; }
+        Invert => !current_value,
         /// Increments stencil value by one, clamping on overflow.
-        IncrementClamp => { if (stencil_buffer[x][y] != 255) { stencil_buffer[x][y] = stencil_buffer[x][y] + 1; }  }
+        IncrementClamp => if (current_value != 255) { current_value + 1 } else { current_value },
         /// Decrements stencil value by one, clamping on underflow.
-        DecrementClamp => { if (stencil_buffer[x][y] != 0) { stencil_buffer[x][y] = stencil_buffer[x][y] - 1; } }
+        DecrementClamp => if (current_value != 0) { current_value - 1 } else { current_value },
         /// Increments stencil value by one, wrapping on overflow.
-        IncrementWrap => { stencil_buffer[x][y] = stencil_buffer[x][y] + 1; }
+        IncrementWrap => current_value + 1,
         /// Decrements stencil value by one, wrapping on underflow.
-        DecrementWrap => { stencil_buffer[x][y] = stencil_buffer[x][y] - 1; }
+        DecrementWrap => current_value - 1
     }
 }
 ```
