@@ -14,12 +14,6 @@ summaryLength = 30
 # Copyright
 copyright = "Attribution 4.0 International (CC BY 4.0)"
 
-# Highlighting
-pygmentsCodefences = true
-pygmentsOptions = "linenos=true"
-pygmentsStyle = "tango"
-pygmentsUseClasses = true
-
 enableGitInfo = "true"
 
 # Taxonomies
@@ -86,3 +80,14 @@ enableGitInfo = "true"
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+  [markup.highlight]
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ''
+    lineAnchors = ''
+    lineNoStart = 1
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = false
+    tabWidth = 4
