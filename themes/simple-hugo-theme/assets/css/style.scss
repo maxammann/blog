@@ -230,40 +230,15 @@ ul.content-list {
 }
 
 /* Custom chroma settings */ 
-.chroma {
-  border-radius: 3px;
+.highlight {
+  .chroma,>pre {
+    border-radius: 3px;
+    overflow: auto;
+  
+    /* LineNumbers, LineNumbersTable */
+    .ln, .lnt {
+      user-select: none;
+    }
+  }
 }
 
-
-/* Fix formatting of code blocks if there is only a single line */
-/* LineTableTD */
-.chroma .lntd {
-  vertical-align: top;
-  padding: 0 0.4em 0 0.4em;
-  margin-right: 0.4em;
-  border: 0;
-}
-/* LineTable */
-.chroma .lntable {
-  border-spacing: 0;
-  padding: 0 0.4em 0 0.4em;
-  margin-right: 0.4em;
-  border: 0;
-  width: auto;
-  overflow: auto;
-  display: block;
-}
-/* LineNumbersTable */
-.chroma .lnt {
-  margin: 0;
-  padding: 0;
-
-  user-select: none;
-}
-/* LineNumbers */
-.chroma .ln {
-  margin: 0;
-  padding: 0;
-
-  user-select: none;
-}

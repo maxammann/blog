@@ -79,7 +79,6 @@ wgpu::RenderPipelineDescriptor {
         }
     })
 }
-
 ```
 
 * In line 11 a pixel format for the stencil testing is defined. Because depth and stencil testing have similar goals the context of both tests is stored in a single texture. In this case we define that every pixel uses 24 bits for the depth buffer and 8 bit for the stencil buffer.

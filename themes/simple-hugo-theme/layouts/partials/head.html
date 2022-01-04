@@ -25,13 +25,11 @@
     </title>
 
     {{ $styles := resources.Get "css/style.scss" | resources.ToCSS | minify -}}
-    {{ $syntax := resources.Get "css/syntax.css" | minify -}}
     {{ $galleries := resources.Get "css/galleries.scss"  | resources.ToCSS | minify -}}
     {{ $fonts := resources.Get "css/fonts.css" | minify -}}
     {{ $projects := resources.Get "css/projects.scss"  | resources.ToCSS | minify -}}
 
     <style>
-        {{- $syntax.Content | safeCSS -}}
         {{- $styles.Content | safeCSS -}}
         {{- $galleries.Content | safeCSS -}}
         {{- $fonts.Content | safeCSS -}}
