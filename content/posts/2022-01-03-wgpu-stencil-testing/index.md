@@ -134,13 +134,12 @@ fn stencil_test(x: u32, y: u32,
         GreaterEqual => current_value >= reference_value,
     }
 
-    if does_pass {
-        stencil_buffer[x][y] = write_mask & update_stencil_buffer(current_value, reference_value, stencil_state.pass_op);
-        return true;
-    } else {
-        stencil_buffer[x][y] = write_mask & new_stencil_value(current_value, reference_value, stencil_state.fail_op);
-        return false;
-    }
+    stencil_buffer[x][y] = write_mask & new_stencil_value(
+        current_value, reference_value, 
+        if does_pass { stencil_state.pass_op } else { stencil_state.fail_op }
+    );
+
+    return does_pass;
 }
 
 /// Gets an updated stencil value according to `reference_value`
