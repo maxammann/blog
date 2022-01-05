@@ -21,7 +21,7 @@ In this post we are focusing on a specific implementation of the WebGPU specific
 
 ## What is Stencil Testing?
 
-After the execution of the fragment shader, a so-called "Stencil Text" is performed. The outcome of the test determines whether the pixel corresponding to the fragment is drawn or not.
+After the execution of the fragment shader, a so-called "Stencil Test" is performed. The outcome of the test determines whether the pixel corresponding to the fragment is drawn or not.
 
 This test uses information from the current draw call, as well as contextual information which is encoded in a stencil buffer. The stencil buffer is a 2D texture of shape `(Screen Width, Screen Height)`. Each stencil value within the buffer usually has 8 bits. Initially the stencil buffer is initialized with zeros.
 
