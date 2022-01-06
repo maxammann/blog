@@ -10,8 +10,8 @@ resources:
 - src: "*.png"
 - src: "*.jpg"
 
-keywords: [ ]
-categories: [ linux, filesystem, samba ]
+keywords: [ linux, filesystem, samba ]
+categories: [ photography ]
 ---
 
 **TL;DR: [Just tell me what to use!](#when-to-use-what)**
