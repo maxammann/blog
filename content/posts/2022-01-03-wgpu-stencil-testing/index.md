@@ -89,10 +89,21 @@ wgpu::RenderPipelineDescriptor {
 
 * Lines 2-5 define the logic behind the stencil test. In the next part I will show how these options determine the output of the stencil test by providing an imaginary implementation.
 
-During the rendering loop you have the possibility to set a reference stencil value `reference_value` like shown here:
+During the rendering loop you have to attach a `depth_stencil_attachment` like shown below in lines 5-8. The `stencil_ops` determines whether the stencil buffer will be cleared with a defined value at the beginning of the render pass, or the buffer of the previous pass will be loaded. At the time of writing, I'm unsure what the impact of the `store` flag is.
+You also have the possibility to set a reference stencil value `reference_value` like shown here:
 
-```rust
-let mut pass: wgpu::RenderPass = ...;
+```rust {hl_lines=["5-8", 16]}
+let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+    ...,
+    depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
+        ...,
+        stencil_ops: Some(wgpu::Operations {
+            load: wgpu::LoadOp::Clear(0),
+            store: true,
+        }),
+    }),
+});
+
 let mut pipeline: &wgpu::RenderPipeline = ...;
 let mut vertex_buffer: wgpu::BufferSlice = ...;
 pass.set_pipeline(&pipeline);
