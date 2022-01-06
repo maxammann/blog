@@ -10,7 +10,7 @@ resources:
 - src: "*.png"
 - src: "*.jpg"
 
-keywords: [ ]
+keywords: [ webgpu, wgpu, stencil, opengl ]
 categories: [ mapr ]
 ---
 
