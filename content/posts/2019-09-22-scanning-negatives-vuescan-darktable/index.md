@@ -12,6 +12,7 @@ resources:
   src: 'wrong-colorspace-example/**.tiff'
 
 keywords: [ vuescan, scanner, negatives, photography, analog ]
+categories: [ photography ]
 ---
 
 I recently got my hands on a Nikon Coolscan 2000 (LS-2000) scanner. 

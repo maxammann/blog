@@ -40,12 +40,12 @@ We will not discuss server-side implementations. Selecting a server-side impleme
 
 Here is the description for each column:
 
-* **Implementation Name:** The name of the implementation which will be used throughout this post.
+* **Implementation Name:** The name of the network file system implementation which will be used throughout this post.
 * **Protocol**: The protocol which is used for transferring and browsing files over the network.
 * **Interface:** The interface column shows the major interface which is used for communication between the implementation and the kernel. GVFS is the Gnome Virtual File System and uses FUSE as interface to communicate with the kernel. I decided to highlight that an implementation uses GVFS instead of using FUSE directly. Introducing a layer between the implementation and FUSE has advantages and disadvantages.
 * **User space:** Determines whether the implementation is running in the kernel space or user space.
 * **References:** Links to further information like the source code of the implementation.
-* **Example Command:** Hint on how to mount a network file system.
+* **Example Command:** Hint on how one would mount the network file system.
 
 ## Comparison Criteria
 
@@ -67,7 +67,7 @@ Here is the description for each column:
   Naively one would think that the only actions a file system would need are: Directory List, Create, Delete, Open, Write, Append, Read and Close. In fact, these are by far the most used ones. But there are also others which applications might require in order to work properly. There is for example the [fallocate](https://man7.org/linux/man-pages/man2/fallocate.2.html) system call which creates an empty file or arbitrary size instantly. There is also [flock](https://man7.org/linux/man-pages/man2/flock.2.html) which is able to lock files.
 
     Those features are not supported on every file system - especially not on network file systems.
-* **C5: Encryption**. The transport should of files over the network should be encrypted. While traffic should be encrypted in LANs and WANs, encryption in WANs is essential.
+* **C5: Encryption**. The transport of files over the network should be encrypted. While traffic should be encrypted in LANs and WANs, encryption in WANs is essential.
 
 
 

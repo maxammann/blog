@@ -8,7 +8,7 @@ resources:
 - src: '*.png'
 
 keywords: [ scsi, scanner, nikon, windows ]
-
+categories: [ photography ]
 ---
 
 [VueScan for the Nikon LS-2000](https://www.hamrick.com/vuescan/nikon_ls_2000.html) offers a future proof way of using old scanners over the legacy SCSI standard. The not that small [Small Computer System Interface](https://en.wikipedia.org/wiki/SCSI) is not easy to setup in 2020. Three things are required in order to use it:
