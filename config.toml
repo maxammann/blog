@@ -11,6 +11,8 @@ paginatePath = "page"
 
 summaryLength = 30
 
+enableEmoji = true
+
 # Copyright
 copyright = "Attribution 4.0 International (CC BY 4.0)"
 
@@ -92,3 +94,4 @@ enableGitInfo = "true"
     noClasses = true
     tabWidth = 4
     style = 'friendly'
+
