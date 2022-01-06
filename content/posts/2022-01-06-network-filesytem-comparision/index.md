@@ -134,14 +134,21 @@ You can also use `smb` if connected over LAN.
 Use `dav` or `sftp` if connected over WAN or VPN. 
 Use what ever is easier. If you have already an SSH server running and have proper access to it then you can choose `ssfs`. If you have a nginx server running, you can use `davfs2`.
 
+> Example Situation: You are traveling by train. You are connected to your home NAS via a VPN and stream low resolution family videos.
+
 **The network connection is stable, but has high latency. I'm mounting the network file system over a WAN or VPN.**
 
 Use `davfs2` or `sshfs`. If you are unsure which to choose, see the answer to the question before this one.
+
+> Example Situation: You mount a network file system on a VM in the cloud. The file system is located on a NAS in your home.
 
 **The network connection is 100% stable. I want to mount a network file system which is in the same LAN or even on the same physical computer.**
 
 Use `cifs` or `nfs`. They especially shine when used over an in-house LAN where transport encryption is not required. Choose whatever is easier in your current situation. If you want user authentication with NFS you probably need a Kerberos infrastructure which is maybe too complex for your use case.
 
+> Example Situation: You are at home where you also have a NAS. You are connected to the NAS via LAN or WLAN. You mount a network file system to your laptop.
+
+> Example Situation: You operate a hypervisor with many VMs. You create a network mount between VMs.
 
 ## Flow Chart for Deciding
 
