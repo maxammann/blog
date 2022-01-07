@@ -10,6 +10,9 @@
     </div>
 </header>
 <article>
-    {{ .Content }}
+    {{ $wrappedTable := printf "<div class=table-wrapper> ${1} </div>" }}
+
+    <!-- Can be removed as soon as table render hooks are supported: https://discourse.gohugo.io/t/responsive-tables-in-markdown/10639/7 -->
+    {{ .Content | replaceRE "(<table>(?:.|\n)+?</table>)" $wrappedTable | safeHTML }}
 </article>
 

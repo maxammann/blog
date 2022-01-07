@@ -140,6 +140,11 @@ code {
   font-family: "Roboto Mono", monospace;
 }
 
+.table-wrapper {
+  display: block;
+  overflow-x: auto;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
