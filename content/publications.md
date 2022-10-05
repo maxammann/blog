@@ -12,3 +12,4 @@ description: "Things more of less officially published"
 
 * [CVE-2022-38153](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-38153) - Denial-of-service attack from arbitrary MITM
 * [CVE-2022-38152](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-38152) - Denial-of-service attack from malicious clients
+* [CVE-2022-39173](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-39173) - Buffer-overflow on wolfSSL servers
