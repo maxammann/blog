@@ -1,11 +1,11 @@
 ---
-title: "Ehrenamtskarte"
+title: "Nürnberg-Pass"
 resources:
 - src: '**-light.png'
   name: logo-light
 technologies: [ Flutter, Kotlin, React]
 slug: ehrenamtskarte
-year: 2020
+year: 2022
 active: true
 project_type: "Major project"
 github:
@@ -13,4 +13,4 @@ github:
 external: []
 ---
 
-Ehrenamtskarte is a project for the Bavarian ministry for social affairs. The card offers benefits for volunteers all around Bavaria.
+Nürnberg-Pass is a project for city of Nürnberg. The card offers benefits for people with low income in Nürnberg.

@@ -6,7 +6,7 @@ resources:
 technologies: [ Go, React Native]
 slug: cyla
 year: 2017
-active: true
+active: false
 project_type: "Major project"
 github:
   - "https://github.com/cyla-app/"

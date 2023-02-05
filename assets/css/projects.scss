@@ -13,23 +13,27 @@
   }
 
   .project-card.inactive {
-    opacity: 0.5;
+    > * {
+      opacity: 0.5;
+    }
   }
 
   .project-card {
-    border: 1px solid #7a7a7a;
-    border-radius: 4px;
     overflow: hidden;
-    padding: 10px;
-    margin: 5px;
+
+    border-left: solid;
+    border-color: rgba(0, 0, 0, 0.5);
+
+    padding: 50px 50px;
+
+    margin: 10px 10px;
 
     display: flex;
     flex-direction: column;
     justify-content: start;
 
-    margin: 10px;
+    width: 100%;
 
-    max-width: calc(300px - 2 * 10px);
     overflow-wrap: break-word;
 
     > * {
@@ -38,8 +42,7 @@
 
     .logo {
       img {
-        width: calc(300px - 2 * 10px);
-        height: 100px;
+        height: 70px;
         object-fit: contain;
         object-position: 50% 50%;
       }
