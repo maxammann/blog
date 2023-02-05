@@ -33,5 +33,6 @@
   "workbench.colorCustomizations": { // object that allows you to customize your color theme: https://code.visualstudio.com/docs/getstarted/theme-color-reference 
     "tab.activeBorder": "#0000" // removes border to highlight active tabs (the colors formats are: #RGB, #RGBA, #RRGGBB or #RRGGBBAA)
   },
-  "editor.guides.indentation": false
+  "editor.guides.indentation": false,
+  "task.allowAutomaticTasks": "on"
 }
