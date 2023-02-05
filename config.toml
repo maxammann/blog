@@ -2,9 +2,6 @@ baseurl = "https://maxammann.org/"
 title = "Max Ammann"
 languageCode = "en-us"
 
-# Theme to use
-theme = "simple-hugo-theme"
-
 # Pagination
 paginate = 10
 paginatePath = "page"

@@ -3,4 +3,4 @@
 {{ $match := "<svg (.*)?>(.*)</svg>" }}
 
 {{ $replaceWith := printf `<svg class="%s inline-svg" ${1}>${2}</svg>` $class }}
-{{ return (replaceRE $match $replaceWith (printf "themes/simple-hugo-theme/assets/icons/%s.svg" $svg | readFile) | safeHTML) }}
+{{ return (replaceRE $match $replaceWith (printf "assets/icons/%s.svg" $svg | readFile) | safeHTML) }}
