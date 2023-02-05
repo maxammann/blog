@@ -35,10 +35,6 @@ enableGitInfo = "true"
     url = "/publications/"
     name = "publications"
     weight = 25
-#  [[menu.main]]
-#    url = "/galleries/"
-#    name = "galleries"
-#    weight = 30
   [[menu.main]]
     url = "/about/"
     name = "about"
