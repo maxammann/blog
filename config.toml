@@ -43,10 +43,6 @@ enableGitInfo = "true"
     url = "/about/"
     name = "about"
     weight = 40
-  [[menu.main]]
-    url = "/contact/"
-    name = "contact"
-    weight = 50
 
   # Footer
   [[menu.footer]]
