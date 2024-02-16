@@ -15,6 +15,9 @@ description: "Things more of less officially published"
 * [CVE-2022-38152](https://www.cve.org/CVERecord?id=CVE-2022-38152) - Denial-of-service attack from malicious clients
 * [CVE-2022-39173](https://www.cve.org/CVERecord?id=CVE-2022-39173) - Buffer-overflow on wolfSSL servers
 * [CVE-2022-42905](https://www.cve.org/CVERecord?id=CVE-2022-42905) - Heap-buffer over-read with WOLFSSL_CALLBACKS
+* [CVE-2023-6936](https://www.cve.org/CVERecord?id=CVE-2023-6936) - Heap-buffer over-read with WOLFSSL_CALLBACKS, the 2nd
+* [CVE-2024-21668](https://www.cve.org/CVERecord?id=CVE-2024-21668) - Reported already fixed bug to create a GitHub advisory
+* [CVE-2023-4969](https://www.cve.org/CVERecord?id=CVE-2023-4969) - Supported coordinating disclosure about GPU leaks
 
 ## Blogs
 
