@@ -4,7 +4,7 @@ title: "Building OpenSSL with Determinisic Randomness"
 date: 2021-06-02
 slug: openssl-no-random
 draft: false
-wip: true
+wip: false
 
 keywords: [openssl]
 categories: [ security ]
