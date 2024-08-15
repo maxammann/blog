@@ -4,3 +4,5 @@ public/
 *.backup
 
 *.lock
+
+.direnv
