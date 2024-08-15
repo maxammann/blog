@@ -8,5 +8,5 @@ Therefore, you can expect posts about various topic in this blog, ranging from d
 
 ## Contact
 
-Feel free to write an email to [max@maxammann.org](mailto:max@maxammann.org) ([GPG](/maxammann.gpg)/[GPG ASC](/maxammann.asc)). 
+Feel free to write an email to [max@maxammann.org](mailto:max@maxammann.org). 
 
