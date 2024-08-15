@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ""
+title: "Keeping the wolves out of wolfSSL"
 date: 2023-01-12
 slug: wolfssl-vulnerabilities-tlspuffin-fuzzing-ssh
 ---

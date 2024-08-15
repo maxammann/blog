@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ""
+title: "Finding mispriced opcodes with fuzzing"
 date: 2024-06-17
 slug: finding-mispriced-opcodes-with-fuzzing
 ---

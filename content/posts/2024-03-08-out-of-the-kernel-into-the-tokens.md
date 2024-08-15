@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ""
+title: "Out of the kernel, into the tokens"
 date: 2024-03-08
 slug: out-of-the-kernel-into-the-tokens
 ---

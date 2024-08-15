@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ""
+title: "Billion times emptiness"
 date: 2023-12-29
 slug: billion-times-emptiness
 ---

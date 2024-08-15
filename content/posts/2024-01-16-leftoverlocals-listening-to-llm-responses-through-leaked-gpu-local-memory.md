@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ""
+title: "LeftoverLocals: Listening to LLM responses through leaked GPU local memory"
 date: 2024-01-16
 slug: leftoverlocals-listening-to-llm-responses-through-leaked-gpu-local-memory
 ---
