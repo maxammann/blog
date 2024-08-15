@@ -6,7 +6,7 @@ description: "Things more of less officially published"
 ## Scientific
 
 * [maplibre-rs: toward portable map renderers](https://doi.org/10.5194/isprs-archives-XLVIII-4-W1-2022-35-2022)
-* [DY Fuzzing: Formal Dolev-Yao Models Meet Protocol Fuzz Testing](https://eprint.iacr.org/2023/57)
+* [DY Fuzzing: Formal Dolev-Yao Models Meet Protocol Fuzz Testing](https://www.computer.org/csdl/proceedings-article/sp/2024/313000a096/1Ub234bjuWA) ([_open access_](https://eprint.iacr.org/2023/57))
 
 
 ## Disclosures
@@ -18,9 +18,3 @@ description: "Things more of less officially published"
 * [CVE-2023-6936](https://www.cve.org/CVERecord?id=CVE-2023-6936) - Heap-buffer over-read with WOLFSSL_CALLBACKS, the 2nd
 * [CVE-2024-21668](https://www.cve.org/CVERecord?id=CVE-2024-21668) - Reported already fixed bug to create a GitHub advisory
 * [CVE-2023-4969](https://www.cve.org/CVERecord?id=CVE-2023-4969) - Supported coordinating disclosure about GPU leaks
-
-## Blogs
-
-#### Trail of Bits:
-
-* [Keeping the wolves out of wolfSSL](https://blog.trailofbits.com/2023/01/12/wolfssl-vulnerabilities-tlspuffin-fuzzing-ssh/)
