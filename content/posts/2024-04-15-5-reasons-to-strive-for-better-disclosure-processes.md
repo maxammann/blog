@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "5 reasons to strive for better disclosure processes"
-date: 2024-04-15-5
+date: 2024-04-15
 slug: reasons-to-strive-for-better-disclosure-processes
 ---
 
