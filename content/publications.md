@@ -18,3 +18,8 @@ description: "Things more of less officially published"
 * [CVE-2023-6936](https://www.cve.org/CVERecord?id=CVE-2023-6936) - Heap-buffer over-read with WOLFSSL_CALLBACKS, the 2nd
 * [CVE-2024-21668](https://www.cve.org/CVERecord?id=CVE-2024-21668) - Reported already fixed bug to create a GitHub advisory
 * [CVE-2023-4969](https://www.cve.org/CVERecord?id=CVE-2023-4969) - Supported coordinating disclosure about GPU leaks
+
+## Public audits
+
+* [Aleo Systems snarkVM](https://github.com/trailofbits/publications/blob/master/reviews/2022-09-aleosystems-snarkvm-securityreview.pdf)
+* [OpenSSL](https://ostif.org/wp-content/uploads/2024/05/OSTIF-OpenSSL-Comprehensive-Report-1.pdf)
