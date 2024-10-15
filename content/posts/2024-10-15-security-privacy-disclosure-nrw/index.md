@@ -157,7 +157,7 @@ The STK NRW confirmed this finding and plans to implement our recommendation.
 ### EAK-4: Privacy policy does not specify data transmission to Twitter/X [Severity: High]
 
 The app transmits information such as time and IP addresses to Twitter/X. The app loads content from twimg.com, e.g:
-https://pbs.twimg[.]com/media/GKLpXGkXgAI2Em_.jpg
+https://pbs.twimg.com/media/GKLpXGkXgAI2Em_.jpg
 
 The reason for this is that the app loads a Twitter feed from the app's backend. However, the images contained therein are
 images are loaded directly from Twitter.
