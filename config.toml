@@ -36,6 +36,11 @@ enableGitInfo = "true"
     name = "publications"
     weight = 25
   [[menu.main]]
+    url = "https://appsec.guide/docs/fuzzing/"
+    name = "fuzzing chapter"
+    weight = 30
+    target="_blank"
+  [[menu.main]]
     url = "/about/"
     name = "about"
     weight = 40

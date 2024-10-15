@@ -3,6 +3,10 @@ title: "Publications"
 description: "Things more of less officially published"
 ---
 
+## Notable texts
+
+* [Fuzzing chapter on appsec.guide](https://appsec.guide/docs/fuzzing/)
+
 ## Scientific
 
 * [maplibre-rs: toward portable map renderers](https://doi.org/10.5194/isprs-archives-XLVIII-4-W1-2022-35-2022)
