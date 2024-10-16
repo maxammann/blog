@@ -52,7 +52,7 @@ The app visually displays the first and last name of the cardholder, a validity 
 
 To scan the QR codes, acceptance partners are given instructions on an [FAQ page](https://www.engagiert-in-nrw.de/faq-zur-ehrenamtskarten-app-nrw#faq_question_4037) published by the Staatskanzelei NRW (STK NRW) advises acceptance partners to
 advised to use the camera app integrated in the system or another app for general scanning of QR codes.
-In the best-case scenario, the acceptance partner can read the above data in plain text if the scanner app used supports this. Here is a screenshot of the website:
+In the best-case scenario, the acceptance partner can read the above data in plain text if the scanner app supports this. Here is a screenshot of the website:
 
 {{< resourceFigure "Screenshot 2024-04-16 08-45-42 Ehrenamtskarte FAQ.png"  >}}Screenshot of the NRW website{{< /resourceFigure >}}
 
@@ -62,7 +62,7 @@ signature contained in the QR code, but this is not included either.
 
 We assume that acceptance points do not assume that digital volunteer cards can be forged. It
 It should be noted that a physical card, as is common for the volunteer cards of many federal states, also has no significant security features.
- However, with the digital version, it is possible with considerably less effort to issue counterfeit cards on a large scale.
+ However, with the digital version, it is possible to issue counterfeit cards on a large scale with considerably less effort.
 
 In addition, security should always be taken into account when digitizing government services. The new development
 of the digital volunteer card could have provided greater protection against counterfeiting for acceptance points.
@@ -81,10 +81,7 @@ A QR code containing the following text is also created:
 The falsified content of the screenshot is accepted by acceptance points as it does not contain any security features
 and there is no mechanism to check the authenticity of the data.
 
-To visualize the security risk, we created an alternative proof-of-concept attack by
-modifying the source code of the app to display arbitrary names and QR codes in the app. This attack has the
-advantage that a forgery is not recognizable in any case, as the app remains interactive, whereas a screenshot is
-is static. See the video above of the attack.
+To visualize the security risk, we created an alternative proof-of-concept attack by modifying the source code of the app to display arbitrary names and QR codes in the app. This attack has the advantage that a forgery is not recognizable in any case, as the app remains interactive, whereas a screenshot is static. See the video above of the attack.
 
 #### Recommendation
 
@@ -97,8 +94,7 @@ then no data about the volunteer should be recognizable as plain text to avoid p
 
 Alternatively, verification of the card number could also be ensured via a data query in the backend.
 However, this alternative harbors data protection risks, as both the name and card number can be guessed by a brute force attack.
-can be guessed. This means that an attacker could find out who has an honorary card without having access to
-have access to QR codes.
+This means that an attacker could find out who has a volunteer card without having access to QR codes.
 
 A final alternative would be to use a secure open-source solution like the [entitlementcard](https://github.com/digitalfabrik/entitlementcard) project that has correctly identified and mitigates these attacks in its threat model.
 
@@ -109,7 +105,7 @@ The STK NRW agreed that the issue exists but did not agree with our severity rat
 After we disagreed with the lower rating they implemented a feature that blocks the creation of screenshots and a feature that shows the current time in a format that includes seconds.
 
 We still believe that the fix by STK NRW is inadequate.
-In most cases, security problems are highly dependent on a threat scenario. If all the benefits you receive from the NRW volunteer card were of little financial value, we could understand your description of a lower level of severity. However, with the NRW volunteer card, for example, there is a €50 discount on car rental, a €100 subsidy on orthopedic mattresses or a €200 subsidy for a natural sleeping system from Pro Natura.
+In most cases, security problems are highly dependent on a threat scenario. If all the benefits you receive from the NRW volunteer card were of little financial value, we could understand your description of a lower level of severity. However, with the NRW volunteer card, for example, there is a €50 discount on car rental, a €100 subsidy on orthopedic mattresses, or a €200 subsidy for a natural sleeping system from Pro Natura.
 
 ### EAK-2: Existing card numbers can be determined by brute forcing [Severity: For information]
 
@@ -139,12 +135,11 @@ The STK NRW confirmed this finding but decided not to fix it yet due to the low 
 
 
 References to the licenses of the open-source libraries used are missing. The lack of license information in an app can
-pose legal risks and violate the principles of the open-source community. Uncertainties about
-usage rights can lead to unintentional copyright infringements.
+pose legal risks and violate the principles of the open-source community. Uncertainties about usage rights can lead to unintentional copyright infringements.
 
 #### Recommendation
 
-Developers should clearly document all libraries used and their licenses and also display these in the app UI.
+Developers should document all libraries used and their licenses and also display these in the app UI.
 
 
 #### Response by the Staatskanzlei NRW
@@ -154,13 +149,12 @@ The STK NRW confirmed this finding and plans to implement our recommendation.
 ### EAK-4: Privacy policy does not specify data transmission to Twitter/X [Severity: High]
 
 The app transmits information such as time and IP addresses to Twitter/X. The app loads content from twimg.com, e.g:
-https://pbs.twimg[.]com/media/GKLpXGkXgAI2Em_.jpg
+https://pbs.twimg.com/media/GKLpXGkXgAI2Em_.jpg
 
 The reason for this is that the app loads a Twitter feed from the app's backend. However, the images contained therein are
 images are loaded directly from Twitter.
 
-The lack of specific information on data transfer to third parties such as Twitter/X in a privacy policy can lead to a loss of trust and legal consequences.
-loss of trust and legal consequences. Users may not be informed about how their data is
+The lack of specific information on data transfer to third parties such as Twitter/X in a privacy policy can lead to a loss of trust and legal consequences. Users may not be informed about how their data is
 data is used and shared.
 
 A current version of the privacy policy is attached in the appendix below.
@@ -170,8 +164,7 @@ A current version of the privacy policy is attached in the appendix below.
 We recommend that you no longer download content directly from Twitter/X, but instead obtain all media content via the backend of the
 Volunteer Card if this is not legally problematic. The backend would then serve as a proxy for the content from Twitter/X.
 
-In addition, current users of the app should be informed that data (IP addresses, usage behavior) has been sent to X without
-the user's consent.
+In addition, current users of the app should be informed that data (IP addresses, usage behavior) has been sent to X without the user's consent.
 
 #### Response by the Staatskanzlei NRW
 
@@ -185,11 +178,9 @@ This data transfer is required to display the map data from OpenStreetMap. The p
 
 #### Recommendation
 
-We recommend updating the privacy policy and mentioning the transfer of data to OpenStreetMap. Furthermore
-users should be informed about a possible outflow of their data without their consent.
+We recommend updating the privacy policy and mentioning the transfer of data to OpenStreetMap. Furthermore users should be informed about a possible outflow of their data without their consent.
 
-Furthermore, the use of OpenStreetMap's non-profit servers should be avoided in the long term, as the state of
-NRW also has its own data services available.
+Furthermore, the use of OpenStreetMap's non-profit servers should be avoided in the long term, as the state of NRW also has its own data services available.
 
 #### Response by the Staatskanzlei NRW
 
@@ -197,12 +188,9 @@ The STK NRW confirmed this finding and added a banner to ask for consent before 
 
 ### EAK-6: Lack of OpenStreetMap attribution on map [Severity: Medium]
 
-The lack of an "attribution" for OpenStreetMap map data violates the terms of use of
-OpenStreetMap and may have legal implications. Users and other developers are not informed about the
-source of the map data. 
+The lack of an "attribution" for OpenStreetMap map data violates the terms of use of OpenStreetMap and may have legal implications. Users and other developers are not informed about the source of the map data. 
 
-In addition, the app's terms of use incorrectly state that the rights to the map data are held by
-Geobasis NRW and the Federal Agency for Cartography and Geodesy.
+In addition, the app's terms of use incorrectly state that the rights to the map data are held by Geobasis NRW and the Federal Agency for Cartography and Geodesy.
 
 #### Response by the Staatskanzlei NRW
 
