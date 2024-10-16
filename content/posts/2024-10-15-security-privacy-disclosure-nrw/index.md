@@ -5,29 +5,34 @@ date: 2024-10-15
 slug: security-privacy-disclosure-nrw
 ---
 
-The Tür an Tür Digitalfabrik and I are publicly disclosing several security and privacy issues in the iOS and Android [NRW Ehrenamtskarten-App](https://www.engagiert-in-nrw.de/app-zur-ehrenamtskarte-nrw). We found 1 high-severity and 1 informational security issue, as well as 5 additional privacy and legal issues.
+The [Tür an Tür Digitalfabrik](https://tuerantuer.de/digitalfabrik/) and I are publicly disclosing several security and privacy issues in the iOS and Android [NRW Ehrenamtskarten-App](https://www.engagiert-in-nrw.de/app-zur-ehrenamtskarte-nrw). We found 1 high-severity and 1 informational security issue, as well as 5 additional privacy and legal issues.
 
 ## Volunteering and service digitization in Germany
 
-The digital volunteer card solution from the state of NRW enables volunteers to receive discounts at acceptance points such as museums, cafés, and car rental companies. Volunteers have to prove their volunteer status using the app and by verifying their identity using an ID.
+The digital volunteer card ("Digitale Ehrenamtskarte" in German) is a solution from the state of NRW that enables volunteers to receive benefits at acceptance points such as discounts at museums, cafés, and car rental companies.
+Volunteers that successfully applied for such a digital volunteer card, are supposed to use the app on their mobile device together with any physical identification document (such as the German National Identity Card or a driver's license) to prove their volunteer status when requesting their volunteer benefits at accepting points.
 
-In late 2020, a group of students from TUM, LMU, and the University of Augsburg, and engineers from the Tür an Tür Digitalfabrik started the design and development of the Ehrenamtskarte Bayern app. From the beginning the development was open-source. After the official introduction of the app at "Bayerisches Staatsministerium für Familie, Arbeit und Soziales", the concept was made generic such that it can be applied to other kinds of digital entitlement cards - the [entitlementcard](https://github.com/digitalfabrik/entitlementcard) project was born.
+In late 2020, a group of students from TUM, LMU, and the University of Augsburg, and engineers from the Tür an Tür Digitalfabrik started the design and development of the Ehrenamtskarte Bayern app. Since the beginning, the development is open-source and focused on providing a secure and convenient way to prove the volunteer status -- all without the necessity of storing all volunteers' data in a central database. After the official production launch of the app for the Bavarian State Ministry for Family, Labor and Social Affairs ("Bayerisches Staatsministerium für Familie, Arbeit und Soziales" in German), the concept was made generic such that it can be applied to other kinds of digital entitlement cards - the [entitlementcard](https://github.com/digitalfabrik/entitlementcard) project was born.
 
-We knew that NRW was in the design process of developing a reference implementation of the OZG, because the OZG requires some transparency in the development process. Therefore the current state of implementations is published on the [Informationsplattform](https://informationsplattform.ozg-umsetzung.de/iNG/app/detail?id=103532&nav=RegKO_RO&tb=projectdetails&pager). We tried to reach out several times to the relevant people and companies in NRW to collaborate on the effort.
-Because the Ehrenamtskarte Bayern is open-source software we tried to connect to development teams to share our learnings. However, these attempts failed.
+We knew that NRW was in the design process of developing a reference implementation for digital volunteer cards, because Germany's Online Access Act ("Onlinezugsangsgesetz", "OZG" in German) prescribes some transparency in the development process. Therefore, the current status of implementations is published on the [OZG-Informationsplattform](https://informationsplattform.ozg-umsetzung.de/iNG/app/detail?id=103532&nav=RegKO_RO&tb=projectdetails&pager). We tried to reach out several times to the relevant people and companies in NRW to collaborate on the effort.
+Because the Ehrenamtskarte Bayern is open-source software we tried to connect to development teams to share our learnings. These collaboration efforts failed as our attempts to contact remained unanswered.
 
-The security of implementations for digital volunteering cards is essential, because museums, cafés, or any other discount providers depend on it.
+The design of the verification mechanisms and the security of implementations for digital volunteering cards is essential, because museums, cafés, or any other benefit providers heavily rely on them.
 In our disclosure, we found that there is no secure way to verify volunteers (EAK-1), which means that any person can create their volunteer card and receive discounts in NRW.
-The Staatskanzlei des Landes Nordrhein-Westfalen argued that the discounts available in the app do not incentivize fraud enough.
-However, we do not agree with this as the lack of security in the NRW app incentivizes discount providers, like a car rental company, to provide small or no discounts at all.
+The state chancellery of the state of North Rhine-Westphalia ("Staatskanzlei des Staates Nordrhein-Westfalen" in German) does not deem the damage scenario high.
+We disagree:
+The monetary benefits that acceptance points offer to volunteers are (partially) quite substantial - so far we have seen discounts of up to 200€.
+The lack of any verification mechanism of the volunteer status is an invitation to fraud:
+Anyone may simply pretend to be a volunteer and, by installing a tampered app on their own mobile device, effortlessly fake the necessary "proof" for the volunteer status, and thus unrightfully claim the benefits.
+Thus, this lack of a security mechanism does not only harm the cheated acceptance points, but also makes any other acceptance point hesitate to offer any substantial benefits to volunteers which, as a consequence, undermines the whole point of the (otherwise great) volunteer benefits program.
 
 We believe this is a failure of the OZG and digitization of governmental processes.
 The Ehrenamtskarte Bayern and its generic whitelabel solution offer a secure and private open-source solution - free of charge. The Bavarian solution is licensed under the MIT license.
-We still hope that eventually either the NRW Ehrenamtskarten-App implements a security verification or considers forking the open source entitlementcard platform.
+We still hope that eventually either the NRW Ehrenamtskarten-App implements a secure verification mechanism or considers forking the open-source entitlementcard platform.
 
 To illustrate the impact of EAK-1 we created a modified version of the NRW Ehrenamtskarten-App which displays a valid QR code for an arbitrary person:
 
-{{< resourceFigureVideo "nrw-2024-04-13_15.06.22.mp4" >}}Illustration of EAK-1. We modified the code of the NRW Ehrenamtskarten-App to display arbitrary names with valid QR codes. We did not publish our modified app, however, once a modified app is published any person, even without any technical knowledge can get a fake volunteer card.{{< /resourceFigureVideo >}}
+{{< resourceFigureVideo "nrw-2024-04-13_15.06.22.mp4" >}}Illustration of EAK-1. We modified the code of the NRW Ehrenamtskarten-App to display arbitrary names with valid QR codes. We did not publish our modified app, however, once a modified app is publicly available, any person - even without any technical expertise - can dreate a fake volunteer card.{{< /resourceFigureVideo >}}
 
 ## Findings
 
