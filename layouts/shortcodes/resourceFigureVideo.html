@@ -1,0 +1,8 @@
+{{ $video := $.Page.Resources.GetMatch (.Get 0)}}
+
+<figure>
+  <video height="500" controls alt="{{ .Get 1 }}">
+    <source src="{{ $video.RelPermalink }}" type="video/mp4">
+  </video>
+  <figcaption>{{ .Inner | .Page.RenderString (dict "display" "inline") }}</figcaption>
+</figure>
