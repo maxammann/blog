@@ -50,25 +50,21 @@ We decided not to assign any CVEs because CVEs are not typically used for mobile
 The NRW Ehrenamtskarten-App does not provide for any verification of volunteer status. On the volunteer's end device
 The app visually displays the first and last name of the cardholder, a validity date, and a card number on the volunteer's device. The same information is also encoded in a QR code.
 
-To scan the QR codes, acceptance partners are given instructions on an [FAQ page](https://www.engagiert-in-nrw.de/faq-zur-ehrenamtskarten-app-nrw#faq_question_4037) published by the Staatskanzelei NRW (STK NRW) advises acceptance partners to
-advised to use the camera app integrated in the system or another app for general scanning of QR codes.
+To scan the QR codes, acceptance partners are given instructions on an [FAQ page](https://www.engagiert-in-nrw.de/faq-zur-ehrenamtskarten-app-nrw#faq_question_4037) published by the Staatskanzelei NRW (STK NRW) advises acceptance partners to use the camera app integrated in the system or another app for general scanning of QR codes.
 In the best-case scenario, the acceptance partner can read the above data in plain text if the scanner app supports this. Here is a screenshot of the website:
 
 {{< resourceFigure "Screenshot 2024-04-16 08-45-42 Ehrenamtskarte FAQ.png"  >}}Screenshot of the NRW website{{< /resourceFigure >}}
 
-However, this mechanism does not verify the data displayed in the QR code. Furthermore, the app
-the QR code within the app to verify the encoded data via a hash comparison with a database in the backend. Another option would be to check a signature contained in the QR code
-signature contained in the QR code, but this is not included either.
+However, this mechanism does not verify the data displayed stored in the QR code. A verification could be performed by verifying an included signature or querying the backend about the validity of a card.
 
-We assume that acceptance points do not assume that digital volunteer cards can be forged. It
+We assume that acceptance points do not assume that digital volunteer cards can be forged.
 It should be noted that a physical card, as is common for the volunteer cards of many federal states, also has no significant security features.
  However, with the digital version, it is possible to issue counterfeit cards on a large scale with considerably less effort.
 
 In addition, security should always be taken into account when digitizing government services. The new development
 of the digital volunteer card could have provided greater protection against counterfeiting for acceptance points.
 Unfortunately, this opportunity has not been taken up to date and the security standard of an easily forged plastic card
-has even been undercut. This also means that volunteers cannot benefit from discounts of a higher value, as acceptance points
-as acceptance points cannot verify the volunteer status.
+has even been undercut. This also means that volunteers cannot benefit from discounts of a higher value, as acceptance points cannot verify the volunteer status.
 
 #### Exploit scenario
 
