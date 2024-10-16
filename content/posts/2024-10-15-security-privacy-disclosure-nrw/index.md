@@ -43,6 +43,8 @@ We found the following security, privacy and legal issues in the [NRW Ehrenamtsk
 |**EAK-6**|Lack of OpenStreetMap attribution on map|Legal|Medium|Yes|
 |**EAK-7**|Privacy policy does not specify data transmission to jsDelivr|Privacy|High|Yes|
 
+We decided not to assign any CVEs because CVEs are not typically used for mobile applications.
+
 ### EAK-1: Lack of secure verification of volunteer status [Severity: High]
 
 The NRW Ehrenamtskarten-App does not provide for any verification of volunteer status. On the volunteer's end device
