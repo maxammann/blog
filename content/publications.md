@@ -22,6 +22,7 @@ description: "Things more of less officially published"
 * [CVE-2023-6936](https://www.cve.org/CVERecord?id=CVE-2023-6936) - Heap-buffer over-read with WOLFSSL_CALLBACKS, the 2nd
 * [CVE-2024-21668](https://www.cve.org/CVERecord?id=CVE-2024-21668) - Reported already fixed bug to create a GitHub advisory
 * [CVE-2023-4969](https://www.cve.org/CVERecord?id=CVE-2023-4969) - Supported coordinating disclosure about GPU leaks
+* [Disclosing security and privacy issues in NRW](https://maxammann.org/posts/2024/10/security-privacy-disclosure-nrw/)
 
 ## Public audits
 
