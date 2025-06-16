@@ -69,7 +69,9 @@ Now, the dumps you can crab using `get_staged` caught my attention. They are in 
 
 So the suspicion is that those are actual flash dumps. Executing `binwalk` on them contradicts this idea, though. Their entropy is high throughout the file. 
 
-{{< resourceFigure "dustx100.bin.png" "Entropy" />}}
+{{< resourceFigure "dustx100.bin.png" "Entropy" >}}
+Output of `binwalk -e`.
+{{< /resourceFigure >}}
 
 This suggests the dumps are encrypted. This struck me as pretty weird. Why would they be encrypted? Unfortunately, I did not yet find out.
 Let's continue, as it turns out it's pretty easy to decrypt them.
@@ -119,20 +121,28 @@ The most interesting code is likely in one of the larger binaries. So that would
 
 I started by loading u-boot.fex into Ghidra. 
 
-{{< resourceFigure "screenshot1.png" "Ghirda load dialog" />}}
+{{< resourceFigure "screenshot1.png" "Ghirda load dialog" 300 >}}
+Dialog to set the base address. Use `0x4a000000` here.
+{{< /resourceFigure >}}
 
 Initially, I left the base address at 0 and then quickly figured out that the base address is `0x4a000000`. This is the address where u-boot expects to be loaded into memory.
 
 From there, I looked for strings containing "dust" and quickly found the Fastboot handling code.
 
-![alt text](fastboot.png)
+
+
+{{< resourceFigure "fastboot.png" "Ghidra fastboot" 1600 >}}
+View of the Fastboot procedure
+{{< /resourceFigure >}}
 
 From there, I started reverse engineering the first Fastboot commands like `getvar`. I also found some weird Fastboot OEM commands that I did not yet investigate, like `bko`, `upload`, `bypass`, `debug` or a command starting with `fan` and ending in `pi`.
 
 Within the `getvar` function, I found that you can return the flash size.
 Now, likely the same code calculating the size of the flash is also used to dump it.
 
-![alt text](image.png)
+{{< resourceFigure "image.png" "Ghidra flash size" 1600 >}}
+Invokation of the flash size function.
+{{< /resourceFigure >}}
 
 Bingo! There is only one reference to the function `flash_size`.
 
