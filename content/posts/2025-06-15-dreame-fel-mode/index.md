@@ -1,20 +1,20 @@
 ---
 layout: post
-title: "Dreame Vaccum FEL Mode"
+title: "Dreame Vacuum FEL Mode"
 date: 2025-06-15
 slug: dreame-fel-mode
 ---
 
 <!-- Motivation -->
 
-I got myself a Dreame vaccum robot with the goal of -- cleaning. Yes, I did not have the goal originally to root my vacuum.
-Howenver, in case I ever want to sideload software onto by vacuum I picked a robot that seemed easily rootable.
-The Dreame X40 looked decent and Dennis Giese did awesome work on getting root access to it [back in 2021](https://dontvacuum.me/talks/DEFCON29/DEFCON29-vacuum-robots.pdf).
+I got myself a Dreame vacuum robot with the goal of -- cleaning. Yes, I did not have the goal originally to root my vacuum.
+However, in case I ever want to sideload software onto the robot, I picked one that is reliably rootable.
+The Dreame X40 looked decent, and Dennis Giese did awesome work on getting root access to it [back in 2021](https://dontvacuum.me/talks/DEFCON29/DEFCON29-vacuum-robots.pdf).
 
-Even though the process is [clearly written up in a PDF](https://builder.dontvacuum.me/nextgen/dreame_gen3.pdf) I had some open questions:
+Even though the process is [clearly written up in a PDF](https://builder.dontvacuum.me/nextgen/dreame_gen3.pdf), I had some open questions:
 
 1. How does the rooting method work? Which security measures are circumvented?
-2. The PDF mentioned that calibration data and device ID is lost. Why is that? Can I do a backup before rooting?
+2. The PDF mentioned that calibration data and device ID are lost. Why is that? Can I do a backup before rooting?
 3. Can I do a full flash backup so reverting is possible?
 4. What are the `dustx100.bin` files? Are those the flash dumps I'm looking for?
 5. The Fastboot mode looks a bit odd. How is it related to Fastboot on Android?
@@ -24,20 +24,22 @@ This blog post is answering these questions.
 
 **My main motivation here is to learn about how the Dreame X40 works and prepare for some deeper security audit.**
 
-I want to avoid loosing any data/features when rooting it. The first step  is to gain root access. After that topics like cloud connectivity, or the MCU etc. can be vetted. If for instance the device ID is lost I would have little hope of analyzing the connectivity deeper.
+I want to avoid losing any data/features when rooting it. The first step  is to gain root access. After that, topics like cloud connectivity, the MCU, etc. can be vetted. If, for instance, the device ID is lost, I would have little hope of analyzing the connectivity deeper.
 
-## FEL rooting method explained
 
-Ideally, first read the PDF as it goes into full detail. In summar the rooting method follows these steps:
 
-1. Make your Laptop listen for FEL devices and connect the robot via USB.
+## FEL rooting method overview
+
+Ideally, first read the PDF as it goes into full detail. In summary the rooting method follows these steps:
+
+1. Make your laptop listen for FEL devices and connect the robot via USB.
 2. Boot the Dreame robot into FEL mode by grounding `BOOT_SEL` while booting the robot.
 3. Write a U-Boot image to memory and start it. In the PDF this is done using [Phoenixsuit on Windows](https://androidmtk.com/download-phoenixsuit) and [LiveSuit on Debian](https://github.com/linux-sunxi/sunxi-livesuite) (⚠️ Download at your own risk. These are random binaries off the Internet!)
-4. The U-Boot image launches into [Fastboot mode](https://docs.u-boot.org/en/stable/android/fastboot-protocol.html). U-Boot is using the fastboot protocol, but this does not mean that all commands are available or the OEM implemented custom ones.
-5. Now we flash the `toc1`, `boot1`, `boot2`, `rootfs1` and `rootfs2` partitions. The update to `toc1` disables secure boot. However I have not verified how it does that.
+4. The U-Boot image launches into [Fastboot mode](https://docs.u-boot.org/en/stable/android/fastboot-protocol.html). U-Boot is using the fastboot protocol, but this does not mean that all commands are available, or the OEM implemented custom ones.
+5. Now we flash the `toc1`, `boot1`, `boot2`, `rootfs1` and `rootfs2` partitions. The update to `toc1` disables secure boot. However, I have not verified how it does that.
 
 
-The linked FEL images in the PDF contain an U-Boot version with custom fastboot commands. Here is an overview of the fuctionality.
+The linked FEL images in the PDF contain a U-Boot version with custom fastboot commands. Here is an overview of the functionality.
 
 | Command | Description |
 | ---| ---|
@@ -50,38 +52,35 @@ The linked FEL images in the PDF contain an U-Boot version with custom fastboot 
 | `fastboot getvar toc1hash` | MD5 hash of the toc1 partition. |
 | `fastboot getvar toc1version` | Unknown. |
 | `fastboot getvar minicg` | Unknown. |
-| `fastboot oem dunst` | Initializes the rooting procedure. I don't know yet if this does anything. |
-| `fastboot oem reset` | Sets CHUNK=0. This defines which part of the flash storage should be copied when `get_staged` is invoked. |
-| `fastboot oem stage1` | Sets CHUNK=1 |
-| `fastboot oem stage2` | Sets CHUNK=2 |
 | `fastboot get_staged dust.bin` | Downloads flash data to the file `dust.bin`. This data is encrypted (more on this later). |
 | `fastboot oem prem` | Not sure yet what this does. |
 | `fastboot flash <part> <file>` | Flashes a partition (e.g., rootfs, boot) with the specified image file. |
 
-## Flash dump
 
-To preserve as much data from the "non-rooted" state I was really after a flash dump. 
+## Dumping the flash
+
+To preserve as much data from the "non-rooted" state, I was really after a flash dump. 
 I wondered if the rooting method gives me some hints on how I could dump the flash.
-The FEL mode is the debugging feature used in the above rooting method. According to [this blog post](https://xor.co.za/post/2018-12-01-fel-bootprocess/) FEL allows you to write to memory and execute it. Actually, the blog post gives some insights on what is likely happening when using LiveSuit/Phoenixsuit. It just "boot" from an in-memory u-boot image.
+The FEL mode is the debugging feature used in the above rooting method. According to [this blog post](https://xor.co.za/post/2018-12-01-fel-bootprocess/), FEL allows you to write to memory and execute it. Actually, the blog post gives some insights on what is likely happening when using LiveSuit/Phoenixsuit. It just "boot" from an in-memory u-boot image.
 
-FEL does not give access to the flash, but it allows you to execute arbitrary code with quite a high priviledge. Binaries executed in its context have access to the flash which is what I'm looking for.
+FEL does not give access to the flash, but it allows you to execute arbitrary code with quite a high privilege. Binaries executed in their context have access to the flash, which is what I'm looking for.
 
-Now, the the dumps you can crab using `get_staged` caught my attention. They are in total ~1200MB which seemed too large for a memory dump. Also which memory would you copy? Likely the memory would not contain any meaninful data just after boot.
+Now, the dumps you can crab using `get_staged` caught my attention. They are in total ~1200MB which seemed too large for a memory dump. Also, which memory would you copy? Likely, the memory would not contain any meaningful data just after boot.
 
-So the suspicion is that those are actual flash dumps. Executing `binwalk` on them contradics this idea though. Their entropy is high throughout the file. 
+So the suspicion is that those are actual flash dumps. Executing `binwalk` on them contradicts this idea, though. Their entropy is high throughout the file. 
 
 {{< resourceFigure "dustx100.bin.png" "Entropy" />}}
 
-This suggests the dumps are encrypted. This striked me as pretty weird. Why would they be encrypted? Unfotunately. I did not yet find out.
-Let's continue though as it turns out its pretty easy to decrypt them.
+This suggests the dumps are encrypted. This struck me as pretty weird. Why would they be encrypted? Unfortunately, I did not yet find out.
+Let's continue, as it turns out it's pretty easy to decrypt them.
 
 
-## Unpacking a FEL image
+### Unpacking a FEL image
 
-I reproduced entering fastboot on Windows aswell.
+I reproduced entering fastboot on Windows as well.
 This was mostly to sanity check my understanding in the beginning when I barely understood anything about FEL yet.
 
-The tool [imgRePacker](https://xdaforums.com/t/tool-imgrepacker-livesuits-phoenixsuits-firmware-images-unpacker-packer.1753473/) is capable on unpacking FEL images like the one you can download from [builder.dontvacuum.me/nextgen](https://builder.dontvacuum.me/nextgen/). There are also similar images provided in the downloads from [builder.dontvacuum.me/_dreame_r2416](https://builder.dontvacuum.me/_dreame_r2416.html) but I have not yet diffed them.
+The tool [imgRePacker](https://xdaforums.com/t/tool-imgrepacker-livesuits-phoenixsuits-firmware-images-unpacker-packer.1753473/) is capable of unpacking FEL images, like the one you can download from [builder.dontvacuum.me/nextgen](https://builder.dontvacuum.me/nextgen/). There are also similar images provided in the downloads from [builder.dontvacuum.me/_dreame_r2416](https://builder.dontvacuum.me/_dreame_r2416.html), but I have not yet diffed them.
 
 The unpacked image looks like this:
 
@@ -114,24 +113,24 @@ The unpacked image looks like this:
 ├── [   4]  Venv.fex
 └── [   8]  vmlinux.fex
 ```
-The most interesting code is likely in one of the larger binaries. So that would be either `toc0.fex`, `toc1.fex` or `u-boot.fex`. As we saw some custom Fastboot commands which are implemented in U-Boot I first took a look at that.
+The most interesting code is likely in one of the larger binaries. So that would be either `toc0.fex`, `toc1.fex` or `u-boot.fex`. As we saw some custom Fastboot commands that are implemented in U-Boot I first took a look at that.
 
-## Reversing u-boot
+## Reversing U-Boot
 
 I started by loading u-boot.fex into Ghidra. 
 
 {{< resourceFigure "screenshot1.png" "Ghirda load dialog" />}}
 
-Initially, I left the base address at 0 and then quickly figured out that the base address is `0x4a000000`. This is the address where u-boot expecs to be loaded into memory.
+Initially, I left the base address at 0 and then quickly figured out that the base address is `0x4a000000`. This is the address where u-boot expects to be loaded into memory.
 
-From there I looked for strings containing "dust" and quickly found the Fastboot handling code.
+From there, I looked for strings containing "dust" and quickly found the Fastboot handling code.
 
 ![alt text](fastboot.png)
 
-From there I started reverse engineering the first Fastboot commands like `getvar`. I also found some weird Fastboot OEM commands that I did not yet investigate like `bko`, `upload`, `bypass`, `debug` or a command starting with `fan` and ending in `pi`.
+From there, I started reverse engineering the first Fastboot commands like `getvar`. I also found some weird Fastboot OEM commands that I did not yet investigate, like `bko`, `upload`, `bypass`, `debug` or a command starting with `fan` and ending in `pi`.
 
-Within the `getvar` function I found that you can return the flash size.
-Now likely the same code calculating the size of the flash is also used to dump it.
+Within the `getvar` function, I found that you can return the flash size.
+Now, likely the same code calculating the size of the flash is also used to dump it.
 
 ![alt text](image.png)
 
@@ -139,17 +138,17 @@ Bingo! There is only one reference to the function `flash_size`.
 
 > Note: When reversing its often really nice to have some reference function like the `sprintf` function above. So investing time into identifying the generic and simple ones is well spent time. I also used these [U-Boot sources](https://github.com/jcyfkimi/tina-u-boot-2018/blob/38c0fca43ad69b48e5382ed6ec4df8b7ffc375be/drivers/sunxi_usb/usb_fastboot.c#L1928) and diffed the code with the decompiled one to identify functions. 
 
-At `0x4a01918c` we find the function `upload` that gets data from the flash and puts it into a buffer which will be transmitted over USB using the Fastboot protocol.
+At `0x4a01918c` we find the function `upload` that gets data from the flash and puts it into a buffer, which will be transmitted over USB using the Fastboot protocol.
 
-Intersting observations are that it copies 0x40000 bytes which are the 400MB we saw earlier. `CURRENT_STAGE` is either 0/1/2. It is controlled by the Fastboot commands `oem reset`, `oem stage1` and `oem stage2`. Based on this value either flash memory from the beginning or a certain offset is taken.
+Interesting observations are that it copies 0x40000 bytes, which match the file size of the dump files. `CURRENT_STAGE` is either 0/1/2. It is controlled by the Fastboot commands `oem reset`, `oem stage1` and `oem stage2`. Based on this value, either flash memory from the beginning or a certain offset is taken.
 
-Note that this upload function uses the Fastboot protocol. This is why it is stargint by sending a string like "DATA: %08x" as defined in the Fastboot documentation:
+Note that this upload function uses the Fastboot protocol. This is why it is starting by sending a string like "DATA: %08x" as defined in the Fastboot documentation:
 
 > DATA -> the requested command is ready for the data phase. A DATA response packet will be 12 bytes long, in the form of DATA00000000 where the 8 digit hexidecimal number represents the total data size to transfer.
 
 We can also see some light XOR encryption here within the most inner do-while loop.
 The encryption key is taken from `xorTableAddress`. The data for the key is at `0x4a03c760`. Initially, I thought the key would be just in the binary. However, the key is 0x200 * 0xFF bytes long.
-This is because each chunk is 0x200 bytes long and we take the last byte from the blockIndex to address the byte in the key.
+This is because each chunk is 0x200 bytes long, and we take the last byte from the `blockIndex` to address the byte in the key.
 We would reach end-of-file before being able to read the whole key from the binary alone.
 
 ```c
@@ -209,9 +208,9 @@ void upload(void)
 }
 ```
 
-This means the key is calculated dynamically during runtime. Following the references from the XOR table we reach a function at `0x4a01956c` which I called `generate_xor_table`. This function is probably statically at some point before you can dump the memory.
+This means the key is calculated dynamically during runtime. Following the references from the XOR table, we reach a function at `0x4a01956c` which I called `generate_xor_table`. This function is probably invoked statically during initialization.
 
-This function generates the key by starting from the seed `0xc9acbcc6` and iteratively generate the key.
+This function generates the key by starting from the seed `0xc9acbcc6` and iteratively generating the key.
 
 ```c
 int generate_xor_table(void)
@@ -259,21 +258,21 @@ int generate_xor_table(void)
 }
 ```
 
-It's 2025 and we got LLMs so it would be a waste of time to translate this code to e.g. Python.
-The resulting key is independant of any serial number so the key should work for any flash dumps.
+It's 2025, and we got LLMs, so it would be a waste of time to translate this code to, e.g., Python.
+The resulting key is independent of any serial number, so the key should work for any flash dumps.
 
-## Summary of reversing U-Boot
+## Summary of Reversing U-Boot
 
 By reversing the U-Boot I was able to find some non-public functionality.
-The `generate_xor_table` can be used to generate an XOR key. By inverting the `upload` function flash dumps can be decrypted now.
+The `generate_xor_table` can be used to generate an XOR key. By inverting the `upload` function, flash dumps can be decrypted now.
 
 
-## Option Questions
+## Open Questions
 
-There is some functionality I do not yet understand (e.g. `oem dunst` and `oem prep`), but likely its also not relevant for my goal which is observing what the Draeme robot is doing during normal operation to discover security flaws.
+There is some functionality I do not yet understand (e.g. `oem dunst` and `oem prep`), but likely it's also not relevant for my goal, which is observing what the Dreame robot is doing during normal operation to discover security flaws.
 
-Also I'm very unsure why the flash dumps are encrypted.
-This creates a dependence to the author of the rooting method. If you brick your device you need help by them. If you would just have the flash dump then I would assume reverting your robot should "just work".
+Also, I'm very unsure why the flash dumps are encrypted.
+This creates a dependence on the author of the rooting method. If you brick your device, you need help from them. If you would just have the flash dump, then I would assume reverting your robot should "just work".
 
 I also wondered why the flash dump is only 1200MB while the whole flash is 4GB of the Dreame X40. The most important partitions are in the first 500MB as this partition layout shows:
 
@@ -313,14 +312,15 @@ Number  Start (sector)    End (sector)  Size       Code  Name
   12          997888         7634910   3.2 GiB     0700  UDISK
 ```
 
-I believe the choice of 1200MB is to limit the amount images that might be included in the flash dump. However, In my dump I could find hundreds of pictures of my flat. The robot likely deleted them but did not yet overwrite them.
+I believe the choice of 1200MB is to limit the amount of pictures that might be included in the flash dump. However, in my dump, I could find hundreds of pictures of my flat. The robot likely deleted them, but did not yet overwrite them.
 
-Therefore, hackers who want to root their Dreames should store their `dustx100.bin`, `dustx101.bin` and `dustx102.bin` files in a save and also secure place.
+Therefore, hackers who want to root their Dreame's should store their `dustx100.bin`, `dustx101.bin` and `dustx102.bin` files in a safe and also secure place.
 
-Anyways, I'm super happy now that I can continue working on this robot and analyzing kernel & userspace.
+Anyway, I'm super happy now that I can continue working on this robot and analyzing the kernel and user space.
 
 
 ##### Links
 
-- Open source FEL tool: https://linux-sunxi.org/Sunxi-tools
+- Open-source FEL tool: https://linux-sunxi.org/Sunxi-tools
 - Information about FEL images: https://linux-sunxi.org/LiveSuit_images
+
