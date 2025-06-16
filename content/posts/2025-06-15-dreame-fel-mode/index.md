@@ -161,6 +161,7 @@ The encryption key is taken from `xorTableAddress`. The data for the key is at `
 This is because each chunk is 0x200 bytes long, and we take the last byte from the `blockIndex` to address the byte in the key.
 We would reach end-of-file before being able to read the whole key from the binary alone.
 
+Here is the decompiled code I ended up with:
 ```c
 
 void upload(void)
@@ -222,6 +223,8 @@ This means the key is calculated dynamically during runtime. Following the refer
 
 This function generates the key by starting from the seed `0xc9acbcc6` and iteratively generating the key.
 
+
+Here is the partially decompiled code I ended up with:
 ```c
 int generate_xor_table(void)
 
