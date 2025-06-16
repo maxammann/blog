@@ -24,9 +24,9 @@
         {{- end -}}
     </title>
 
-    {{ $styles := resources.Get "css/style.scss" | resources.ToCSS | minify -}}
+    {{ $styles := resources.Get "css/style.scss" | css.Sass | minify -}}
     {{ $fonts := resources.Get "css/fonts.css" | minify -}}
-    {{ $projects := resources.Get "css/projects.scss"  | resources.ToCSS | minify -}}
+    {{ $projects := resources.Get "css/projects.scss"  | css.Sass | minify -}}
 
     <style>
         {{- $styles.Content | safeCSS -}}

@@ -3,8 +3,8 @@ title = "Max Ammann"
 languageCode = "en-us"
 
 # Pagination
-paginate = 10
-paginatePath = "page"
+pagination.path = "page"
+pagination.pagerSize = 10
 
 summaryLength = 30
 
