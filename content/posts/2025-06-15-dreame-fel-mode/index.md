@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Dreame Vacuum FEL Mode"
+title: "Hacking the hack: Internals of the Dreame FEL rooting method"
 date: 2025-06-15
 slug: dreame-fel-mode
 ---
@@ -282,6 +282,33 @@ The `generate_xor_table` can be used to generate an XOR key. By inverting the `u
 
 ## Open Questions
 
+We were able to answer some of the questions we started with:
+
+> 1. How does the rooting method work? Which security measures are circumvented?
+
+The rooting works by disabling secure boot by first overwriting the toc1 partition and then the rootfs partition. It's unclear yet how toc1 is patched to disable secure boot.
+
+> 2. The PDF mentioned that calibration data and device ID are lost. Why is that? Can I do a backup before rooting?
+
+I did not see any hints of calibration data getting lost. Calibration data looks similar before and after the root (`/data/misc/caliberation_result.json`). I did not yet investigate device ID. But I believe `did` is equal to device ID (`/mnt/private/ULI/factory/did.txt`).
+
+> 3. Can I do a full flash backup so reverting is possible?
+
+Yes you can do that. I'm pretty sure reverting should work without any issues if you grabbed the `dustx100.bin` files. I showed how to decrypt the files in this blog post.
+
+> 4. What are the `dustx100.bin` files? Are those the flash dumps I'm looking for?
+
+They are encrypted flash dumps of the first ~1200MB of flash storage.
+
+> 5. The Fastboot mode looks a bit odd. How is it related to Fastboot on Android?
+
+Fastboot was introduced with Android. However, the implementation used here is not related to Android. 
+
+> 6. Where do the binaries used during rooting come from? Who created them?
+
+I don't know yet how to reproduce the FEL images used for rooting.
+
+
 There is some functionality I do not yet understand (e.g. `oem dunst` and `oem prep`), but likely it's also not relevant for my goal, which is observing what the Dreame robot is doing during normal operation to discover security flaws.
 
 Also, I'm very unsure why the flash dumps are encrypted.
@@ -325,11 +352,17 @@ Number  Start (sector)    End (sector)  Size       Code  Name
   12          997888         7634910   3.2 GiB     0700  UDISK
 ```
 
-I believe the choice of 1200MB is to limit the amount of pictures that might be included in the flash dump. However, in my dump, I could find hundreds of pictures of my flat. The robot likely deleted them, but did not yet overwrite them.
+I believe the choice of 1200MB is to limit the amount of pictures that might be included in the flash dump. However, in my dump, I could find hundreds of pictures of my flat. The robot likely deleted them, but did not yet overwrite them. Therefore, hackers who want to root their Dreame's should store their `dustx100.bin`, `dustx101.bin` and `dustx102.bin` files in a safe and also secure place.
 
-Therefore, hackers who want to root their Dreame's should store their `dustx100.bin`, `dustx101.bin` and `dustx102.bin` files in a safe and also secure place.
+To summarize:
 
-Anyway, I'm super happy now that I can continue working on this robot and analyzing the kernel and user space.
+1. What does `oem dunst` and `oem prep` do?
+2. What is the device ID `did`?
+3. Can we authrorize to the Dreame API using the data we got from the robot?
+4. Which binaries run on the robot? What does the [MCU](https://github.com/alufers/dreame_mcu_protocol/blob/master/dreame_z10_notes.md) do?
+
+
+I'm super happy now that I can continue working on this robot and analyzing the kernel and user space.
 
 
 ##### Links
