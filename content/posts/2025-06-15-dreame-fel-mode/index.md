@@ -360,6 +360,8 @@ To summarize:
 2. What is the device ID `did`?
 3. Can we authrorize to the Dreame API using the data we got from the robot?
 4. Which binaries run on the robot? What does the [MCU](https://github.com/alufers/dreame_mcu_protocol/blob/master/dreame_z10_notes.md) do?
+5. There seem to be different FEL images available. One intended to do dumping of the flash and then one for the rooting/secure boot disabling.
+6. There are some more hidden Fastboot commands that might be interesting to see what they do.
 
 
 I'm super happy now that I can continue working on this robot and analyzing the kernel and user space.
