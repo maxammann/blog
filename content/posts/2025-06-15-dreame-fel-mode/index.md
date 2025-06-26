@@ -150,7 +150,7 @@ Bingo! There is only one reference to the function `flash_size`.
 
 At `0x4a01918c` we find the function `upload` that gets data from the flash and puts it into a buffer, which will be transmitted over USB using the Fastboot protocol.
 
-Interesting observations are that it copies 0x40000 bytes, which match the file size of the dump files. `CURRENT_STAGE` is either 0/1/2. It is controlled by the Fastboot commands `oem reset`, `oem stage1` and `oem stage2`. Based on this value, either flash memory from the beginning or a certain offset is taken.
+Interesting observations are that it copies 0x40000 bytes, which match the file size of the dump files. `CURRENT_STAGE` is either 0/1/2. It is controlled by the Fastboot commands `oem reset`, `oem stage1` and `oem stage2`. Based on this value, either flash memory from the beginning or a certain offset is taken. The `stage()` function takes a buffer and sends it over USB.
 
 Note that this upload function uses the Fastboot protocol. This is why it is starting by sending a string like "DATA: %08x" as defined in the Fastboot documentation:
 
@@ -161,7 +161,7 @@ The encryption key is taken from `xorTableAddress`. The data for the key is at `
 This is because each chunk is 0x200 bytes long, and we take the last byte from the `blockIndex` to address the byte in the key.
 We would reach end-of-file before being able to read the whole key from the binary alone.
 
-Here is the decompiled code I ended up with:
+Before we dive into how the encryption key is generated, here is the decompiled code for the `upload` function I ended up with:
 ```c
 
 void upload(void)
