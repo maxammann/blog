@@ -54,7 +54,7 @@ The linked FEL images in the PDF contain a U-Boot version with custom fastboot c
 | `fastboot getvar toc1version` | Unknown. |
 | `fastboot getvar minicg` | Unknown. |
 | `fastboot get_staged dust.bin` | Downloads flash data to the file `dust.bin`. This data is encrypted (more on this later). |
-| `fastboot oem prem` | Not sure yet what this does. |
+| `fastboot oem prep` | Not sure yet what this does. |
 | `fastboot flash <part> <file>` | Flashes a partition (e.g., rootfs, boot) with the specified image file. |
 
 
