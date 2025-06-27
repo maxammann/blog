@@ -10,6 +10,7 @@ slug: dreame-fel-mode
 I got myself a Dreame vacuum robot with the goal of -- cleaning. Yes, I did not have the goal originally to root my vacuum.
 However, in case I ever want to sideload software onto the robot, I picked one that is reliably rootable.
 The Dreame X40 looked decent, and Dennis Giese did awesome work on getting root access to it [back in 2021](https://dontvacuum.me/talks/DEFCON29/DEFCON29-vacuum-robots.pdf).
+This turned out to be a good decision as at some point I was starting to become a bit freaked out by the robot's camera and decided to checkout the security of the robot.
 
 Even though the process is [clearly written up in a PDF](https://builder.dontvacuum.me/nextgen/dreame_gen3.pdf), I had some open questions:
 
