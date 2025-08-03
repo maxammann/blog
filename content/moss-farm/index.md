@@ -3,7 +3,7 @@ title: "Moss Farm, Tormore, Isle of Arran"
 description: "Facts about Moss Farm on Arran island"
 ---
 
-This research was conducted primarily by Diana B.
+**This research was conducted primarily by Diana B. Please cite her when referencing this work!**
 
 
 {{< resourceFigure "moss-farm.jpg" "Moss Farm pictures" >}}Source: Arran Heritage Museum{{< /resourceFigure >}}
