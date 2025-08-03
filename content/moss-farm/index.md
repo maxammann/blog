@@ -6,7 +6,7 @@ description: "Facts about Moss Farm on Arran island"
 **This research was conducted primarily by Diana B. Please cite her when referencing this work!**
 
 
-{{< resourceFigure "moss-farm.jpg" "Moss Farm pictures" >}}Source: Arran Heritage Museum{{< /resourceFigure >}}
+{{< resourceFigure "moss-farm.jpg" "Moss Farm pictures" >}}Moss Farm 1911 - Arran Heritage Museum. Source: Arran Heritage Museum{{< /resourceFigure >}}
 
 Machrie Moor on the isle of Arran is a unique archaeological site, famous for its standing stones, cairns, stone circles and other historic remains.  But visitors often wander away from the ancient stones, drawn by a semi-derelict little farm house that lies in a dip in the landscape and gives its name to the Moss Farm Road stone circles.
 
