@@ -22,16 +22,19 @@ Only the OS maps can be relied on to give a definite fix on Moss Farm's location
 
 
 <iframe width=700 height=500 src="https://maps.nls.uk/view-full/75118758#zoom=5.5&lat=4043&lon=3874&layers=BT"></iframe>
-OS Map 1864 – unnamed croft	
+Unnamed croft, Machrie Moor – Argyll & Buteshire CCXLVIII.8 25” series surveyed 1864 and published 1867
 
 
 The same edition shows two (also unnamed) buildings on the site shown below which later maps identify as Moss Farm.  Directly to the north are two enclosures, one surrounded by bushes, perhaps to keep grazing animals off a vegetable patch.
 
 <iframe width=700 height=500 src="https://maps.nls.uk/view-full/82872549#zoom=5.5&lat=1216&lon=2782&layers=BT"></iframe>
+Moss Farm, Machrie Moor – Buteshire CCXLVIII.8 25” series revised 1895 and published 1896
+
 
 [^4]The first likely written sighting of Moss Farm comes in 1872 in the *Ardrossan & Saltcoats Herald*, when Angus McKillop, “ploughman to Peter McKenzie, Tormore Moss”, won a prize in the junior class of a ploughing match on 20th April 1872\.  He went on to win again in the Arran Cattle Show in August 1881[^5].  But the first actual mention of Moss Farm by that name comes with the death of Archibald Robertson, blacksmith, on 22nd June 1899, as reported by his brother, William Robertson, who was present at the time[^6].  
 
-{{< resourceFigure "standing-stones.jpg" "Undated postcard of the Machrie Moor standing stones, Moss Farm in the distance" >}}Undated postcard of the Machrie Moor standing stones, Moss Farm in the distance
+{{< resourceFigure "standing-stones.jpg" "Undated postcard of the Machrie Moor standing stones, Moss Farm in the distance [Image: Paul Burns]" >}}Undated postcard of the Machrie Moor standing stones, Moss Farm in the distance 
+[Image: Paul Burns]
 {{< /resourceFigure >}}
 
 Moving forward several decades, the Robertsons are still in occupation at Moss Farm in 1934, advertising in *The Scotsman* holiday lets at various properties in the area[^7].  The farmhouse had no electricity or running water, and sanitation was a crude arrangement in the neighbouring field, but this was presumably acceptable in a country holiday house.  It remained that way until the final tenant moved out in the 1960s, and the old house began to deteriorate.  
