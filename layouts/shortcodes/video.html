@@ -1,0 +1,11 @@
+{{ $video := $.Page.Resources.GetMatch (.Get "src") }}
+
+<figure>
+  <video {{ if (.Get "autoplay") }}autoplay{{ end }} {{ if (.Get "loop") }}loop{{ end }} {{ if (.Get "muted") }}muted{{ end }} {{ if (.Get "controls") }}controls{{ end }}>
+    <source src="{{ $video.RelPermalink }}" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  {{ if .Inner }}
+  <figcaption>{{ .Inner | .Page.RenderString (dict "display" "inline") }}</figcaption>
+  {{ end }}
+</figure>
